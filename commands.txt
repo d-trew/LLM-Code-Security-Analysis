@@ -1,0 +1,8 @@
+& "C:\Users\Daniel's laptop\AppData\Local\Programs\Python\Python312\python.exe" -m venv venv
+
+.\venv\Scripts\activate
+
+pip freeze | ForEach-Object { pip uninstall -y $_ }
+
+pip install -r requirements.txt
+pip install pandas --only-binary :all:
