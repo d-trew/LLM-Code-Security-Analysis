@@ -2,7 +2,6 @@ import os
 import json
 from bs4 import BeautifulSoup
 
-# Base directory path (adjust this path as necessary)
 BASE_DIR = "GCJ/gcj-dataset/codejam"
 
 # Function to clean up $$$ symbols from math expressions

@@ -3,6 +3,8 @@ from huggingface_hub import hf_hub_download
 from huggingface_hub import login
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, AutoModelForSeq2SeqLM
 
+hf_token = os.getenv("HUGGINGFACE_TOKEN")
+login(token=hf_token)
 
 model_name = "meta-llama/CodeLlama-7b-Python-hf"
 

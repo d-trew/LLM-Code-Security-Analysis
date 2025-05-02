@@ -6,3 +6,19 @@ pip freeze | ForEach-Object { pip uninstall -y $_ }
 
 pip install -r requirements.txt
 pip install pandas --only-binary :all:
+
+//download models to /scratch - probably overkill:
+(venv) dt00561@heron179:~/fyp$ export HF_HOME="/scratch/dt00561/huggingface_cache"
+(venv) dt00561@heron179:~/fyp$ echo $HF_HOME
+/scratch/dt00561/huggingface_cache
+(venv) dt00561@heron179:~/fyp$ mkdir -p $HF_HOME
+(venv) dt00561@heron179:~/fyp$ echo $HF_HOME
+/scratch/dt00561/huggingface_cache
+(venv) dt00561@heron179:~/fyp$ nano ~/.bashrc
+(venv) dt00561@heron179:~/fyp$ mkdir -p $HF_HOME
+
+
+
+
+run mistral:
+dt00561@heron030:/scratch/dt00561/ollama/bin$ OLLAMA_MODELS=/scratch/dt00561/.ollama/models OLLAMA_HISTORY=/scratch/dt00561/.ollama/history /scratch/dt00561/ollama/bin/ollama serve
