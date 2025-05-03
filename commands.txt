@@ -21,4 +21,20 @@ pip install pandas --only-binary :all:
 
 
 run mistral:
-dt00561@heron030:/scratch/dt00561/ollama/bin$ OLLAMA_MODELS=/scratch/dt00561/.ollama/models OLLAMA_HISTORY=/scratch/dt00561/.ollama/history /scratch/dt00561/ollama/bin/ollama serve
+dt00561@otter04:/scratch/dt00561/ollama/bin$ ls
+ollama  start_ollama_gpu.sh
+dt00561@otter04:/scratch/dt00561/ollama/bin$ ./start_ollama_gpu.sh
+
+start_ollama_gpu.sh:
+#!/bin/bash
+export OLLAMA_MODELS=/scratch/dt00561/ollama/models
+OLLAMA_GPU_LAYERS=35 \  # Increased for A4000's 16GB VRAM
+OLLAMA_FLASH_ATTENTION=1 \  # Enable optimized attention
+CUDA_VISIBLE_DEVICES=0 \
+export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+
+# Create model directory if missing
+mkdir -p "$OLLAMA_MODELS"
+
+# Run from current directory
+./ollama serve

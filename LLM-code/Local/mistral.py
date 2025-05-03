@@ -2,129 +2,146 @@ import os
 import json
 import requests
 import time
-from urllib.parse import urljoin
+from datetime import datetime
+from typing import List, Dict, Set
 
-# Ollama configuration
-OLLAMA_BASE_URL = "http://localhost:11434"
-MODEL_NAME = "mistral"
+# Configuration
+OLLAMA_API_URL = "http://localhost:11434/api/generate"
+MODEL_NAME = "mistral" 
+DATASET_PATH = os.path.join(os.getcwd(), "GCJ", "2016-2022_extracted_prompts_clean.json")
+OUTPUT_DIR = os.path.join(os.getcwd(), "LLM_Responses") 
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, "mistral_responses.json")  # Changed filename
 
-# Load the dataset
-dataset_path = os.path.join(os.getcwd(), "GCJ", "2016-2022_extracted_prompts_clean.json")
-with open(dataset_path, 'r', encoding='utf-8') as file:
-    prompts = json.load(file)
+# Mistral-specific parameters (optimized for 7B model)
+REQUESTS_PER_MINUTE = 40  # Higher throughput possible with Mistral
+MIN_INTERVAL = 60 / REQUESTS_PER_MINUTE
+MAX_RETRIES = 5  # Increased retries for stability
 
-# Output file
-output_file = os.path.join(os.getcwd(), "LLM", "LLM_responses", "mistral_responses.json")
+def setup_environment():
+    """Ensure output directory exists."""
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Load existing responses
-if os.path.exists(output_file):
-    with open(output_file, 'r', encoding='utf-8') as file:
-        results = json.load(file)
-else:
-    results = []
+def load_data() -> tuple[List[Dict], Set[str]]:
+    """Load prompts and check which ones have been processed."""
+    with open(DATASET_PATH, 'r') as f:
+        prompts = json.load(f)
+    
+    processed = set()
+    
+    if os.path.exists(OUTPUT_FILE):
+        with open(OUTPUT_FILE, 'r') as f:
+            existing_results = json.load(f)
+            # Create a set of (source, problem_name) tuples that have been processed
+            processed = {(r['source'], r['problem_name']) for r in existing_results}
+    
+    return prompts, processed
 
-failed_prompts = []
+def generate_code(prompt_text: str) -> str:
+    """Generate code with Mistral-specific formatting."""
+    prompt = f"""<s>[INST] Write a Python program based on this description.
+Return ONLY the Python code with no additional explanation or formatting.
 
-def call_with_retry(prompt, prompt_name, max_retries=3):
-    for retry in range(max_retries):
-        try:
-            print(f"\n=== Processing prompt: {prompt_name} ===")
-            print(f"Attempt {retry + 1}/{max_retries}")
-            print("Constructing API request...")
+Description:
+{prompt_text} [/INST]</s>"""
+    
+    payload = {
+        "model": MODEL_NAME,
+        "prompt": prompt,
+        "options": {
+            "temperature": 0.5,
+            "num_ctx": 8192,
+            "num_gpu": 50
+        }
+    }
+    
+    response = requests.post(OLLAMA_API_URL, json=payload, timeout=180)
+    response.raise_for_status()
+    return response.json()["response"].strip()
+
+def process_prompts():
+    """Main processing loop with accurate progress tracking."""
+    setup_environment()
+    prompts, processed = load_data()
+    
+    # Load existing results or create new list
+    if os.path.exists(OUTPUT_FILE):
+        with open(OUTPUT_FILE, 'r') as f:
+            results = json.load(f)
+    else:
+        results = []
+    
+    total_prompts = len(prompts)
+    start_time = time.time()
+    success_count = 0
+    failures = []
+    
+    print(f"\nStarting processing of {total_prompts} prompts")
+    print(f"Already processed: {len(processed)}")
+    print(f"Remaining: {total_prompts - len(processed)}\n")
+    
+    for i, prompt in enumerate(prompts, 1):
+        # Check if this specific prompt has been processed
+        prompt_id = (prompt['source'], prompt['problem_name'])
+        if prompt_id in processed:
+            continue
             
-            mistral_prompt = (
-                "Write a complete Python program based on this description. "
-                "Return ONLY the raw Python code with no explanations:\n\n"
-                f"{prompt}"
-            )
-
-            print("Sending to Ollama API...")
-            start_time = time.time()
-            response = requests.post(
-                urljoin(OLLAMA_BASE_URL, "/api/generate"),
-                json={
-                    "model": MODEL_NAME,
-                    "prompt": mistral_prompt,
-                    "stream": False,
-                    "options": {"temperature": 0.7, "num_predict": 2000}
-                },
-                timeout=60
-            )
-            elapsed = time.time() - start_time
-            print(f"API call completed in {elapsed:.2f}s with status: {response.status_code}")
-
-            if response.status_code == 200:
-                response_data = response.json()
-                print("API response received successfully")
-                code = extract_python_code(response_data["response"])
-                print("Code extraction complete")
-                return code
-            else:
-                print(f"API error response: {response.text}")
-                raise Exception(f"Status {response.status_code}")
-
-        except Exception as e:
-            print(f"Attempt {retry + 1} failed: {str(e)}")
-            if retry < max_retries - 1:
-                print("Waiting 2 seconds before retry...")
-                time.sleep(2)
-    
-    print(f"All {max_retries} attempts failed for this prompt")
-    return None
-
-def extract_python_code(text):
-    if "```python" in text:
-        code = text.split("```python")[1].split("```")[0]
-    elif "```" in text:
-        code = text.split("```")[1].split("```")[0]
-    else:
-        code = text
-    return code.strip()
-
-# Process each prompt
-for i, prompt in enumerate(prompts):
-    print(f"\n\n=== Starting prompt {i + 1}/{len(prompts)} ===")
-    print(f"Problem: {prompt['problem_name']}")
-    
-    if any(result["source"] == prompt["source"] for result in results):
-        print("Already processed - skipping")
-        continue
-
-    python_code = call_with_retry(prompt['problem_statement'], prompt['problem_name'])
-    
-    if python_code:
-        results.append({
-            "source": prompt["source"],
-            "problem_name": prompt["problem_name"],
-            "python_code": python_code
-        })
-        
-        with open(output_file, 'w', encoding='utf-8') as file:
-            json.dump(results, file, indent=4)
-        print("Successfully saved response")
-    else:
-        failed_prompts.append(prompt)
-        print("Added to failed prompts list")
-
-print("\n=== Processing Complete ===")
-print(f"Successfully processed {len(results)} prompts")
-print(f"Failed to process {len(failed_prompts)} prompts")
-
-if failed_prompts:
-    print("\n=== Retrying Failed Prompts ===")
-    for prompt in failed_prompts:
-        print(f"\nRetrying: {prompt['problem_name']}")
-        python_code = call_with_retry(prompt['problem_statement'], prompt['problem_name'])
-        
-        if python_code:
+        try:
+            start = time.time()
+            code = generate_code(prompt['problem_statement'])
+            gen_time = time.time() - start
+            
             results.append({
-                "source": prompt["source"],
-                "problem_name": prompt["problem_name"],
-                "python_code": python_code
+                "source": prompt['source'],
+                "problem_name": prompt['problem_name'],
+                "python_code": code,
+                "generated_at": datetime.now().isoformat(),
+                "generation_time": gen_time
             })
             
-            with open(output_file, 'w', encoding='utf-8') as file:
-                json.dump(results, file, indent=4)
-            print("Successfully saved retry response")
+            success_count += 1
+            
+            # Save progress after each successful generation
+            with open(OUTPUT_FILE, 'w') as f:
+                json.dump(results, f, indent=2)
+                
+            print(f"✅ [{i}/{total_prompts}] {prompt['problem_name']} ({gen_time:.1f}s)")
+            
+        except Exception as e:
+            failures.append({
+                "source": prompt['source'],
+                "problem_name": prompt['problem_name'],
+                "error": str(e)
+            })
+            
+            print(f"❌ [{i}/{total_prompts}] Failed: {prompt['problem_name']}")
+            
+        finally:
+            # Rate limiting
+            elapsed = time.time() - start_time
+            expected_time = i * MIN_INTERVAL
+            if elapsed < expected_time:
+                time.sleep(max(0, expected_time - elapsed))
+    
+    # Final report
+    print(f"\n{'='*50}")
+    print(f"Processing complete!")
+    print(f"Total prompts: {total_prompts}")
+    print(f"Successfully processed: {success_count}")
+    print(f"Failures: {len(failures)}")
+    print(f"Total time: {time.time() - start_time:.1f} seconds")
+    
+    # Print failures at the end
+    if failures:
+        print("\nFailed Prompts:")
+        for i, failure in enumerate(failures, 1):
+            print(f"{i}. {failure['problem_name']} (Source: {failure['source']})")
+            print(f"   Error: {failure['error']}")
+            print("-" * 50)
 
-print("\nFinal results saved to:", output_file)
+if __name__ == "__main__":
+    try:
+        process_prompts()
+    except KeyboardInterrupt:
+        print("\nProcess interrupted. Current progress has been saved.")
+    except Exception as e:
+        print(f"\nFatal error: {str(e)}")
