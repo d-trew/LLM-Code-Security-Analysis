@@ -2,9 +2,9 @@ import re
 import os
 import sys
 
-def clean_gemini_code(input_text):
+def clean_ai_code(input_text):
     """
-    Clean up Gemini-generated code by removing escape characters and formatting.
+    Clean up AI-generated code by removing escape characters and formatting.
     
     Args:
         input_text (str): The input code string with potential escape characters
@@ -25,7 +25,7 @@ def clean_gemini_code(input_text):
 
 def process_file(input_file, output_file=None):
     """
-    Process a file containing Gemini-generated code.
+    Process a file containing ai-generated code.
     
     Args:
         input_file (str): Path to the input file
@@ -37,7 +37,7 @@ def process_file(input_file, output_file=None):
         input_text = f.read()
     
     # Clean the code
-    cleaned_code = clean_gemini_code(input_text)
+    cleaned_code = clean_ai_code(input_text)
     
     # Determine output file path
     if output_file is None:

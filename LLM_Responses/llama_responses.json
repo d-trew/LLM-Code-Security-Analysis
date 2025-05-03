@@ -1,0 +1,1332 @@
+[
+    {
+        "source": "2016\\qualification_round\\coin_jam",
+        "problem_name": "Coin Jam",
+        "python_code": "```\nimport math\n\ndef next_power_of_two(n):\n    return int(math.pow(2, math.ceil(math.log2(n))))\n\ndef check_jamcoin(jamcoin, n):\n    for i in range(2, 11):\n        base = str(i)\n        value = int(jamcoin, base)\n        for j in range(2, value + 1):\n            if value % j == 0:\n                return True\n    return False\n\ndef generate_jamcoin(n, j):\n    while True:\n        jamcoin = ''.join([str(random.randint(0, 1)) for _ in range(n)])\n        if check_jamcoin(jamcoin, n) and not any([jamcoin == jam for jam in jams]):\n            jams.append(jamcoin)\n            if len(jams) == j + 1:\n                break\n\njams = []\nn, j = int(input()), int(input())\nfor i in range(1, j + 1):\n    print(f\"Case #{i}: {generate_jamcoin(n, j)}\")\n```",
+        "generated_at": "2025-05-02T23:46:42.285025",
+        "generation_time": 3.537393808364868
+    },
+    {
+        "source": "2016\\qualification_round\\counting_sheep",
+        "problem_name": "Counting Sheep",
+        "python_code": "```\nn = int(input())\nseen = set()\ni = 0\nwhile len(seen) < 10:\n    i += 1\n    num = str(i * n)\n    for digit in num:\n        seen.add(digit)\nprint(f\"Case #1: {int(n * (len(seen) + 9))}\")\n```",
+        "generated_at": "2025-05-02T23:46:43.649272",
+        "generation_time": 1.3582262992858887
+    },
+    {
+        "source": "2016\\qualification_round\\fractiles",
+        "problem_name": "Fractiles",
+        "python_code": "```\ndef fractal_artwork(K, C):\n    artwork = [''] * K\n    for c in range(C):\n        new_artwork = ''\n        for tile in artwork:\n            if 'L' in tile:\n                new_artwork += (K*['L'] + tile)[1:]\n            else:\n                new_artwork += tile + K*'G'\n        artwork = new_artwork\n    return artwork\n\ndef check_for_gold(K, C):\n    for c in range(C):\n        complexity = 0\n        while complexity < C:\n            if 'G' in fractal_artwork(K, complexity)[K//2]:\n                return [1]\n            complexity += 1\n    return ['IMPOSSIBLE']\n\nfor t in range(int(input())):\n    K, C, S = map(int, input().split())\n    print('Case #{}: {}'.format(t+1, check_for_gold(K, C)))\n```",
+        "generated_at": "2025-05-02T23:46:48.051785",
+        "generation_time": 4.396957159042358
+    },
+    {
+        "source": "2016\\qualification_round\\revenge_of_the_pancakes",
+        "problem_name": "Revenge of the Pancakes",
+        "python_code": "```\ndef pancake_flipping(S):\n    n = len(S)\n    flips = 0\n    for i in range(n, 0, -1):\n        if S[i-1] == '-':\n            k = i\n            while S[k-1] == '-':\n                k -= 1\n            S = '-' * (i-k) + '+' * k + S[k+1:]\n            flips += 1\n    return flips\n\nfor i in range(int(input())):\n    S = input()\n    print(f\"Case #{i+1}: {pancake_flipping(S)}\")",
+        "generated_at": "2025-05-02T23:46:50.315097",
+        "generation_time": 2.2592666149139404
+    },
+    {
+        "source": "2016\\round_1a\\bffs",
+        "problem_name": "BFFs",
+        "python_code": "```\ndef solve():\n    t = int(input())\n    for i in range(1, t+1):\n        n = int(input())\n        bffs = list(map(int, input().split()))\n        seen = set()\n        circle_size = 0\n        for j in range(n):\n            if bffs[j] not in seen:\n                seen.add(bffs[j])\n                circle_size += 2\n            else:\n                seen.remove(seen.pop())\n                circle_size += 1\n        print(f\"Case #{i}: {circle_size}\")\n\nsolve()",
+        "generated_at": "2025-05-02T23:46:52.222851",
+        "generation_time": 1.9032797813415527
+    },
+    {
+        "source": "2016\\round_1a\\rank_and_file",
+        "problem_name": "Rank and File",
+        "python_code": "```\nt = int(input())\nfor _ in range(t):\n    n = int(input())\n    row = set()\n    col = set()\n    for i in range(2*n-1):\n        if i < n:\n            row.update(map(int, input().split()))\n        else:\n            col.update(map(int, input().split()))\n    if len(row) == n:\n        missing = sorted(set(range(min(row), max(row)+1)))\n    else:\n        missing = sorted(set(range(min(col), max(col)+1)))\n    print(f\"Case # {_+1}: {missing}\")",
+        "generated_at": "2025-05-02T23:46:54.220463",
+        "generation_time": 1.9927599430084229
+    },
+    {
+        "source": "2016\\round_1a\\the_last_word",
+        "problem_name": "The Last Word",
+        "python_code": "```\ndef find_last_word(S):\n    n = len(S)\n    for i in range(2**n):\n        word = ''\n        for j in range(n):\n            if (i & (1 << j)):\n                word += S[j]\n            else:\n                word = S[j] + word\n        yield word\n\nT = int(input())\nfor i in range(T):\n    S = input()\n    words = sorted(list(find_last_word(S)))\n    print(f\"Case #{i+1}: {words[-1]}\")",
+        "generated_at": "2025-05-02T23:46:55.992848",
+        "generation_time": 1.7677853107452393
+    },
+    {
+        "source": "2016\\round_1b\\close_match",
+        "problem_name": "Close Match",
+        "python_code": "```\nfrom itertools import product\n\nT = int(input())\nfor t in range(1, T + 1):\n    C, J = input().split()\n    min_diff = float('inf')\n    result_C, result_J = None, None\n    for c, j in product(map(int, '0123456789'), repeat=len(C)):\n        if str(c) == C.replace('?','0') and str(j) == J.replace('?','0'):\n            diff = abs(int(str(c)) - int(str(j)))\n            if diff < min_diff:\n                min_diff = diff\n                result_C, result_J = str(c), str(j)\n    print(f\"Case #{t}: {result_C} {result_J}\")",
+        "generated_at": "2025-05-02T23:46:58.397815",
+        "generation_time": 2.400498390197754
+    },
+    {
+        "source": "2016\\round_1b\\getting_the_digits",
+        "problem_name": "Getting the Digits",
+        "python_code": "```\ndef solve(s):\n    zero_to_nine = ['ZERO', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE']\n    for i in range(len(zero_to_nine)):\n        s = s.replace(zero_to_nine[i], str(i))\n    return ''.join(sorted(s))\n\nfor t in range(int(input())):\n    print('Case #{}: {}'.format(t+1, solve(input())))",
+        "generated_at": "2025-05-02T23:47:00.143410",
+        "generation_time": 1.7417058944702148
+    },
+    {
+        "source": "2016\\round_1b\\technobabble",
+        "problem_name": "Technobabble",
+        "python_code": "```\nfrom collections import defaultdict\n\nT = int(input())\nfor i in range(1, T + 1):\n    N = int(input())\n    topics = [input().split() for _ in range(N)]\n    first_words = set()\n    second_words = set()\n    fake_topics = 0\n    for topic in topics:\n        if topic[0] not in first_words and topic[1] not in second_words:\n            first_words.add(topic[0])\n            second_words.add(topic[1])\n        else:\n            fake_topics += 1\n    print(f\"Case #{i}: {fake_topics}\")",
+        "generated_at": "2025-05-02T23:47:02.338870",
+        "generation_time": 2.1888444423675537
+    },
+    {
+        "source": "2016\\round_1c\\fashion_police",
+        "problem_name": "Fashion Police",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    J, P, S, K = map(int, input().split())\n    max_days = min(J, P)\n    outfits = []\n    for i in range(max_days):\n        j, p = i % J + 1, i % P + 1\n        s = (i // J) % S + 1\n        outfits.append((j, p, s))\n    print(f\"Case # {_+1}: {max_days}\")\n    for outfit in outfits:\n        print(*outfit)",
+        "generated_at": "2025-05-02T23:47:04.517775",
+        "generation_time": 2.174492120742798
+    },
+    {
+        "source": "2016\\round_1c\\senate_evacuation",
+        "problem_name": "Senate Evacuation",
+        "python_code": "```\nT = int(input())\nfor i in range(T):\n    N = int(input())\n    parties = list(map(int, input().split()))\n    evacuation_plan = []\n    remaining_parties = list(range(N))\n    while sum(parties) > 0:\n        if len(remaining_parties) == 1:\n            evacuation_plan.append('C')\n            break\n        min_party = min(parties)\n        max_index = parties.index(min_party)\n        for j in range(len(remaining_parties)):\n            if parties[remaining_parties[j]] == min_party:\n                remaining_parties.remove(j)\n        if len(remaining_parties) > 1 and sum(parties) % 2 != 0:\n            evacuation_plan.append('AB'[:2])\n        elif len(remaining_parties) > 1:\n            evacuation_plan.append('AC'[:2])\n        else:\n            evacuation_plan.append(str(chr(65 + remaining_parties[0])))\n        parties = [p - (1 if p == min_party else 0) for p in parties]\n    print(f\"Case #{i+1}: {' '.join(evacuation_plan)}\")",
+        "generated_at": "2025-05-02T23:47:08.316921",
+        "generation_time": 3.793257474899292
+    },
+    {
+        "source": "2016\\round_1c\\slides",
+        "problem_name": "Slides!",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    B, M = map(int, input().split())\n    if M % (B-1) != 0:\n        print(f\"Case #{t}: IMPOSSIBLE\")\n    else:\n        slides = [[0]*B for _ in range(B)]\n        for _ in range(M//((B-1))):\n            start, end = map(int, input().split())\n            if start == B:\n                break\n            if start < end:\n                slides[start][end] = 1\n            else:\n                slides[end][start] = 1\n        print(f\"Case #{t}: POSSIBLE\")\n        for i in range(B-1):\n            for j in range(i+1, B):\n                if (M//((B-1))) % 2 == 0:\n                    slides[i+1][j] = 1\n                else:\n                    slides[i][j] = 1\n        for row in slides:\n            print(' '.join(str(cell) for cell in row))\n```",
+        "generated_at": "2025-05-02T23:47:11.958283",
+        "generation_time": 3.635115385055542
+    },
+    {
+        "source": "2016\\round_2\\freeform_factory",
+        "problem_name": "Freeform Factory",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    N = int(input())\n    workers = []\n    for _ in range(N):\n        worker = [int(c) for c in input()]\n        workers.append(worker)\n    min_spent = 0\n    for i in range(N):\n        for j in range(N):\n            if workers[i][j] == 1:\n                all_known = True\n                for k in range(N):\n                    if k != i and workers[k][j] == 1:\n                        all_known = False\n                        break\n                if not all_known:\n                    min_spent += 1\n    print(f\"Case #{t}: {min_spent}\")\n```",
+        "generated_at": "2025-05-02T23:47:14.623170",
+        "generation_time": 2.6602258682250977
+    },
+    {
+        "source": "2016\\round_2\\rather_perplexing_showdown",
+        "problem_name": "Rather Perplexing Showdown",
+        "python_code": "```\ndef solve_case(N, R, P, S):\n    R = min(R, N)\n    P = min(P, N - R)\n    S = N - R - P\n    res = []\n    if R > 0:\n        res.append('R' * (2 * R))\n    if P > 0:\n        res.append('P' * (2 * P))\n    if S > 0:\n        res.append('S' * (2 * S))\n    return 'IMPOSSIBLE' if any(len(x) % 2 == 0 for x in res) else ''.join(sorted(res[0]))\n\nT = int(input())\nfor _ in range(T):\n    N, R, P, S = map(int, input().split())\n    print('Case #{}: {}'.format(_, solve_case(N, R, P, S)))",
+        "generated_at": "2025-05-02T23:47:17.766295",
+        "generation_time": 3.1390798091888428
+    },
+    {
+        "source": "2016\\round_2\\red_tape_committee",
+        "problem_name": "Red Tape Committee",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, K = map(int, input().split())\n    Ps = list(map(float, input().split()))\n    Ps.sort(reverse=True)\n    total_prob = 0\n    for i in range(K // 2):\n        if Ps[i] > Ps[K - i - 1]:\n            total_prob += (Ps[i] + Ps[K - i - 1]) / 2\n        else:\n            total_prob += min(Ps[i], Ps[K - i - 1])\n    print(f\"Case #{_+1}: {total_prob:.6f}\")",
+        "generated_at": "2025-05-02T23:47:20.322851",
+        "generation_time": 2.552436590194702
+    },
+    {
+        "source": "2016\\round_2\\the_gardener_of_seville",
+        "problem_name": "The Gardener of Seville",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T + 1):\n    R, C = map(int, input().split())\n    courtiers = list(map(int, input().split()))\n    graph = {}\n    for i in range(len(courtiers)):\n        pair = tuple(sorted([courtiers[i], courtiers[(i+1)%len(courtiers)]]))\n        if pair not in graph:\n            graph[pair] = []\n        graph[pair].append((R-1, C-1))\n    visited = set()\n    def dfs(x, y):\n        for dx, dy in [(0, 1), (1, 0), (-1, 0), (0, -1)]:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < R and 0 <= ny < C and (nx, ny) not in visited:\n                for pair, paths in graph.items():\n                    if (nx, ny) in paths:\n                        for px, py in paths:\n                            if dfs(px, py):\n                                return True\n                visited.add((nx, ny))\n                return False\n        return True\n\n    result = \"IMPOSSIBLE\"\n    for r in range(R):\n        for c in range(C):\n            if (r, c) not in visited and dfs(r, c):\n                result = \"\"\n                for row in range(R):\n                    for col in range(C):\n                        if (row, col) == (0, 0): \n                            print(\"Case #{}:\".format(t), end=\"\")\n                        elif row == R - 1:\n                            if col == C - 1: \n                                print(\"/\")\n                            else: \n                                print(\"\\\\\")\n                        else:\n                            if col == C - 1: \n                                print(\"/\")\n                            else: \n                                print(\"\\\\\")\n                break\n    if result == \"IMPOSSIBLE\":\n        print(result)\n```",
+        "generated_at": "2025-05-02T23:47:26.802603",
+        "generation_time": 6.476368427276611
+    },
+    {
+        "source": "2016\\round_3\\forest_university",
+        "problem_name": "Forest University",
+        "python_code": "```\nfrom math import comb\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    M = int(input())\n    cool_words = [input().upper() for _ in range(M)]\n    prerequisites = {}\n    for i in range(N):\n        prereq, course = input().split()\n        if len(prereq) > 1:\n            prerequisites[course] = prereq\n    sequences = set()\n    def dfs(course, path):\n        if course not in prerequisites:\n            sequences.add(''.join([c[0] for c in path]))\n        else:\n            for c in prerequisites[course]:\n                dfs(c, path + [(course, c)])\n    dfs('C', [])\n    answers = []\n    for cool_word in cool_words:\n        count = 0\n        for seq in sequences:\n            if cool_word in seq:\n                count += 1\n        answers.append(f'{count/len(sequences):.4f}')\n    print('Case #{}: {}'.format(_, ' '.join(answers)))",
+        "generated_at": "2025-05-02T23:47:30.368610",
+        "generation_time": 3.5607478618621826
+    },
+    {
+        "source": "2016\\round_3\\go",
+        "problem_name": "Go++",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, L = map(int, input().split())\n    G = [input() for _ in range(N)]\n    B = input()\n    print(f\"Case #{_+1}: {'IMPOSSIBLE' if (B in G) else ''.join(['?0', '?1'][:L])}\")\n```",
+        "generated_at": "2025-05-02T23:47:32.075461",
+        "generation_time": 1.617767095565796
+    },
+    {
+        "source": "2016\\round_3\\rebel_against_the_empire",
+        "problem_name": "Rebel Against The Empire",
+        "python_code": "```\nimport math\nT = int(input())\nfor _ in range(T):\n    N, S = map(int, input().split())\n    asteroids = []\n    for _ in range(N):\n        x, y, z, Vx, Vy, Vz = map(float, input().split())\n        asteroids.append((x, y, z, Vx, Vy, Vz))\n    max_distance = 0\n    current_position = (0, 0, 0)\n    previous_positions = [(0, 0, 0)]\n    for i in range(N):\n        x, y, z, Vx, Vy, Vz = asteroids[i]\n        time_to_meet = ((x - current_position[0]) / Vx + \n                        (y - current_position[1]) / Vy + \n                        (z - current_position[2]) / Vz)\n        if time_to_meet > S:\n            jump_distance = math.sqrt((x - current_position[0])**2 + \n                                       (y - current_position[1])**2 + \n                                       (z - current_position[2])**2)\n            max_distance = max(max_distance, jump_distance)\n            previous_positions.append((x, y, z))\n        current_position = (x, y, z)\n    print('Case #{}: {:.4f'.format(_, max_distance))",
+        "generated_at": "2025-05-02T23:47:36.779376",
+        "generation_time": 4.69738245010376
+    },
+    {
+        "source": "2016\\round_3\\teaching_assistant",
+        "problem_name": "Teaching Assistant",
+        "python_code": "```\nt = int(input())\nfor i in range(t):\n    s = input()\n    score = 0\n    for j in range(len(s)):\n        if (j // 2) % 2 == 0:\n            score += 10 if s[j] == 'C' else 5\n        else:\n            score += 10 if s[j] == 'J' else 5\n    print('Case #{}: {}'.format(i+1, score))",
+        "generated_at": "2025-05-02T23:47:39.004042",
+        "generation_time": 2.219141960144043
+    },
+    {
+        "source": "2016\\world_finals\\family_hotel",
+        "problem_name": "Family Hotel",
+        "python_code": "print(\"Hello, World!\")",
+        "generated_at": "2025-05-02T23:47:39.125273",
+        "generation_time": 0.11645054817199707
+    },
+    {
+        "source": "2016\\world_finals\\gallery_of_pillars",
+        "problem_name": "Gallery of Pillars",
+        "python_code": "```\nT = int(input())\nfor i in range(T):\n    N, R = map(int, input().split())\n    visible = 0\n    for j in range(N):\n        for k in range(N):\n            if (j+j+1)*R > ((k*N)+j)**2:\n                break\n        else:\n            continue\n        for x in range(k*R + j*R, (N-k)*R + j*R + 1):\n            y = int(((x - j*R)**0.5 + k*R) / R)\n            if y < N and y >= 0:\n                visible += 1\n    print(f\"Case #{i+1}: {visible}\")\n```",
+        "generated_at": "2025-05-02T23:47:41.497415",
+        "generation_time": 2.367136001586914
+    },
+    {
+        "source": "2016\\world_finals\\integeregex",
+        "problem_name": "Integeregex",
+        "python_code": "```\nimport re\nfor _ in range(int(input())):\n    a, b = map(int, input().split())\n    pattern = re.compile(input())\n    count = sum(1 for i in range(a, b+1) if bool(pattern.match(str(i))))\n    print(f\"Case # {_+1}: {count}\")",
+        "generated_at": "2025-05-02T23:47:42.755280",
+        "generation_time": 1.252647876739502
+    },
+    {
+        "source": "2016\\world_finals\\map_reduce",
+        "problem_name": "Map Reduce",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, C, D = [int(x) for x in input().split()]\n    map_data = [list(input()) for _ in range(R)]\n    start_pos = None\n    finish_pos = None\n    for i in range(R):\n        for j in range(C):\n            if map_data[i][j] == 'S':\n                start_pos = (i, j)\n            elif map_data[i][j] == 'F':\n                finish_pos = (i, j)\n\n    def bfs(map_data, start_pos, finish_pos):\n        R, C = len(map_data), len(map_data[0])\n        queue = [(start_pos, 0)]\n        visited = set([start_pos])\n        while queue:\n            pos, dist = queue.pop(0)\n            if pos == finish_pos:\n                return dist\n            for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n                new_x, new_y = pos[0] + x, pos[1] + y\n                if 0 <= new_x < R and 0 <= new_y < C and map_data[new_x][new_y] != '#' and (new_x, new_y) not in visited:\n                    queue.append(((new_x, new_y), dist + 1))\n                    visited.add((new_x, new_y))\n\n    def dfs(map_data, start_pos, finish_pos):\n        R, C = len(map_data), len(map_data[0])\n        queue = [(start_pos, 0)]\n        visited = set([start_pos])\n        while queue:\n            pos, dist = queue.pop(0)\n            if pos == finish_pos:\n                return dist\n            for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n                new_x, new_y = pos[0] + x, pos[1] + y\n                if 0 <= new_x < R and 0 <= new_y < C and map_data[new_x][new_y] != '#' and (new_x, new_y) not in visited:\n                    queue.append(((new_x, new_y), dist + 1))\n                    visited.add((new_x, new_y))\n\n    def check(map_data, D):\n        R, C = len(map_data), len(map_data[0])\n        for i in range(R):\n            for j in range(C):\n                if map_data[i][j] == '#':\n                    temp_map = [list(x) for x in map_data]\n                    temp_map[i][j] = '.'\n                    if bfs(temp_map, start_pos, finish_pos) == D:\n                        return 'POSSIBLE'\n        return 'IMPOSSIBLE'\n\n    print(f'Case #{\"{}\":>1}: {check(map_data, D)}')\n```",
+        "generated_at": "2025-05-02T23:47:52.126078",
+        "generation_time": 9.366148471832275
+    },
+    {
+        "source": "2016\\world_finals\\radioactive_islands",
+        "problem_name": "Radioactive Islands",
+        "python_code": "```\nimport math\n\ndef min_radiation(A, B, C):\n    X = abs(B - A)\n    Y = 0\n    for c in C:\n        D = abs(c - A) if c < A else abs(c - B)\n        Y += (D ** 2) / (X + D)\n    return Y\n\nT = int(input())\nfor t in range(1, T+1):\n    N, A, B = map(float, input().split())\n    C = [float(x) for x in input().split()]\n    print(f\"Case #{t}: {min_radiation(A, B, C)}\")",
+        "generated_at": "2025-05-02T23:47:54.392090",
+        "generation_time": 2.2614941596984863
+    },
+    {
+        "source": "2017\\qualification_round\\bathroom_stalls",
+        "problem_name": "Bathroom Stalls",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, K = map(int, input().split())\n    stalls = ['O'] * (N + 2)\n    for _ in range(K):\n        if 'O' == stalls[1]:\n            start = 1\n        elif 'O' == stalls[N+2]:\n            start = N+2-2\n        else:\n            for i in range(2, N+1):\n                if 'O' != stalls[i]:\n                    start = i\n                    break\n        end = start\n        while 'O' != stalls[end] and end < N+2 - 1:\n            end += 1\n        empty_stalls = list(range(start, end))\n        for s in empty_stalls:\n            LS = sum(1 for e in range(s-1) if 'O' == stalls[e])\n            RS = sum(1 for e in range(N+2-s) if 'O' == stalls[N+2-e-1])\n            if len(empty_stalls) > 1 and min(LS, RS) == LS:\n                start = s\n        max_LS_RS = 0\n        min_LS_RS = float('inf')\n        for s in range(start, end):\n            LS = sum(1 for e in range(s-1) if 'O' == stalls[e])\n            RS = sum(1 for e in range(N+2-s) if 'O' == stalls[N+2-e-1])\n            if LS > max_LS_RS:\n                max_LS_RS = LS\n                min_LS_RS = RS\n        print(f\"Case #{_+1}: {max_LS_RS} {min_LS_RS}\")\n```",
+        "generated_at": "2025-05-02T23:47:59.883676",
+        "generation_time": 5.4865381717681885
+    },
+    {
+        "source": "2017\\qualification_round\\fashion_show",
+        "problem_name": "Fashion Show",
+        "python_code": "```\nfrom collections import deque\n\ndef solve_case(n, m, preplaced_models):\n    max_style = 0\n    best_solution = []\n    \n    for _ in range(4**m):\n        current_models = [0] * (n * n)\n        for model in preplaced_models:\n            current_models[model[1]*n+model[0]] = model[2]\n        \n        visited = set()\n        queue = deque([(0, 0, 0)])\n        while queue:\n            x, y, style = queue.popleft()\n            if (x, y) not in visited:\n                visited.add((x, y))\n                current_style = style\n                if current_models[x*n+y] == '+':\n                    current_style += 1\n                elif current_models[x*n+y] == 'x':\n                    current_style += 1\n                elif current_models[x*n+y] == 'o':\n                    current_style += 2\n                \n                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n                    nx, ny = x+dx, y+dy\n                    if 0 <= nx < n and 0 <= ny < n and (nx, ny) not in visited:\n                        queue.append((nx, ny, current_style))\n                \n                if len(visited) == n * n:\n                    max_style = max(max_style, current_style)\n                    best_solution = [(i*n+j, 'o' if current_models[i*n+j] == '+' else ('x' if current_models[i*n+j] == 'x' else '.'), i+1, j+1) for i in range(n) for j in range(n) if (i, j) not in visited and current_models[i*n+j] != 'o']\n    \n    return max_style, len(best_solution)\n\nT = int(input())\nfor t in range(1, T+1):\n    n, m = map(int, input().split())\n    preplaced_models = []\n    for _ in range(m):\n        x, y, model_type = input().split()\n        x, y = int(x), int(y)\n        if model_type == '+':\n            model_type = 'o'\n        elif model_type == 'x':\n            model_type = 'o'\n        preplaced_models.append((y, x, model_type[0]))\n    style, added_models = solve_case(n, m, preplaced_models)\n    print(f\"Case #{t}: {style} {len(added_models)}\")\n    for model in added_models:\n        print(*model)",
+        "generated_at": "2025-05-02T23:48:08.413503",
+        "generation_time": 8.524665594100952
+    },
+    {
+        "source": "2017\\qualification_round\\oversized_pancake_flipper",
+        "problem_name": "Oversized Pancake Flipper",
+        "python_code": "```\nT = int(input())\nfor i in range(1, T + 1):\n    S = input()\n    K = int(input())\n    pancake_flipper_flips = 0\n    while True:\n        if S[0] == '+':\n            for _ in range(K):\n                if len(S) < _ * (K - 1) + _:\n                    break\n                S = '+' * (_ * (K - 1) + _) + '-' * (len(S) - _ * (K - 1) - _) + S[_ * (K - 1):]\n            pancake_flipper_flips += 1\n        if all(c == '+' for c in S):\n            break\n    if all(c == '+' for c in S):\n        print(f\"Case #{i}: {pancake_flipper_flips}\")\n    else:\n        print(f\"Case #{i}: IMPOSSIBLE\")",
+        "generated_at": "2025-05-02T23:48:11.573780",
+        "generation_time": 3.1523642539978027
+    },
+    {
+        "source": "2017\\qualification_round\\tidy_numbers",
+        "problem_name": "Tidy Numbers",
+        "python_code": "```\nn = int(input())\nfor i in range(1, n+1):\n    s = str(i)\n    if s == \"\".join(sorted(s)):\n        print(f\"Case #{i}: {s}\")\n```",
+        "generated_at": "2025-05-02T23:48:12.419607",
+        "generation_time": 0.8319728374481201
+    },
+    {
+        "source": "2017\\round_1a\\alphabet_cake",
+        "problem_name": "Alphabet Cake",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, C = map(int, input().split())\n    grid = [input() for _ in range(R)]\n    initial_to_child = {}\n    child_to_initials = {}\n    for i in range(R):\n        for j in range(C):\n            if grid[i][j] != '?':\n                initial = grid[i][j]\n                if initial not in initial_to_child:\n                    initial_to_child[initial] = len(child_to_initials)\n                    child_to_initials[len(child_to_initials)] = set()\n                child_to_initials[initial_to_child[initial]].add((i, j))\n    for i in range(len(child_to_initials)):\n        for (r1, c1), (r2, c2) in itertools.combinations(list(child_to_initials[i]), 2):\n            if r1 == r2 and abs(c1 - c2) > 0:\n                row = [(c1, i)] * (c2 - c1 + 1)\n                for r, (c, _) in enumerate(grid):\n                    if r not in [r1, r2]:\n                        grid[r] += 'a'\n                    else:\n                        for cc in range(c1, c2+1):\n                            if r == r1 and c == c1:\n                                grid[r] = list(grid[r])\n                                grid[r][cc - c1] = initial_to_child[chr(ord('A') + i)]\n                                grid[r] = ''.join(grid[r])\n                            elif r == r2 and c == c2:\n                                grid[r] = list(grid[r])\n                                grid[r][cc - c1] = initial_to_child[chr(ord('A') + i)]\n                                grid[r] = ''.join(grid[r])\n                break\n    print(f\"Case #{'%d'%_}:\")\n    for row in grid:\n        print(row)",
+        "generated_at": "2025-05-02T23:48:18.414090",
+        "generation_time": 5.985822439193726
+    },
+    {
+        "source": "2017\\round_1a\\play_the_dragon",
+        "problem_name": "Play the Dragon",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    hd, ad, hk, ak, b, d = map(int, input().split())\n    if (hk - ad) // d > 0:\n        print(f\"Case # {_+1}: IMPOSSIBLE\")\n    else:\n        turns = 0\n        while hd > 0 and hk > 0:\n            turns += 1\n            hk -= max(0, ad)\n            ad += b\n            if ak - d > 0:\n                hd -= min(hd, ak - d)\n            else:\n                hd -= ak\n            if hd <= 0 or hk <= 0:\n                break\n        print(f\"Case # {_+1}: {turns}\")\n```",
+        "generated_at": "2025-05-02T23:48:21.268443",
+        "generation_time": 2.8461647033691406
+    },
+    {
+        "source": "2017\\round_1a\\ratatouille",
+        "problem_name": "Ratatouille",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, P = map(int, input().split())\n    packages = []\n    for _ in range(N):\n        package = list(map(int, input().split()))\n        packages.append(package)\n    max_kits = 0\n    for i in range(1 << N):\n        valid = True\n        kit_serving = 0\n        total_packages = [0] * P\n        for j in range(N):\n            if (i & (1 << j)):\n                kit_serving += 1\n                for k in range(P):\n                    total_packages[k] += packages[j][k]\n        for j in range(P):\n            if packages[0][j] * .9 <= total_packages[j] <= packages[0][j] * 1.1:\n                continue\n            valid = False\n            break\n        if valid and kit_serving > max_kits:\n            max_kits = kit_serving\n    print(f\"Case # {_ + 1}: {max_kits}\")",
+        "generated_at": "2025-05-02T23:48:25.164588",
+        "generation_time": 3.890287160873413
+    },
+    {
+        "source": "2017\\round_1b\\pony_express",
+        "problem_name": "Pony Express",
+        "python_code": "```\nimport heapq\n\ndef pony_express(N, E, D):\n    horse_speeds = [[0] * (N+1) for _ in range(N+1)]\n    horse_distances = [[float('inf')] * (N+1) for _ in range(N+1)]\n\n    for i in range(1, N+1):\n        horse_speeds[i][i] = 1\n        horse_distances[i][i] = 0\n\n    for i in range(1, N+1):\n        for j in range(i+1, N+2):\n            if D[i-1][j-i-1] != -1:\n                horse_speeds[i][j] = min(horse_speeds[i][j], horse_speeds[i][i] + E[i-1])\n                horse_distances[i][j] = min(horse_distances[i][j], horse_distances[i][i] + D[i-1][j-i-1])\n\n    Q = 1\n    U = 1\n    V = N\n\n    total_time = horse_distances[U][V]\n\n    return Case #{}: {:.6f}\\n'.format(Q, total_time)\n\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    E = [int(x) for x in input().split()]\n    D = [[int(x) for x in input().split()] for _ in range(N)]\n    print(pony_express(N, E, D))",
+        "generated_at": "2025-05-02T23:48:30.378536",
+        "generation_time": 5.208447217941284
+    },
+    {
+        "source": "2017\\round_1b\\stable_neigh-bors",
+        "problem_name": "Stable Neigh-bors",
+        "python_code": "```\nfrom itertools import permutations\n\ndef is_valid(stalls):\n    for i in range(len(stalls) - 1):\n        if set(stalls[i:i+2]).intersection({'R', 'O', 'Y', 'G', 'B', 'V'}):\n            return False\n    return True\n\nfor t in range(int(input())):\n    N = int(input())\n    R, O, Y, G, B, V = map(int, input().split())\n    stalls = ['R' * R + 'O' * O + 'Y' * Y + 'G' * G + 'B' * B + 'V' * V][0]\n    for p in permutations(stalls):\n        if is_valid(p):\n            print(f\"Case #{t+1}: {''.join(p)}\")\n            break\n    else:\n        print(f\"Case #{t+1}: IMPOSSIBLE\")",
+        "generated_at": "2025-05-02T23:48:33.532690",
+        "generation_time": 3.1460535526275635
+    },
+    {
+        "source": "2017\\round_1b\\steed_2_cruise_control",
+        "problem_name": "Steed 2: Cruise Control",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    D, N = map(int, input().split())\n    K = list(map(int, input().split()) for _ in range(N))\n    S = list(map(int, input().split()) for _ in range(N))\n    K.sort()\n    S.sort(reverse=True)\n    ans = 0\n    for i in range(1, N):\n        if K[i] - K[i-1] <= S[i]:\n            ans = max(ans, S[i])\n        else:\n            ans = max(ans, (K[i] - K[i-1]) / (i+1))\n    print(f\"Case #{_+1}: {ans:.6f}\")\n```",
+        "generated_at": "2025-05-02T23:48:36.160598",
+        "generation_time": 2.619605779647827
+    },
+    {
+        "source": "2017\\round_1c\\ample_syrup",
+        "problem_name": "Ample Syrup",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, K = map(int, input().split())\n    pancakes = []\n    for _ in range(N):\n        R, H = map(int, input().split())\n        pancakes.append((R, H))\n    pancakes.sort(key=lambda x: x[0], reverse=True)\n    max_area = 0\n    for i in range(K):\n        R, H = pancakes[i]\n        area = (2 * 3.14159 * R) + (2 * 3.14159 * R * H)\n        max_area += area\n    print(f\"Case # {_+1}: {max_area:.6f}\")\n```",
+        "generated_at": "2025-05-02T23:48:38.670077",
+        "generation_time": 2.5021800994873047
+    },
+    {
+        "source": "2017\\round_1c\\core_training",
+        "problem_name": "Core Training",
+        "python_code": "```\nimport math\n\ndef calculate_probability():\n    T = int(input())\n    results = []\n    \n    for _ in range(T):\n        N, K = map(int, input().split())\n        U = float(input())\n        \n        P = list(map(float, input().split()))\n        \n        P.sort(reverse=True)\n        used_units = 0\n        \n        for i in range(N):\n            if used_units + (1 - P[i]) > U:\n                break\n            used_units += 1\n        \n        probability = 1\n        for i in range(K-1, N):\n            probability *= P[i]\n        \n        results.append(f\"Case # {_+1}: {probability:.6f}\")\n    \n    print('\\n'.join(results))",
+        "generated_at": "2025-05-02T23:48:41.438158",
+        "generation_time": 2.7625505924224854
+    },
+    {
+        "source": "2017\\round_1c\\parenting_partnering",
+        "problem_name": "Parenting Partnering",
+        "python_code": "```\nfrom math import inf\n\ndef min_exchanges(Cameron, Jamie):\n    end_time = 24 * 60\n    Cameron_activities = sorted([(Ci, Di) for Ci, Di in zip(*[iter(Cameron[i:i+2]) for i in range(0, len(Cameron), 2)]))\n    Jamie_activities = sorted([(Ji, Ki) for Ji, Ki in zip(*[iter(Jamie[i:i+2]) for i in range(0, len(Jamie), 2)]])\n    \n    free_time = [end_time]\n    for Ci, Di in Cameron_activities:\n        free_time.append(Ci)\n        free_time.append(Di)\n    for Ji, Ki in Jamie_activities:\n        free_time.append(Ji)\n        free_time.append(Ki)\n\n    exchanges = 0\n    prev_free_time = 0\n    for time in sorted(free_time):\n        if time > prev_free_time:\n            exchanges += 1\n        prev_free_time = time\n\n    return exchanges\n\nT = int(input())\nfor i in range(1, T + 1):\n    AC, AJ = map(int, input().split())\n    Cameron = [int(x) for x in input().split()] * (AC // 2)\n    Jamie = [int(x) for x in input().split()] * (AJ // 2)\n    \n    print(f\"Case #{i}: {min_exchanges(Cameron, Jamie)}\")",
+        "generated_at": "2025-05-02T23:48:46.598262",
+        "generation_time": 5.151697397232056
+    },
+    {
+        "source": "2017\\round_2\\beaming_with_joy",
+        "problem_name": "Beaming With Joy",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, C = map(int, input().split())\n    grid = [list(input()) for _ in range(R)]\n    possible = True\n    for r in range(R):\n        for c in range(C):\n            if grid[r][c] == '.':\n                has_beam = False\n                for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n                    nr, nc = r + dr, c + dc\n                    while 0 <= nr < R and 0 <= nc < C:\n                        if grid[nr][nc] == '|':\n                            possible = False\n                        elif grid[nr][nc] in ['/\\\\']:\n                            break\n                        elif grid[nr][nc] == '#':\n                            nr, nc = r + dr, c + dc\n                            break\n                        has_beam = True\n                        break\n                if not has_beam:\n                    possible = False\n    print(f\"Case # {_+1}: {'POSSIBLE' if possible else 'IMPOSSIBLE'}\")\n    if possible:\n        for row in grid:\n            print(''.join(row))\n```",
+        "generated_at": "2025-05-02T23:48:50.822776",
+        "generation_time": 4.215506315231323
+    },
+    {
+        "source": "2017\\round_2\\fresh_chocolate",
+        "problem_name": "Fresh Chocolate",
+        "python_code": "```\nn = int(input())\nfor i in range(n):\n    t = int(input())\n    p = int(input())\n    g = list(map(int, input().split()))\n    left = 0\n    res = 0\n    for people in g:\n        if people + left > p:\n            res += (people+p-1)//p\n            left = p - (people+p-1)%p\n        else:\n            res += 1\n            left -= people\n    print(\"Case #{}: {}\".format(i+1, res))",
+        "generated_at": "2025-05-02T23:48:53.034354",
+        "generation_time": 2.204188108444214
+    },
+    {
+        "source": "2017\\round_2\\roller_coaster_scheduling",
+        "problem_name": "Roller Coaster Scheduling",
+        "python_code": "```\nimport sys\n\ndef min_rides_and_promotions(n, m, buyers):\n    buyers.sort()\n    last_seat = [0] * (n + 1)\n    for i in range(m):\n        buyer = buyers[i]\n        seat = buyers.index(buyer) + 1\n        if seat > last_seat[seat]:\n            return \"Case #{}: {} {}\".format(sys._getframe().f_lineno, m, m - len([i for i in buyers if buyers.index(i) >= seat]))\n    seats_used = sum([i > j for i, j in zip(buyers, buyers[1:])])\n    rides = (seats_used + 1) // n\n    promotions = seats_used % n\n    return \"Case #{}: {} {}\".format(1, rides, promotions)\n\nT = int(input())\nfor _ in range(T):\n    n, c, m = map(int, input().split())\n    buyers = [int(x) for x in input().split()]\n    print(min_rides_and_promotions(n, m, buyers))\n```",
+        "generated_at": "2025-05-02T23:48:56.805501",
+        "generation_time": 3.7627081871032715
+    },
+    {
+        "source": "2017\\round_2\\shoot_the_turrets",
+        "problem_name": "Shoot the Turrets",
+        "python_code": "```\ndef solve(C, R, M, grid):\n    soldiers = [(i, j) for i in range(R) for j in range(C) if grid[i][j] == 'S']\n    turrets = [(i, j) for i in range(R) for j in range(C) if grid[i][j] == 'T']\n\n    def dfs(i, j, soldiers_left, turrets_left):\n        if (i, j) in soldiers_left:\n            soldiers_left.remove((i, j))\n        if (i, j) in turrets_left:\n            turrets_left.remove((i, j))\n\n        max_turrets_destroyed = 0\n        for si, sj in soldiers_left:\n            for ti, tj in turrets_left:\n                if abs(si - i) + abs(sj - j) <= M and all(abs(si - ki) + abs(sj - kj) > M or (ki, kj) not in turrets_left for ki, kj in turrets_left):\n                    destroyed = 1\n                    for di, dj in [(0, 1), (1, 0), (-1, 0), (0, -1)]:\n                        ni, nj = i + di, j + dj\n                        while 0 <= ni < R and 0 <= nj < C and grid[ni][nj] != '#':\n                            if grid[ni][nj] == 'T' and all(abs(si - ki) + abs(sj - kj) > M or (ki, kj) not in turrets_left for ki, kj in turrets_left):\n                                destroyed += 1\n                                break\n                            ni, nj = ni + di, nj + dj\n                    if destroyed:\n                        max_turrets_destroyed = max(max_turrets_destroyed, 1 + dfs(i, j, soldiers_left[:], turrets_left[destroyed:]))\n\n        return max_turrets_destroyed\n\n    for i in range(len(soldiers)):\n        for j in range(C):\n            if grid[i][j] == 'T':\n                grid[i][j] = '#'\n    return str(max([dfs(i, 0, soldiers[:], turrets[:]) for i in range(R)]))\n```",
+        "generated_at": "2025-05-02T23:49:04.273296",
+        "generation_time": 7.46081805229187
+    },
+    {
+        "source": "2017\\round_3\\good_news_and_bad_news",
+        "problem_name": "Good News and Bad News",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    F, P = map(int, input().split())\n    news_values = [0] * (F + 1)\n    for _ in range(P):\n        A, B = map(int, input().split())\n        if B > A:\n            A, B = B, A\n        news_values[A] += int(input())\n        news_values[B] -= int(input())\n    if any(sum(map(abs, news_values[i:]))) % (2 * F) != 0:\n        print(f\"Case # {_ + 1}: IMPOSSIBLE\")\n    else:\n        for _ in range(P):\n            A, B = map(int, input().split())\n            if B > A:\n                A, B = B, A\n            news_values[A] -= int(input())\n            news_values[B] += int(input())\n        print(f\"Case # {_ + 1}: {' '.join(map(str, news_values[1:]))}\")\n```",
+        "generated_at": "2025-05-02T23:49:07.820270",
+        "generation_time": 3.539492607116699
+    },
+    {
+        "source": "2017\\round_3\\googlements",
+        "problem_name": "Googlements",
+        "python_code": "```\ndef googlement_count(G):\n    L = len(G)\n    count_dict = {0: [1]}\n    for i in range(10):\n        if i > L:\n            break\n        new_count_dict = {}\n        for googlement, counts in count_dict.items():\n            for j in range(L+1):\n                if str(i) * (j + 1) == G[:j+1]:\n                    new_counts = list(counts)\n                    new_counts.append(int(''.join(map(str, counts))))\n                    new_count_dict.setdefault(0, []).append(new_counts)\n        count_dict = new_count_dict\n    return len(count_dict[0])\n\nT = int(input())\nfor i in range(T):\n    G = input()\n    print(f\"Case #{i+1}: {googlement_count(G)}\")",
+        "generated_at": "2025-05-02T23:49:10.624912",
+        "generation_time": 2.7957823276519775
+    },
+    {
+        "source": "2017\\round_3\\mountain_tour",
+        "problem_name": "Mountain Tour",
+        "python_code": "```\ndef solve(camps):\n    dp = [[float('inf')] * camps for _ in range(23)]\n    dp[0][0] = 0\n    for i in range(1, 2*camps+1):\n        start, end, duration = (i-1)//2, (i-1)//2 + ((i-1)%2)*2, (i-1) % 4 * 1000 + 1\n        if dp[start][end-start] == float('inf'):\n            continue\n        for j in range(min(end, camps), end-duration):\n            dp[j][j+duration] = min(dp[j][j+duration], dp[start][end-start] + duration)\n    return min(dp[0])\n\nfor i in range(int(input())):\n    camps = int(input())\n    print(f\"Case #{i+1}: {solve(camps)}\")",
+        "generated_at": "2025-05-02T23:49:13.776225",
+        "generation_time": 3.144251585006714
+    },
+    {
+        "source": "2017\\round_3\\slate_modern",
+        "problem_name": "Slate Modern",
+        "python_code": "```\nimport sys\ndef solve(R, C, D, N):\n    grid = [[0]*C for _ in range(R)]\n    for i in range(N):\n        r, c, val = map(int, input().split())\n        grid[r-1][c-1] = val\n    \n    for r in range(R):\n        for c in range(C):\n            if grid[r][c] == 0:\n                min_val = max_val = grid[r][c]\n                for nr in range(max(0, r-D), min(R, r+D+1)):\n                    for nc in range(max(0, c-D), min(C, c+D+1)):\n                        if (r != nr or c != nc) and grid[nr][nc] > 0:\n                            min_val = min(min_val, grid[nr][nc])\n                            max_val = max(max_val, grid[nr][nc])\n                if max_val - min_val <= D:\n                    for nr in range(max(0, r-D), min(R, r+D+1)):\n                        for nc in range(max(0, c-D), min(C, c+D+1)):\n                            if (r != nr or c != nc) and grid[nr][nc] > 0:\n                                grid[r][c] = (grid[r][c] + grid[nr][nc]) % 109+7\n                else:\n                    return \"IMPOSSIBLE\"\n    \n    total = sum(grid[i][j] for i in range(R) for j in range(C))\n    return str(total % 109+7)\n\nT = int(input())\nfor i in range(T):\n    R, C, D, N = map(int, input().split())\n    print(\"Case #{}: {}\".format(i+1, solve(R, C, D, N)))",
+        "generated_at": "2025-05-02T23:49:19.757654",
+        "generation_time": 5.974334478378296
+    },
+    {
+        "source": "2017\\world_finals\\dice_straight",
+        "problem_name": "Dice Straight",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    N = int(input())\n    max_len = 0\n    for i in range(N):\n        D = list(map(int, input().split()))\n        D.sort()\n        for j in range(len(D)-4):\n            if D[j+4] - D[j] == 5:\n                max_len = max(max_len, j+5)\n                break\n    print(\"Case #{}: {}\".format(t, max_len))\n```",
+        "generated_at": "2025-05-02T23:49:21.517304",
+        "generation_time": 1.7514913082122803
+    },
+    {
+        "source": "2017\\world_finals\\omnicircumnavigation",
+        "problem_name": "Omnicircumnavigation",
+        "python_code": "```\nimport math\n\ndef is_omnicircumnavigation(N, X, Y, Z):\n    for i in range(N):\n        if i == N-1:\n            j = 0\n        else:\n            j = i+1\n        v1 = (X[i], Y[i], Z[i])\n        v2 = (X[j], Y[j], Z[j])\n        dot_product = sum(a*b for a, b in zip(v1, v2))\n        magnitude1 = math.sqrt(sum(x**2 for x in v1))\n        magnitude2 = math.sqrt(sum(x**2 for x in v2))\n        cosine_angle = dot_product / (magnitude1 * magnitude2)\n        if abs(cosine_angle) > 0.9999:\n            return \"NO\"\n    return \"YES\"\n\nT = int(input())\nfor t in range(1, T+1):\n    N = int(input())\n    X = [list(map(float, input().split())) for _ in range(N)]\n    Y = [x[1] for x in X]\n    Z = [x[2] for x in X]\n    print(\"Case #{}: {}\".format(t, is_omnicircumnavigation(N, X, Y, Z)))",
+        "generated_at": "2025-05-02T23:49:25.866507",
+        "generation_time": 4.337895154953003
+    },
+    {
+        "source": "2017\\world_finals\\operation",
+        "problem_name": "Operation",
+        "python_code": "```\nimport fractions\ndef solve_case(cards):\n    start = int(input())\n    operations = []\n    for _ in range(int(input())):\n        operation, operand = input().split()\n        operations.append((operation == '+', int(operand)))\n    max_result = float('-inf')\n    for order in range(len(list(map(lambda x: 1 if x[0] == '-' else -1, operations)))):\n        result = start\n        for op, operand in operations:\n            if op:\n                result += operand\n            else:\n                result /= operand\n        max_result = max(max_result, result)\n    gcd = lambda a, b: a if not b else gcd(b, a % b)\n    z = 1\n    for op, operand in operations:\n        if op:\n            z = abs(z * operand)\n        else:\n            z = abs(z * operand)\n    y = int(max_result * z)\n    z = int(gcd(z, y))\n    return f\"Case #{int(input()) + 1}: {y//z} {z}\"\n```",
+        "generated_at": "2025-05-02T23:49:29.572306",
+        "generation_time": 3.6948752403259277
+    },
+    {
+        "source": "2017\\world_finals\\spanning_planning",
+        "problem_name": "Spanning Planning",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    K = int(input())\n    N = 3 + K // 2 if K % 2 == 0 else 3 + (K - 1) // 2\n    graph = [['0'] * N for _ in range(N)]\n    for i in range(N):\n        for j in range(i+1, N):\n            if (i+j) <= N:\n                graph[i][j] = '1'\n                graph[j][i] = '1'\n    print(f\"Case #{t}: {N}\")\n    for row in graph:\n        print(''.join(row))\n```",
+        "generated_at": "2025-05-02T23:49:31.838251",
+        "generation_time": 2.255769968032837
+    },
+    {
+        "source": "2017\\world_finals\\stack_management",
+        "problem_name": "Stack Management",
+        "python_code": "```\nP = int(input())\nfor _ in range(P):\n    P_i = list(map(int, input().split()))\n    C = P_i[1]\n    stacks = [list(map(lambda x: (int(x.split()[0]), int(x.split()[1])), input().split())) for _ in range(C)]\n    N = int(input())\n    case_id = 0\n    for _ in range(N):\n        N_i, C_i = map(int, input().split())\n        premade_stack_indexes = list(map(int, input().split()))\n        for i in premade_stack_indexes:\n            if len(stacks[i]) > 1 and stacks[i][-2][0] == stacks[i][-1][0]:\n                print(\"Case #{}: IMPOSSIBLE\".format(case_id+1))\n                case_id += 1\n                break\n        else:\n            print(\"Case #{}: POSSIBLE\".format(case_id+1))\n            case_id += 1",
+        "generated_at": "2025-05-02T23:49:35.124056",
+        "generation_time": 3.2743051052093506
+    },
+    {
+        "source": "2017\\world_finals\\teleporters",
+        "problem_name": "Teleporters",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    Thundera = list(map(int, input().split()))\n    Care_a_Lot = list(map(int, input().split()))\n    teleporters = []\n    for _ in range(N-2):\n        teleporters.append(list(map(int, input().split())))\n    \n    min_teleportations = float('inf')\n    for i in range(2**N):\n        visited = [False] * (N+2)\n        current_location = Thundera\n        teleportation_count = 0\n        \n        for j in range(N-1):\n            if ((current_location[0] - teleporters[i%N][0]) + \n                (current_location[1] - teleporters[i%N][1]) + \n                (current_location[2] - teleporters[i%N][2])) == 0:\n                current_location = list(teleporters[i%N])\n            visited[i%N] = True\n            current_location = [x+y for x,y in zip(current_location,teleporters[(i+1)%N])]\n            if current_location == Care_a_Lot:\n                min_teleportations = min(min_teleportations, teleportation_count+1)\n                break\n        \n    print(\"Case #{}: {}\".format(_, \"IMPOSSIBLE\" if min_teleportations==float('inf') else str(min_teleportations)))\n```",
+        "generated_at": "2025-05-02T23:49:40.159446",
+        "generation_time": 5.026410818099976
+    },
+    {
+        "source": "2018\\practice_session\\bathroom_stalls",
+        "problem_name": "Bathroom Stalls",
+        "python_code": "```\nT = int(input())\nfor i in range(1, T+1):\n    N, K = map(int, input().split())\n    stalls = ['O'] * (N + 2)\n    for j in range(K-1):\n        if 'O' == stalls[j+1]:\n            stalls[j] = 'O'\n        else:\n            stalls[j+1] = 'O'\n    max_ls_rs = 0\n    min_ls_rs = float('inf')\n    for j in range(2, N + 1):\n        ls = 0 if 'O' == stalls[j-1] else j - 1\n        rs = 0 if 'O' == stalls[j+1] else N - j\n        if min(ls, rs) > min_ls_rs:\n            max_ls_rs = max(max_ls_rs, max(ls, rs))\n            min_ls_rs = min(ls, rs)\n        elif min(ls, rs) == min_ls_rs and max(ls, rs) > max_ls_rs:\n            max_ls_rs = max(ls, rs)\n    print(f\"Case #{i}: {max_ls_rs} {min_ls_rs}\")",
+        "generated_at": "2025-05-02T23:49:43.951014",
+        "generation_time": 3.7830257415771484
+    },
+    {
+        "source": "2018\\practice_session\\number_guessing",
+        "problem_name": "Number Guessing",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    A, B = map(int, input().split())\n    N = int(input())\n    P = None\n    for _ in range(N):\n        Q = int(input(\"Guess: \"))\n        if Q < A or Q > B:\n            print(\"WRONG_ANSWER\")\n            break\n        elif Q == P:\n            print(\"CORRECT\")\n            break\n        else:\n            if Q < P:\n                print(\"TOO_SMALL\")\n            else:\n                print(\"TOO_BIG\")\n    ```",
+        "generated_at": "2025-05-02T23:49:46.298142",
+        "generation_time": 2.3408243656158447
+    },
+    {
+        "source": "2018\\practice_session\\senate_evacuation",
+        "problem_name": "Senate Evacuation",
+        "python_code": "```\nt = int(input())\nfor i in range(t):\n    n = int(input())\n    senators = list(map(int, input().split()))\n    plan = []\n    while sum(senators) > 0:\n        min_majority = float('inf')\n        for j in range(n):\n            majority = senators[j] // (j + 1)\n            if majority < min_majority and all(majority <= senators[k] // (k + 1) for k in range(j)):\n                min_majority = majority\n                best_party = j\n        plan.append(chr(65 + best_party).upper() * min_majority)\n        senators = [senators[i] - min_majority for i in range(n)]\n    print(f\"Case #{i+1}: {' '.join(plan)}\")",
+        "generated_at": "2025-05-02T23:49:49.067973",
+        "generation_time": 2.759779453277588
+    },
+    {
+        "source": "2018\\practice_session\\steed_2_cruise_control",
+        "problem_name": "Steed 2: Cruise Control",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    D, N = map(int, input().split())\n    horses = []\n    for _ in range(N):\n        K, S = map(int, input().split())\n        horses.append((K, S))\n    max_speed = 0\n    for i in range(len(horses)):\n        for j in range(i+1, len(horses)):\n            if horses[i][1] > horses[j][1]:\n                max_speed = max(max_speed, horses[i][1])\n            else:\n                max_speed = max(max_speed, horses[j][1])\n    print(f\"Case #{t}: {max_speed:.6f}\")",
+        "generated_at": "2025-05-02T23:49:51.609388",
+        "generation_time": 2.5301854610443115
+    },
+    {
+        "source": "2018\\qualification_round\\cubic_ufo",
+        "problem_name": "Cubic UFO",
+        "python_code": "```\nimport math\n\ndef calculate_shadow_area(cube_points):\n    shadow_xmin = min(x1 for x1, _, _ in cube_points)\n    shadow_xmax = max(x2 for _, x2, _ in cube_points)\n    shadow_ymin = -3\n    shadow_ymax = -3\n    for x1, _, z1 in cube_points:\n        if abs(z1) > 0.5:\n            shadow_ymin = min(shadow_ymin, -3 - 0.5 + abs(z1))\n            shadow_ymax = max(shadow_ymax, -3 + 0.5 - abs(z1))\n\n    shadow_width = shadow_xmax - shadow_xmin\n    shadow_height = shadow_ymax - shadow_ymin\n    return shadow_width * shadow_height\n\ndef find_rotation(cube_points):\n    x1, y1, z1 = cube_points[0]\n    x2, y2, z2 = cube_points[1]\n    if abs(y1) + abs(z1) > 0.5 and abs(y2) + abs(z2) > 0.5:\n        return [x1, -y1, z1], [x2, -y2, z2], [x1, y1, z1]\n\n    x1, y1, z1 = cube_points[0]\n    x3, y3, z3 = cube_points[2]\n    if abs(y1) + abs(z1) > 0.5 and abs(y3) + abs(z3) > 0.5:\n        return [x1, -y1, z1], [x2, y2, z2], [x3, y3, z3]\n\n    x1, y1, z1 = cube_points[0]\n    x2, y2, z2 = cube_points[1]\n    if abs(y1) + abs(z1) > 0.5 and abs(y2) + abs(z2) > 0.5:\n        return [x1, -y1, z1], [x3, y3, z3], [x2, -y2, z2]\n\n    for x1, y1, z1 in cube_points:\n        if abs(y1) + abs(z1) > 0.5:\n            return [x1, -y1, z1], [x2, y2, z2], [x3, y3, z3]\n\nT = int(input())\nfor t in range(1, T+1):\n    A = float(input())\n    cube_points = [(0.5, 0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, -0.5, 0.5),\n                   (0.5, 0.5, -0.5), (-0.5, 0.5, -0.5), (0.5, -0.5, -0.5), (-0.5, -0.5, -0.5)]\n    shadow_area = calculate_shadow_area(cube_points)\n    if math.isclose(shadow_area, A):\n        rotation_points = find_rotation(cube_points)\n        print(f\"Case #{t}:\")\n        for point in rotation_points:\n            print(\" \".join(map(str, point)))\n```",
+        "generated_at": "2025-05-02T23:50:02.713653",
+        "generation_time": 11.095817565917969
+    },
+    {
+        "source": "2018\\qualification_round\\go_gopher",
+        "problem_name": "Go, Gopher!",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    A = int(input())\n    prepared = set()\n    for _ in range(1000):\n        while True:\n            I, J = map(int, input().split())\n            if (I, J) not in prepared and 2 <= I <= 999 and 2 <= J <= 999:\n                break\n        prepared.add((I, J))\n        print(I, J)\n        response = input().split()\n        if response == ['0', '0']:\n            break\n```",
+        "generated_at": "2025-05-02T23:50:05.618291",
+        "generation_time": 2.8987367153167725
+    },
+    {
+        "source": "2018\\qualification_round\\saving_the_universe_again",
+        "problem_name": "Saving The Universe Again",
+        "python_code": "```\ndef hack_program(program):\n    n = len(program)\n    dp = [float('inf')] * (n + 1)\n    dp[0] = 0\n    for i in range(1, n):\n        if program[i-1] == 'S':\n            dp[i] = min(dp[i], dp[i-1] + 1)\n        elif program[i-1] == 'C' and i > 1:\n            dp[i] = min(dp[i], dp[i-2] + 1)\n    return 'IMPOSSIBLE' if dp[-1] == float('inf') else str(min(dp))\n\nt = int(input())\nfor _ in range(t):\n    d, program = input().split()\n    d = int(d)\n    print(f\"Case #{_+1}: {hack_program(program)}\")",
+        "generated_at": "2025-05-02T23:50:08.554657",
+        "generation_time": 2.9289214611053467
+    },
+    {
+        "source": "2018\\qualification_round\\trouble_sort",
+        "problem_name": "Trouble Sort",
+        "python_code": "```\nimport sys\n\ndef trouble_sort(lst):\n    n = len(lst)\n    for i in range(n-2):\n        if lst[i] > lst[i+2]:\n            return i\n    return 'OK'\n\nT = int(sys.stdin.readline())\nfor t in range(T):\n    N = int(sys.stdin.readline())\n    L = [int(x) for x in sys.stdin.readline().split()]\n    print(f'Case #{t+1}: {trouble_sort(L)}')\n```",
+        "generated_at": "2025-05-02T23:50:10.328035",
+        "generation_time": 1.7643930912017822
+    },
+    {
+        "source": "2018\\round_1a\\bit_party",
+        "problem_name": "Bit Party",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, B, C = map(int, input().split())\n    M = list(map(int, input() for _ in range(C)))\n    S = list(map(int, input() for _ in range(C)))\n    P = list(map(int, input() for _ in range(C)))\n    robots = [0] * R\n    for i in range(B):\n        min_time = float('inf')\n        best_cashier = -1\n        for j in range(C):\n            time = M[j] * (robots.count(j) + 1) + S[j]\n            if time < min_time:\n                min_time = time\n                best_cashier = j\n        robots[best_cashier] += 1\n    print(f\"Case #{_+1}: {min_time}\")\n```",
+        "generated_at": "2025-05-02T23:50:13.330008",
+        "generation_time": 2.9948155879974365
+    },
+    {
+        "source": "2018\\round_1a\\edgy_baking",
+        "problem_name": "Edgy Baking",
+        "python_code": "```\ndef cookie_cutter(N, P):\n    cookies = []\n    for _ in range(N):\n        width, height = map(int, input().split())\n        cookies.append((width, height))\n    \n    dp = [[0, [0, 0]]] * (P + 1)\n    for w, h in cookies:\n        for i in range(P, w * 2 + h * 2 - 2, -1):\n            if i >= w * 2 + h * 2:\n                dp[i][0] = max(dp[i][0], dp[i - w - h][0] + w + h)\n            else:\n                dp[i][0] = max(dp[i][0], min(dp[i - w][1][0] + w, dp[i - h][1][0] + h))\n    \n    return str(int(max(i[0] for i in dp[:P])))\n\n\nT = int(input())\nfor _ in range(T):\n    N, P = map(int, input().split())\n    print(f\"Case #{_+1}: {cookie_cutter(N, P)}\")",
+        "generated_at": "2025-05-02T23:50:17.146959",
+        "generation_time": 3.8057808876037598
+    },
+    {
+        "source": "2018\\round_1a\\waffle_choppers",
+        "problem_name": "Waffle Choppers",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, C, H, V = [int(x) for x in input().split()]\n    waffle = [input() for _ in range(R)]\n    chocolate_count = sum(1 for row in waffle for cell in row if cell == '@')\n    pieces = {}\n    for i in range(H + 1):\n        for j in range(V + 1):\n            piece = ''\n            for k in range(R):\n                for l in range(C):\n                    if k < R - 1 and (i == H or k >= i):\n                        piece += waffle[k][l]\n                    else:\n                        break\n            for l in range(C):\n                if l < C - 1 and (j == V or l >= j):\n                    piece += waffle[R - 1][l]\n                else:\n                    break\n            pieces.setdefault(tuple(map(len, piece.split('.'))), []).append(piece)\n    for x in pieces.values():\n        if len(set(x)) > 1:\n            print('Case #{}: IMPOSSIBLE'.format(_ + 1))\n            break\n    else:\n        print('Case #{}: POSSIBLE'.format(_ + 1))\n```",
+        "generated_at": "2025-05-02T23:50:21.503071",
+        "generation_time": 4.3428635597229
+    },
+    {
+        "source": "2018\\round_1b\\mysterious_road_signs",
+        "problem_name": "Mysterious Road Signs",
+        "python_code": "```\ndef count_signs(S):\n    max_length = 0\n    sets = {}\n    for i in range(S):\n        d, A, B = map(int, input().split())\n        if i == 0:\n            max_length += 1\n        elif A > max_length - 1 or B < i + 1 - max_length:\n            max_length = min(A, B)\n        sets.setdefault(max_length, []).append((d, A, B))\n    return str(S) + ' ' + str(len(sets.get(max_length, [])))",
+        "generated_at": "2025-05-02T23:50:23.556624",
+        "generation_time": 2.0445122718811035
+    },
+    {
+        "source": "2018\\round_1b\\rounding_error",
+        "problem_name": "Rounding Error",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, L = map(int, input().split())\n    C = list(map(int, input().split()))\n    total = sum(C)\n    remaining = N - total\n    max_sum = 0\n    for i in range(101):\n        if (i + 1) * remaining <= 100:\n            max_sum = max(max_sum, i * L + sum(min(i+1, c) for c in C))\n    print(f\"Case #{_+1}: {max_sum}\")\n```",
+        "generated_at": "2025-05-02T23:50:25.621044",
+        "generation_time": 2.0540199279785156
+    },
+    {
+        "source": "2018\\round_1b\\transmutation",
+        "problem_name": "Transmutation",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    M = int(input())\n    formulas = {}\n    for i in range(M-1):\n        a, b = map(int, input().split())\n        if (a, b) not in formulas:\n            formulas[(a, b)] = 0\n        if (b, a) not in formulas:\n            formulas[(b, a)] = 0\n    treasury = list(map(int, input().split()))\n    lead = 0\n    while sum(treasury[1:]) > 0:\n        for i in range(M-1):\n            a, b = [k for k, v in enumerate(treasury) if v > 0][i], [k for k, v in enumerate(treasury) if v > 0][i+1]\n            if (a, b) in formulas or (b, a) in formulas:\n                if treasury[a] >= 2 and treasury[b] >= 2:\n                    lead += 2\n                    treasury[a] -= 2\n                    treasury[b] -= 2\n    print(f\"Case # {_+1}: {lead}\")",
+        "generated_at": "2025-05-02T23:50:29.554955",
+        "generation_time": 3.9239466190338135
+    },
+    {
+        "source": "2018\\round_1c\\ant_stack",
+        "problem_name": "Ant Stack",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    weights = list(map(int, input().split()))\n    stack = []\n    for weight in reversed(weights):\n        if sum([weight * 6 for weight in stack]) >= weight:\n            stack.append(weight)\n    print(f\"Case #{_+1}: {len(stack)}\")",
+        "generated_at": "2025-05-02T23:50:30.967187",
+        "generation_time": 1.400003433227539
+    },
+    {
+        "source": "2018\\round_1c\\a_whole_new_word",
+        "problem_name": "A Whole New Word",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    N, L = map(int, input().split())\n    words = [input() for _ in range(N)]\n    seen = set(word[:L] for word in words)\n    possible_words = []\n    for word in words:\n        for i in range(len(words) - len(word) + 1):\n            if ''.join([c[i] for c in word]) not in seen and len(word) == L:\n                possible_words.append(''.join([c[i] for c in word]))\n    if possible_words:\n        print(f\"Case #{t}: {'- ' if not possible_words[0].isalpha() else possible_words[0]}\")\n    else:\n        print(f\"Case #{t}: -\")",
+        "generated_at": "2025-05-02T23:50:33.783221",
+        "generation_time": 2.806579828262329
+    },
+    {
+        "source": "2018\\round_1c\\lollipop_shop",
+        "problem_name": "Lollipop Shop",
+        "python_code": "```\nimport random\n\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    flavors_like = {}\n    for _ in range(N):\n        D = int(input())\n        likes = [int(x) for x in input().split()]\n        for like in likes:\n            if like not in flavors_like:\n                flavors_like[like] = set()\n            flavors_like[like].add(like)\n    for N in range(N):\n        if N not in flavors_like:\n            print(-1)\n            continue\n        preferences = {}\n        for flavor_id, liked_flavors in flavors_like.items():\n            if N not in liked_flavors:\n                probability = 0.005 + (0.1 - 0.005) * random.random()\n            else:\n                probability = 0.5\n            preferences[flavor_id] = probability\n        max_probability = max(preferences.values())\n        for flavor_id, probability in preferences.items():\n            if probability == max_probability:\n                print(flavor_id)\n                break\n```",
+        "generated_at": "2025-05-02T23:50:37.716174",
+        "generation_time": 3.9212687015533447
+    },
+    {
+        "source": "2018\\round_2\\costume_change",
+        "problem_name": "Costume Change",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    A = []\n    for _ in range(N):\n        row = list(map(int, input().split()))\n        A.append(row)\n    count = 0\n    for i in range(N):\n        colors = set()\n        materials = set()\n        for j in range(N):\n            color = abs(A[i][j]) // (A[i][j] // abs(A[i][j]))\n            material = A[i][j] // abs(A[i][j])\n            if color in colors or material in materials:\n                count += 1\n                break\n            colors.add(color)\n            materials.add(material)\n    print(f\"Case #{_+1}: {count}\")\n```",
+        "generated_at": "2025-05-02T23:50:40.287652",
+        "generation_time": 2.560285806655884
+    },
+    {
+        "source": "2018\\round_2\\falling_balls",
+        "problem_name": "Falling Balls",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    C = int(input())\n    B = list(map(int, input().split()))\n    rows = [0]\n    for b in B:\n        if rows[-1] < 2 and (rows[-1] == 1 or sum([int(x != '.') for x in rows[-1]]) > 0):\n            rows.append('/\\\\' * (b + 1))\n        else:\n            rows.append('.' * (C - 1) + '/' * b)\n    print(f\"Case #{_+1}: {'IMPOSSIBLE' if len(rows) < C else len(rows)}\")\n    for row in rows:\n        print(row)\n```",
+        "generated_at": "2025-05-02T23:50:42.899607",
+        "generation_time": 2.568742036819458
+    },
+    {
+        "source": "2018\\round_2\\graceful_chainsaw_jugglers",
+        "problem_name": "Graceful Chainsaw Jugglers",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, B = map(int, input().split())\n    jugglers = min(R // 1 + (B - 1) // 1, R % 1 + (B - 1) % 1)\n    print(f\"Case #{_+1}: {jugglers}\")",
+        "generated_at": "2025-05-02T23:50:44.526995",
+        "generation_time": 1.6152656078338623
+    },
+    {
+        "source": "2018\\round_2\\gridception",
+        "problem_name": "Gridception",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, C = map(int, input().split())\n    dream_grid = [list(input()) for _ in range(R)]\n    max_pattern_size = 0\n    for pattern_size in range(1, min(R, C) + 1):\n        for i in range(R - pattern_size + 1):\n            for j in range(C - pattern_size + 1):\n                if all(dream_grid[i+k][j+l] == dream_grid[i][j] for k in range(pattern_size) for l in range(pattern_size)):\n                    max_pattern_size = max(max_pattern_size, pattern_size)\n    print(f\"Case # {_+1}: {max_pattern_size}\")\n```",
+        "generated_at": "2025-05-02T23:50:47.611491",
+        "generation_time": 3.072523593902588
+    },
+    {
+        "source": "2018\\round_3\\fence_construction",
+        "problem_name": "Fence Construction",
+        "python_code": "```\nimport sys\n\ndef dfs(i, fences, k, visited):\n    if i >= len(fences):\n        return True\n    for j in range(len(fences)):\n        if not visited[j] and (i == k or fences[i][0] != fences[j][0] or fences[i][1] != fences[j][1]):\n            visited[j] = True\n            if dfs(i + 1, fences, k, visited):\n                return True\n    return False\n\ndef solve(fences, k):\n    for i in range(len(fences)):\n        visited = [False] * len(fences)\n        visited[k - 1] = True\n        if not dfs(0, fences, k - 1, visited):\n            return \"Case #{}: Impossible\".format(sys._getframe().f_lineno)\n    return \"Case #{}: {}\".format(sys._getframe().f_lineno, ' '.join(map(str, range(1, len(fences) + 1))))\n\nT = int(input())\nfor t in range(T):\n    F, K = map(int, input().split())\n    fences = []\n    for i in range(K):\n        x1, y1, x2, y2 = map(int, input().split())\n        fences.append(((x1, y1), (x2, y2)))\n    print(solve(fences, K))\n```",
+        "generated_at": "2025-05-02T23:50:52.371493",
+        "generation_time": 4.749382972717285
+    },
+    {
+        "source": "2018\\round_3\\field_trip",
+        "problem_name": "Field Trip",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T + 1):\n    N = int(input())\n    people = []\n    for _ in range(N):\n        r, c = map(int, input().split())\n        people.append((r, c))\n    min_turns = float('inf')\n    for i in range(N):\n        turns = 0\n        teacher_r, teacher_c = people[i]\n        for j in range(i + 1, N):\n            if (teacher_r, teacher_c) != people[j]:\n                dr, dc = abs(people[j][0] - teacher_r), abs(people[j][1] - teacher_c)\n                turns += max(dr, dc)\n        min_turns = min(min_turns, turns)\n    print(f\"Case #{t}: {min_turns}\")\n```",
+        "generated_at": "2025-05-02T23:50:55.181845",
+        "generation_time": 2.7971622943878174
+    },
+    {
+        "source": "2018\\round_3\\name-preserving_network",
+        "problem_name": "Name-Preserving Network",
+        "python_code": "```\nn = int(input())\nfor _ in range(n):\n    N = int(input())\n    design = []\n    for _ in range(N):\n        link1, link2 = map(int, input().split())\n        design.append((link1 - 1, link2 - 1))\n    print(N)\n    for link in design:\n        print(*link)\n```",
+        "generated_at": "2025-05-02T23:50:57.157771",
+        "generation_time": 1.9637210369110107
+    },
+    {
+        "source": "2018\\round_3\\raise_the_roof",
+        "problem_name": "Raise the Roof",
+        "python_code": "```\nfrom scipy.spatial import ConvexHull\nimport numpy as np\n\ndef build_order(columns):\n    hulls = []\n    for i, column in enumerate(columns):\n        points = [column[:2]] + [columns[j][:2] for j in range(i)]\n        hull = ConvexHull(np.array(points))\n        if hull.status == 1:\n            return \"Case #{}: {}\".format(len(hulls) + 1, list(range(i+1)))\n        else:\n            hulls.append((i, hull))\n\n    for i, (idx, hull) in enumerate(reversed(hulls)):\n        points = [column[:2] for column in columns[idx-3:]]\n        hull_points = np.array([points[0]] + [point.tolist() for point in hull.vertices[1:]])\n        while len(points) > 3:\n            new_point = np.mean(hull_points, axis=0)\n            if all((new_point - point).dot(new_point - points[i]) <= 0 for i in range(len(points))):\n                break\n            hull_points = np.insert(hull_points, 0, new_point)\n        if len(points) > 3:\n            return \"Case #{}: {}\".format(i+1, list(range(idx-2, idx)))\n    return \"Case #{}: {}\".format(1, list(range(len(columns))))\n\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    columns = []\n    for _ in range(N):\n        x, y, h = map(int, input().split())\n        columns.append((x, y, h))\n    print(build_order(columns))",
+        "generated_at": "2025-05-02T23:51:02.536636",
+        "generation_time": 5.367112159729004
+    },
+    {
+        "source": "2018\\world_finals\\jurisdiction_restrictions",
+        "problem_name": "Jurisdiction Restrictions",
+        "python_code": "```\nimport heapq\n\ndef police_station_assignment(R, C, S, stations):\n    # Create a grid of zeros representing the city\n    grid = [[0] * C for _ in range(R)]\n\n    # Assign blocks to stations\n    for ri, ci, di in stations:\n        for r in range(max(1, ri-di), min(R, ri+di+1)):\n            for c in range(max(1, ci-di), min(C, ci+di+1)):\n                if abs(r-ri) + abs(c-ci) <= di:\n                    grid[r][c] = 1\n\n    # Calculate the number of blocks assigned to each station\n    assignments = [0] * S\n    for r in range(R):\n        for c in range(C):\n            if grid[r][c]:\n                ri, ci, _ = stations[grid[r][c]-1]\n                assignments[grid[r][c]-1] += 1\n\n    # Calculate the minimum and maximum number of blocks assigned to each station\n    min_assignment = min(assignments)\n    max_assignment = max(assignments)\n\n    # Return the difference between the maximum and minimum number of blocks assigned\n    return max_assignment - min_assignment\n\ndef main():\n    T = int(input())\n    for t in range(1, T+1):\n        R, C, S = map(int, input().split())\n        stations = []\n        for _ in range(S):\n            ri, ci, di = map(int, input().split())\n            stations.append((ri, ci, di))\n        print(f\"Case #{t}: {police_station_assignment(R, C, S, stations)}\")\n\nif __name__ == \"__main__\":\n    main()",
+        "generated_at": "2025-05-02T23:51:08.167289",
+        "generation_time": 5.6188883781433105
+    },
+    {
+        "source": "2018\\world_finals\\swordmaster",
+        "problem_name": "Swordmaster",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    P, N = map(int, input().split())\n    A = []\n    D = []\n    for i in range(N):\n        ai, di = map(int, input().split())\n        A.append((ai - 1) % P)\n        D.append((di - 1) % P)\n    swordmaster = True\n    for a, d in zip(A, D):\n        if (a + 1 == d and (a + 2) % P not in [x[0] for x in A[:i]] and (d + 1) % P not in [x[1] for x in D[:i]]) or \\\n           (a + 1 != d and a in [x[0] for x in A[:i]] and d in [x[1] for x in D[:i]]):\n            swordmaster = False\n            break\n    print('Case #{}: {}'.format(_, 'YES' if swordmaster else 'NO'))",
+        "generated_at": "2025-05-02T23:51:11.842956",
+        "generation_time": 3.666741132736206
+    },
+    {
+        "source": "2018\\world_finals\\the_cartesian_job",
+        "problem_name": "The Cartesian Job",
+        "python_code": "```\nimport math\nfor _ in range(int(input())): \n    n = int(input())\n    events = []\n    for i in range(n):\n        x0, y0, x1, y1 = map(int, input().split())\n        r = (x1-x0)**2 + (y1-y0)**2\n        events.append((r, 0 if y1 < 0 or y1 > 1000 else -1))\n    events.sort()\n    res = 1\n    t = 0\n    for event in events:\n        r, flag = event\n        t += math.sqrt(r)\n        if flag == -1: \n            res *= (t % 2) / t\n        t %= 1\n    print(f\"Case #{_+1}: {res:.6f}\")\n```",
+        "generated_at": "2025-05-02T23:51:14.826546",
+        "generation_time": 2.975977659225464
+    },
+    {
+        "source": "2018\\world_finals\\two-tiling",
+        "problem_name": "Two-Tiling",
+        "python_code": "```\nimport re\n\ndef solve_case(case):\n    board = [list(line) for line in case[:3]]\n    tile1 = [list(line) for line in case[3:6]]\n    tile2 = [list(line) for line in case[6:]]\n\n    def is_valid_red_pattern(pattern):\n        return all(all(c == '@' or c == '.' and (c == '@' or c in pattern[0][1:]) for c in row) for row in pattern)\n\n    valid_tiles = []\n    for i in range(2**64):\n        red_cells = [int(c) for line in [(j & 1 << k) for j, k in zip(*[[int(c) for c in line] for line in board])) for c in line if c == '@']\n        pattern = [[0 if c == '.' else 1 for c in line] for line in board]\n        is_solvable = True\n        for tile in [tile1, tile2]:\n            tile_pattern = [[(j & 1 << k) for j, k in zip(*[[int(c) for c in line] for line in tile])) for line in tile]\n            if not all(all(pattern[i][j] == tile_pattern[i][j] and pattern[i][j] != 0 or c != '@' for i, j in zip(*[[i, j] for i, j in enumerate(line)])) for line in board):\n                is_solvable = False\n                break\n        if is_solvable:\n            valid_tiles.append(red_cells)\n\n    return 'POSSIBLE' if any(valid_tiles) else 'IMPOSSIBLE'\n\nT = int(input())\nfor t in range(1, T + 1):\n    case = [list(line) for line in [input().strip() for _ in range(4)]]\n    print(f\"Case #{t}: {solve_case(case)}\")\n    if solve_case(case) == 'POSSIBLE':\n        board = [['.' for _ in range(8)] for _ in range(8)]\n        red_cells = valid_tiles[0]\n        for i, j in zip(*[[i, j] for i, j in enumerate(board)]):\n            if red_cells[i*8 + j]:\n                board[i][j] = '@'\n        for line in [str(''.join(['.' if c == '.' else '@' if i < 3 and j < 3 else ' ' for c in line])) for line in board]:\n            print(line)\n```",
+        "generated_at": "2025-05-02T23:51:23.912301",
+        "generation_time": 9.073486328125
+    },
+    {
+        "source": "2019\\qualification_round\\cryptopangrams",
+        "problem_name": "Cryptopangrams",
+        "python_code": "```\ndef prime_factors(n):\n    i = 2\n    factors = []\n    while i * i <= n:\n        if n % i:\n            i += 1\n        else:\n            n //= i\n            factors.append(i)\n    if n > 1:\n        factors.append(n)\n    return factors\n\ndef decrypt(ciphertext, N):\n    plaintext = [''] * len(ciphertext)\n    for i in range(len(ciphertext)):\n        prime_factors_list = [N]\n        for j in range(i):\n            prime_factors_list.append(ciphertext[j])\n        product = 1\n        for num in prime_factors_list:\n            product *= num\n        prime_index = (product - 2) % 26\n        if prime_index < 10:\n            plaintext[i] = chr(ord('A') + prime_index)\n        else:\n            plaintext[i] = chr(ord('a') + prime_index - 10)\n    return ''.join(plaintext)\n\nT = int(input())\nfor t in range(T):\n    N, L = map(int, input().split())\n    ciphertext = list(map(int, input().split()))\n    print(f\"Case #{t+1}: {decrypt(ciphertext, N)}\")\n```",
+        "generated_at": "2025-05-02T23:51:27.858912",
+        "generation_time": 3.9368903636932373
+    },
+    {
+        "source": "2019\\qualification_round\\dat_bae",
+        "problem_name": "Dat Bae",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, B, F = map(int, input().split())\n    bits = []\n    for _ in range(F):\n        bits.append(input())\n    broken_workers = set()\n    for i in range(len(bits)):\n        result = input()\n        if len(result) != N - B:\n            break\n        for j in range(N - B):\n            if result[j] == '1':\n                broken_workers.add(i)\n    print(*sorted(broken_workers), sep=' ')",
+        "generated_at": "2025-05-02T23:51:29.870087",
+        "generation_time": 1.9940707683563232
+    },
+    {
+        "source": "2019\\qualification_round\\foregone_solution",
+        "problem_name": "Foregone Solution",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    N = int(input())\n    for a in range(1, N//2 + 1):\n        b = N - a\n        if '4' not in str(a) and '4' not in str(b):\n            print(f\"Case #{t}: {a} {b}\")\n            break",
+        "generated_at": "2025-05-02T23:51:31.248154",
+        "generation_time": 1.367239236831665
+    },
+    {
+        "source": "2019\\qualification_round\\you_can_go_your_own_way",
+        "problem_name": "You Can Go Your Own Way",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    P = input()\n    case_num = _ + 1\n    path = []\n    x, y = 0, N-1\n    while (x, y) != (N-1, 0):\n        if P[y*2+1] == 'E' and x < N-1:\n            path.append('E')\n            x += 1\n        elif P[y*2] == 'S' and y > 0:\n            path.append('S')\n            y -= 1\n        else:\n            if y > 0 and (P[(y-1)*2] != 'S' or P[y*2+1] != 'E'):\n                path.append('S')\n                y -= 1\n            elif x < N-1 and (P[y*2+1] != 'E' or P[(x+1)*2] != 'S'):\n                path.append('E')\n                x += 1\n    print(f\"Case #{case_num}: {''.join(path)}\")",
+        "generated_at": "2025-05-02T23:51:34.904659",
+        "generation_time": 3.641287326812744
+    },
+    {
+        "source": "2019\\round_1a\\alien_rhyme",
+        "problem_name": "Alien Rhyme",
+        "python_code": "```\nimport itertools\n\ndef find_largest_rhyming_subset(words):\n    max_size = 0\n    for p in range(1, len(words) + 1):\n        for accentuations in itertools.product('abcdefghijklmnopqrstuvwxyz', repeat=len(words)):\n            if all(words[i][word.find(accents[i]):] == words[j][word.find(accents[j]):] for i in range(p) for j in range(i+1, p)):\n                max_size = max(max_size, p)\n    return max_size\n\nT = int(input())\nfor t in range(1, T + 1):\n    N = int(input())\n    words = [input().upper() for _ in range(N)]\n    print(f\"Case #{t}: {find_largest_rhyming_subset(words)}\")",
+        "generated_at": "2025-05-02T23:51:37.639665",
+        "generation_time": 2.7198054790496826
+    },
+    {
+        "source": "2019\\round_1a\\golf_gophers",
+        "problem_name": "Golf Gophers",
+        "python_code": "```\nimport random\nT = int(input())\nfor _ in range(T):\n    N, M = map(int, input().split())\n    gophers = [0] * (N + 1)\n    for _ in range(N):\n        for i in range(18):\n            if random.randint(0, 1):\n                windmill = random.randint(0, 17)\n                blades = random.randint(2, 18)\n                for j in range(blades):\n                    gophers[windmill] += 1\n    print(sum(gophers))\n```",
+        "generated_at": "2025-05-02T23:51:39.936515",
+        "generation_time": 2.287182569503784
+    },
+    {
+        "source": "2019\\round_1a\\pylons",
+        "problem_name": "Pylons",
+        "python_code": "```\nimport heapq\n\ndef bfs(r, c):\n    queue = [(0, r, c)]\n    visited = set((r, c))\n    path = []\n    while queue:\n        dist, row, col = heapq.heappop(queue)\n        if len(path) == r * c:\n            return 'POSSIBLE'\n        for nr, nc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, 1), (-1, -1), (1, 1), (1, -1)]:\n            nr += row\n            nc += col\n            if 1 <= nr <= r and 1 <= nc <= c and (nr, nc) not in visited:\n                path.append((nr, nc))\n                visited.add((nr, nc))\n                heapq.heappush(queue, (dist + 1, nr, nc))\n    return 'IMPOSSIBLE'\n\nT = int(input())\nfor _ in range(T):\n    R, C = map(int, input().split())\n    print(f'Case #{\"%d\" % (_+1)}: POSSIBLE')\n    for r, c in bfs(R, C):\n        print(f'{r} {c}')",
+        "generated_at": "2025-05-02T23:51:44.094294",
+        "generation_time": 4.143390417098999
+    },
+    {
+        "source": "2019\\round_1b\\draupnir",
+        "problem_name": "Draupnir",
+        "python_code": "```\nT = int(input())\nW = int(input())\n\nfor _ in range(T):\n    R1 = 0\n    R2 = 0\n    R3 = 0\n    R4 = 0\n    R5 = 0\n    R6 = 0\n    \n    for _ in range(W):\n        query = int(input())\n        \n        if query % 263 == 0:\n            R1 += query // 1\n        elif query % 131 == 0:\n            R2 += query // 2\n        elif query % 87 == 0:\n            R3 += query // 3\n        elif query % 43 == 0:\n            R4 += query // 4\n        elif query % 29 == 0:\n            R5 += query // 5\n        else:\n            R6 += query // 6\n        \n    print(R1, R2, R3, R4, R5, R6)\n```",
+        "generated_at": "2025-05-02T23:51:47.498414",
+        "generation_time": 3.3547897338867188
+    },
+    {
+        "source": "2019\\round_1b\\fair_fight",
+        "problem_name": "Fair Fight",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, K = map(int, input().split())\n    C = list(map(int, input().split()))\n    D = list(map(int, input().split()))\n    count = 0\n    for L in range(1, N+1):\n        for R in range(L, N+1):\n            if all(min(C[L-1:R]) <= max(C[L-1:R]) and min(D[L-1:R]) <= max(D[L-1:R]) for _ in range(R-L+1)):\n                count += 1\n    print(f\"Case # {_ + 1}: {count}\")",
+        "generated_at": "2025-05-02T23:51:50.019857",
+        "generation_time": 2.5117039680480957
+    },
+    {
+        "source": "2019\\round_1b\\manhattan_crepe_cart",
+        "problem_name": "Manhattan Crepe Cart",
+        "python_code": "```\nimport heapq\ndef find_cart():\n    T = int(input())\n    for _ in range(T):\n        P, Q = map(int, input().split())\n        directions = {}\n        for _ in range(P):\n            x, y, direction = input().split()\n            x, y = int(x), int(y)\n            if direction == 'N':\n                directions[(x, y + 1)] = directions.get((x, y + 1), 0) + 1\n            elif direction == 'S':\n                directions[(x, y - 1)] = directions.get((x, y - 1), 0) + 1\n            elif direction == 'E':\n                directions[(x + 1, y)] = directions.get((x + 1, y), 0) + 1\n            elif direction == 'W':\n                directions[(x - 1, y)] = directions.get((x - 1, y), 0) + 1\n        min_heap = []\n        for location, count in directions.items():\n            if location[0] < Q and location[1] < Q:\n                heapq.heappush(min_heap, (-count, *location))\n        cart_location = None\n        max_count = 0\n        while min_heap:\n            count, x, y = heapq.heappop(min_heap)\n            if count > max_count:\n                max_count = count\n                cart_location = (x, y)\n        print(f'Case #{_ + 1}: {cart_location[0]} {cart_location[1]}')\n```",
+        "generated_at": "2025-05-02T23:51:55.359431",
+        "generation_time": 5.32342267036438
+    },
+    {
+        "source": "2019\\round_1c\\bacterial_tactics",
+        "problem_name": "Bacterial Tactics",
+        "python_code": "```\nimport sys\n\ndef solve(R, C):\n    board = [['.' for _ in range(C)] for _ in range(R)]\n    for i in range(R):\n        line = list(input())\n        for j in range(C):\n            if line[j] == '#':\n                board[i][j] = '#'\n    winning_moves = 0\n    for i in range(R):\n        for j in range(C):\n            if board[i][j] == '.':\n                board[i][j] = 'H'\n                winning_moves += check_winning_moves(board, R, C)\n                board[i][j] = '.'\n                board[i][j] = 'V'\n                winning_moves += check_winning_moves(board, R, C)\n                board[i][j] = '.'\n    print(f\"Case #{R*C}: {winning_moves}\")\n\ndef check_winning_moves(board, R, C):\n    for i in range(R):\n        for j in range(C):\n            if board[i][j] == '.':\n                return 1\n    return 0\n\nT = int(input())\nfor _ in range(T):\n    R, C = map(int, input().split())\n    solve(R, C)",
+        "generated_at": "2025-05-02T23:51:59.405449",
+        "generation_time": 4.037370920181274
+    },
+    {
+        "source": "2019\\round_1c\\power_arrangers",
+        "problem_name": "Power Arrangers",
+        "python_code": "```\nT = int(input())\nF = 475\n\nfor _ in range(T):\n    print(119)\n```",
+        "generated_at": "2025-05-02T23:52:00.215878",
+        "generation_time": 0.7967128753662109
+    },
+    {
+        "source": "2019\\round_1c\\robot_programming_strategy",
+        "problem_name": "Robot Programming Strategy",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    A = int(input())\n    robots = [input() for _ in range(A)]\n    win_program = \"R\" * (len(robots[0]) // 3) + \"P\"\n    if any(len(program) % 3 != 0 or program[:3] == win_program[:3] for program in robots):\n        print(f\"Case #{_+1}: IMPOSSIBLE\")\n    else:\n        print(f\"Case #{_+1}: {win_program}\")\n```",
+        "generated_at": "2025-05-02T23:52:02.409525",
+        "generation_time": 2.185687780380249
+    },
+    {
+        "source": "2019\\round_2\\contransmutation",
+        "problem_name": "Contransmutation",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    M = int(input())\n    formulas = {}\n    for _ in range(M):\n        R1, R2 = map(int, input().split())\n        if R1 not in formulas:\n            formulas[R1] = []\n        if R2 not in formulas:\n            formulas[R2] = []\n        formulas[R1].append(R2)\n        formulas[R2].append(1)  # lead is always produced\n    G = list(map(int, input().split()))\n    lead = G[0]\n    stack = [(G[i], i) for i in range(M)]\n    while stack:\n        g, metal = stack.pop()\n        if metal == 1:  # lead\n            lead += g\n        else:\n            for R2 in formulas[metal]:\n                if g > 0 and R2 != metal:\n                    stack.append((g - 1, R2))\n                    break\n    print(f\"Case #{_+1}: {lead % (1000000007)}\")",
+        "generated_at": "2025-05-02T23:52:05.968522",
+        "generation_time": 3.5476765632629395
+    },
+    {
+        "source": "2019\\round_2\\new_elements_part_1",
+        "problem_name": "New Elements: Part 1",
+        "python_code": "```\nt = int(input())\nfor i in range(1, t+1):\n    n = int(input())\n    orderings = set()\n    for _ in range(n):\n        ci, j = map(int, input().split())\n        for k in range(min(ci, j)+1):\n            ordering = f\"({ci-k},{j-k}) ({k},{k})\"\n            if (ci-k) > (j-k): \n                orderings.add(ordering)\n    print(f\"Case #{i}: {len(orderings)}\")",
+        "generated_at": "2025-05-02T23:52:08.020258",
+        "generation_time": 2.0428106784820557
+    },
+    {
+        "source": "2019\\round_2\\new_elements_part_2",
+        "problem_name": "New Elements: Part 2",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    c_weights = []\n    for _ in range(N):\n        Ci, Ji = map(int, input().split())\n        c_weights.append(Ci + Ji)\n    c_weights.sort()\n    for C in range(1, 110):\n        for J in range(1, 110):\n            if all((C * i) + (J * (N - i)) == c_weights[i] for i in range(N)):\n                print(f\"Case #{_+1}: {C} {J}\")\n                break\n    else:\n        print(f\"Case #{_+1}: IMPOSSIBLE\")",
+        "generated_at": "2025-05-02T23:52:10.575455",
+        "generation_time": 2.539437770843506
+    },
+    {
+        "source": "2019\\round_2\\pottery_lottery",
+        "problem_name": "Pottery Lottery",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    day = int(input())\n    if day == 100:\n        V, P = map(int, input().split())\n        print(V, P)\n    else:\n        for _ in range(day-1):\n            input()\n        V, P = map(int, input().split())\n        print(V, P)",
+        "generated_at": "2025-05-02T23:52:12.159925",
+        "generation_time": 1.5756933689117432
+    },
+    {
+        "source": "2019\\round_3\\datacenter_duplex",
+        "problem_name": "Datacenter Duplex",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    R, C = map(int, input().split())\n    G = [list(input()) for _ in range(R)]\n    As = [(i, j) for i in range(R) for j in range(C) if G[i][j] == 'A']\n    Bs = [(i, j) for i in range(R) for j in range(C) if G[i][j] == 'B']\n    print(f'Case #{t}:', end=' ')\n    if not solve(G, As, Bs):\n        print('IMPOSSIBLE')\n    else:\n        print('POSSIBLE')\n        for row in G:\n            line = ''\n            for cell in row:\n                if (cell == 'A' and any(neighbor == 'A' or neighbor == '.' for neighbor in [(i, j) if abs(i-j) == 1] + [(i-1, j) if i > 0] + [(i+1, j) if i < R-1] + [(i, j-1) if j > 0] + [(i, j+1) if j < C-1])):\n                    line += '/'\n                elif (cell == 'B' and any(neighbor == 'B' or neighbor == '.' for neighbor in [(i, j) if abs(i-j) == 1] + [(i-1, j) if i > 0] + [(i+1, j) if i < R-1] + [(i, j-1) if j > 0] + [(i, j+1) if j < C-1])):\n                    line += '\\\\'\n                else:\n                    line += cell\n            print(line)\n```",
+        "generated_at": "2025-05-02T23:52:18.004371",
+        "generation_time": 5.830506086349487
+    },
+    {
+        "source": "2019\\round_3\\napkin_folding",
+        "problem_name": "Napkin Folding",
+        "python_code": "```\nfrom fractions import Fraction\nimport sys\n\ndef is_neat(napkin, k):\n    for i in range(k-1):\n        x0 = napkin[i][0]\n        y0 = napkin[i][1]\n        x1 = napkin[(i+1)%k][0]\n        y1 = napkin[(i+1)%k][1]\n        if is_collinear(x0, y0, x1, y1):\n            return False\n    return True\n\ndef is_collinear(x0, y0, x1, y1):\n    dx = (x1 - x0)\n    dy = (y1 - y0)\n    dxdy = (dx * dy) if dx != 0 else float('inf')\n    d2 = max((abs(dx)), (abs(dy)))\n    return abs(dxdy) <= d2\n\ndef find_pattern(napkin, k):\n    for i in range(len(napkin)-1):\n        x0 = napkin[i][0]\n        y0 = napkin[i][1]\n        x1 = napkin[(i+1)%len(napkin)][0]\n        y1 = napkin[(i+1)%len(napkin)][1]\n        if is_collinear(x0, y0, x1, y1):\n            for j in range(len(napkin)-1):\n                x2 = napkin[j][0]\n                y2 = napkin[j][1]\n                x3 = napkin[(j+1)%len(napkin)][0]\n                y3 = napkin[(j+1)%len(napkin)][1]\n                if is_collinear(x2, y2, x3, y3):\n                    continue\n                for _ in range(k-1):\n                    return [(Fraction(x0), Fraction(y0)), (Fraction(x1), Fraction(y1))]\n    return None\n\ndef main():\n    T = int(input())\n    for t in range(T):\n        N, K = map(int, input().split())\n        napkin = []\n        for _ in range(N):\n            x, y = map(int, input().split())\n            napkin.append((x, y))\n        if is_neat(napkin, K):\n            print(f\"Case #{t+1}: POSSIBLE\")\n            pattern = find_pattern(napkin, K)\n            if pattern:\n                for segment in pattern:\n                    print(*segment)\n        else:\n            print(f\"Case #{t+1}: IMPOSSIBLE\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "generated_at": "2025-05-02T23:52:26.557444",
+        "generation_time": 8.536903142929077
+    },
+    {
+        "source": "2019\\round_3\\pancake_pyramid",
+        "problem_name": "Pancake Pyramid",
+        "python_code": "```\ndef pyramidification_cost(S, P):\n    H = [0] + P\n    cost = 0\n    for i in range(1, S):\n        if H[i] < H[i-1]:\n            diff = H[i-1] - H[i]\n            cost += diff\n            H[i] += diff\n    return cost\n\nT = int(input())\nfor t in range(1, T+1):\n    S = int(input())\n    P = list(map(int, input().split()))\n    total_cost = 0\n    for L in range(S-3):\n        for R in range(min(S-L-3, L+1)):\n            H = [0] + P[L+1:L+R+1]\n            cost = pyramidification_cost(len(H), H)\n            total_cost += cost\n    print(f\"Case #{t}: {total_cost % 1000000007}\")\n```",
+        "generated_at": "2025-05-02T23:52:30.121201",
+        "generation_time": 3.550724983215332
+    },
+    {
+        "source": "2019\\round_3\\zillionim",
+        "problem_name": "Zillionim",
+        "python_code": "```\nimport random\n\nt = int(input().split()[0])\nw = int(input().split()[1])\n\nfor _ in range(t):\n    game = list(range(1, 1022))\n    while True:\n        p = int(input())\n        if p == -2 or p == -3:\n            break\n        q = random.randint(max(1, p-1010+1), min(p, len(game)-p-1010+1))\n        print(q)\n```",
+        "generated_at": "2025-05-02T23:52:32.093291",
+        "generation_time": 1.9586811065673828
+    },
+    {
+        "source": "2019\\world_finals\\board_meeting",
+        "problem_name": "Board Meeting",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    Nmax, M, R = map(int, input().split())\n    for _ in range(R):\n        A, B = map(int, input().split())\n        print(sum(max(abs(Xi-A), abs(Yi-B)) for Xi, Yi in [list(map(int, input().split())) for _ in range(Nmax)]))\n    print('READY')\n    for _ in range(R):\n        C, D = map(int, input().split())\n        print(sum(max(abs(Xi-C), abs(Yi-D)) for Xi, Yi in [list(map(int, input().split())) for _ in range(Nmax)]))\n```",
+        "generated_at": "2025-05-02T23:52:34.879120",
+        "generation_time": 2.7764036655426025
+    },
+    {
+        "source": "2019\\world_finals\\go_to_considered_helpful",
+        "problem_name": "Go To Considered Helpful",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, C = map(int, input().split())\n    son_location = None\n    for i in range(R):\n        row = input()\n        if 'N' in row:\n            son_location = (i, row.index('N'))\n        if 'M' in row:\n            Marlin_location = (i, row.index('M'))\n    if not son_location:\n        print(\"Case #{}: IMPOSSIBLE\".format(_ + 1))\n        continue\n    directions = []\n    while True:\n        x, y = Marlin_location\n        dx, dy = 0, 0\n        if 'N' in row[x+1]: \n            dx += 1\n        elif 'S' in row[x-1]:\n            dx -= 1\n        if 'E' in row[y+1]:\n            dy += 1\n        elif 'W' in row[y-1]:\n            dy -= 1\n        directions.append('N' if dx > 0 else 'S' if dx < 0 else '')\n        directions.append('E' if dy > 0 else 'W' if dy < 0 else '')\n        Marlin_location = (x + dx, y + dy)\n        if Marlin_location == son_location:\n            break\n    print(\"Case #{}: {}\".format(_ + 1, len(directions)))\n```",
+        "generated_at": "2025-05-02T23:52:39.611456",
+        "generation_time": 4.705564498901367
+    },
+    {
+        "source": "2019\\world_finals\\juggle_struggle_part_1",
+        "problem_name": "Juggle Struggle: Part 1",
+        "python_code": "```\nfrom collections import Counter\n\ndef magnificent_arrangement(jugglers):\n    pairs = []\n    for i in range(len(jugglers) // 2):\n        j1 = i * 2\n        j2 = (i * 2) + 1\n        pair = tuple(sorted([j1, j2]))\n        pairs.append(pair)\n    return ' '.join(map(str, [pair[0] + 1 for pair in pairs]))\n\nT = int(input())\nfor t in range(T):\n    N = int(input())\n    jugglers = []\n    for _ in range(N * 2):\n        x, y = map(int, input().split())\n        jugglers.append((x, y))\n    arrangement = magnificent_arrangement(jugglers)\n    print(f'Case #{t + 1}: {arrangement}')\n```",
+        "generated_at": "2025-05-02T23:52:42.475698",
+        "generation_time": 2.8374364376068115
+    },
+    {
+        "source": "2019\\world_finals\\juggle_struggle_part_2",
+        "problem_name": "Juggle Struggle: Part 2",
+        "python_code": "```\ndef check_magnificent(T):\n    for _ in range(T):\n        N = int(input())\n        pairs = []\n        magnificent = True\n        for _ in range(N):\n            x1, y1, x2, y2 = map(int, input().split())\n            pairs.append(((x1, y1), (x2, y2)))\n        for i in range(N):\n            for j in range(i+1, N):\n                if not intersect(pairs[i][0], pairs[j][0]):\n                    magnificent = False\n                    break\n        if magnificent:\n            print(f\"Case # {_+1}: MAGNIFICENT\")\n        else:\n            print(f\"Case # {_+1}: {' '.join(map(str, range(1, N+1)))}\")\n\ndef intersect(p1, p2):\n    x1, y1 = p1\n    x2, y2 = p2\n    if x1 == x2:\n        return False\n    a = (y2 - y1) / (x2 - x1)\n    b = y1 - a * x1\n    for point in [(x1, y1), (x2, y2)]:\n        x, y = point\n        if a * x + b != y:\n            return False\n    return True\n\nT = int(input())\ncheck_magnificent(T)",
+        "generated_at": "2025-05-02T23:52:47.070415",
+        "generation_time": 4.557490110397339
+    },
+    {
+        "source": "2019\\world_finals\\sorting_permutation_unit",
+        "problem_name": "Sorting Permutation Unit",
+        "python_code": "```\nimport sys\n\ndef get_permutations(n):\n    permutations = []\n    for i in range(1, n+1):\n        for p in range(i, n+1):\n            if not any(j in [p1, p2] for j in range(1, p)):\n                permutations.append([i, p])\n    return permutations\n\ndef get_sorted_array(permutations, instructions, array):\n    sorted_array = array.copy()\n    for i in range(len(instructions)):\n        permutation = permutations[instructions[i]-1]\n        sorted_array = [sorted_array[j-1] if j in permutation else sorted_array[j] for j in range(1, len(array)+1)]\n    return sorted_array\n\ndef main():\n    T = int(input())\n    for _ in range(T):\n        P, S, K, N = map(int, input().split())\n        permutations = get_permutations(N)\n        for i in range(K):\n            array = list(map(int, input().split()))\n            instructions = list(map(int, input().split()))\n            sorted_array = get_sorted_array(permutations, instructions, array)\n            print(*sorted_array)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "generated_at": "2025-05-02T23:52:51.043299",
+        "generation_time": 3.9516520500183105
+    },
+    {
+        "source": "2019\\world_finals\\wont_sum_must_now",
+        "problem_name": "Won't sum? Must now",
+        "python_code": "```\nimport itertools\nT = int(input())\nfor _ in range(T):\n    S = int(input())\n    K = 3\n    while True:\n        for L in range(1, (S//10)+2):\n            for P in itertools.product('0123456789', repeat=L):\n                P_str = ''.join(P)\n                if int(P_str) <= S:\n                    if K == 1:\n                        print(f'Case #{\"\":_;}: {P_str}')\n                        break\n                    else:\n                        S -= int(P_str)\n                        K -= 1\n                        if K > 0:\n                            for L2 in range(1, (S//10)+2):\n                                for P2 in itertools.product('0123456789', repeat=L2):\n                                    P2_str = ''.join(P2)\n                                    if int(P2_str) <= S:\n                                        if K == 2:\n                                            print(f'Case #{\"\":_;}: {P_str}{P2_str}')\n                                            break\n                                        else:\n                                            S -= int(P2_str)\n                                            K -= 1\n                                            if K > 0:\n                                                for L3 in range(1, (S//10)+2):\n                                                    for P3 in itertools.product('0123456789', repeat=L3):\n                                                        P3_str = ''.join(P3)\n                                                        if int(P3_str) <= S:\n                                                            print(f'Case #{\"\":_;}: {P_str}{P2_str}{P3_str}')\n                                                            break\n                                        break\n                                else:\n                                    continue\n                            else:\n                                continue\n                        else:\n                            break\n                else:\n                    continue\n        else:\n            break",
+        "generated_at": "2025-05-02T23:52:56.133603",
+        "generation_time": 5.080030202865601
+    },
+    {
+        "source": "2020\\qualification_round\\esab_atad",
+        "problem_name": "ESAb ATAd",
+        "python_code": "```\nT = int(input())\nB = 10\nbits = [0]*B\nqueries = []\nfor _ in range(T):\n    for _ in range(150):\n        query = int(input())\n        queries.append(query)\n        if query % 10 == 1:\n            bits[query//10] = (bits[query//10]+1)%2\n    answer = ''\n    for bit in bits:\n        answer += str(bit)\n    print(answer)",
+        "generated_at": "2025-05-02T23:52:57.941610",
+        "generation_time": 1.7976064682006836
+    },
+    {
+        "source": "2020\\qualification_round\\indicium",
+        "problem_name": "Indicium",
+        "python_code": "```\nfrom itertools import permutations\n\ndef is_valid_natural_latin_square(n, latin_square):\n    for i in range(n):\n        row = set()\n        col = set()\n        for j in range(n):\n            if latin_square[i][j] in row:\n                return False\n            row.add(latin_square[i][j])\n            if latin_square[j][i] in col:\n                return False\n            col.add(latin_square[j][i])\n    return True\n\ndef calculate_trace(n, latin_square):\n    trace = 0\n    for i in range(n):\n        trace += latin_square[i][i]\n    return trace\n\ndef find_natural_latin_square(n, k):\n    if n > k:\n        return \"IMPOSSIBLE\"\n    for latin_square in permutations(range(1, n+1), n*n).reshape((n,n)):\n        if is_valid_natural_latin_square(n, latin_square) and calculate_trace(n, latin_square) == k:\n            return latin_square\n    return \"IMPOSSIBLE\"\n\nT = int(input())\nfor t in range(T):\n    N, K = map(int, input().split())\n    result = find_natural_latin_square(N, K)\n    if result == \"IMPOSSIBLE\":\n        print(\"Case #{}: {}\".format(t+1, result))\n    else:\n        print(\"Case #{}: POSSIBLE\".format(t+1))\n        for row in result:\n            print(' '.join(map(str, row)))\n```",
+        "generated_at": "2025-05-02T23:53:02.661832",
+        "generation_time": 4.701101779937744
+    },
+    {
+        "source": "2020\\qualification_round\\nesting_depth",
+        "problem_name": "Nesting Depth",
+        "python_code": "```\ndef solve(s):\n    res = []\n    stack = []\n    for c in s:\n        if c == '0':\n            while len(stack) > int(c):\n                res.append(')')\n                stack.pop()\n            res.append('(')\n            stack.append(1)\n        else:\n            while len(stack) < int(c):\n                res.append('(')\n                stack.append(1)\n            for _ in range(int(c)):\n                res.append(')')\n                stack.pop()\n    return ''.join(res)\n\nT = int(input())\nfor i in range(T):\n    s = input()\n    print(f\"Case #{i+1}: {solve(s)}\")",
+        "generated_at": "2025-05-02T23:53:04.850203",
+        "generation_time": 2.170694351196289
+    },
+    {
+        "source": "2020\\qualification_round\\parenting_partnering_returns",
+        "problem_name": "Parenting Partnering Returns",
+        "python_code": "```\nimport sys\n\ndef find_schedule(activities):\n    activities.sort()\n    cam_activities = []\n    jamie_activities = []\n\n    for start, end in activities:\n        if not cam_activities or cam_activities[-1][1] < start:\n            cam_activities.append((start, end))\n        else:\n            jamie_activities.append((start, end))\n\n    return 'C' * len(cam_activities) + 'J' * len(jamie_activities)\n\nT = int(sys.stdin.readline().strip())\nfor t in range(1, T+1):\n    N = int(sys.stdin.readline().strip())\n    activities = []\n    for i in range(N):\n        start, end = map(int, sys.stdin.readline().split())\n        activities.append((start, end))\n    print(f\"Case #{t}: {find_schedule(activities) if all(not overlap(cam_activities, jamie_activities)) else 'IMPOSSIBLE'}\")\n```",
+        "generated_at": "2025-05-02T23:53:07.983008",
+        "generation_time": 3.1059317588806152
+    },
+    {
+        "source": "2020\\qualification_round\\vestigium",
+        "problem_name": "Vestigium",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    matrix = []\n    for _ in range(N):\n        row = list(map(int, input().split()))\n        matrix.append(row)\n    \n    trace = sum(matrix[i][i] for i in range(N))\n    repeated_rows = set()\n    repeated_cols = set()\n    for i in range(N):\n        row_set = set(matrix[i])\n        col_set = set(x[i] for x in matrix)\n        if len(row_set) != N:\n            repeated_rows.add(i+1)\n        if len(col_set) != N:\n            repeated_cols.add(i+1)\n    \n    print(f\"Case #{_+1}: {trace} {(len(repeated_rows))} {(len(repeated_cols))}\")\n```",
+        "generated_at": "2025-05-02T23:53:10.622468",
+        "generation_time": 2.6248838901519775
+    },
+    {
+        "source": "2020\\round_1a\\pascal_walk",
+        "problem_name": "Pascal Walk",
+        "python_code": "```\ndef pascal_walk(n):\n    triangle = [[1], [1, 1]]\n    s = 0\n    while len(triangle) <= n:\n        row = [1]\n        for i in range(len(triangle[-1]) - 1):\n            row.append(triangle[-1][i] + triangle[-1][i+1])\n        row.append(1)\n        triangle.append(row)\n        s += len(triangle) - 1\n    total = sum(int(x) for row in triangle for x in row)\n    if total < n:\n        return \"Case #1: 1 1\"\n    else:\n        for i, (row, pos) in enumerate(zip(triangle, range(1, s+1))):\n            if total - sum(triangle[pos-1]) == int(row[0]):\n                return f\"Case #{pos}: {pos} {len(triangle[pos-1])}\"\n        return \"Case #1: 1 1\"\n\nT = int(input())\nfor _ in range(T):\n    n = int(input())\n    print(pascal_walk(n))\n```",
+        "generated_at": "2025-05-02T23:53:14.195852",
+        "generation_time": 3.551064968109131
+    },
+    {
+        "source": "2020\\round_1a\\pattern_matching",
+        "problem_name": "Pattern Matching",
+        "python_code": "```\nimport re\n\nT = int(input())\n\nfor _ in range(T):\n    N = int(input())\n    patterns = [input() for _ in range(N)]\n\n    min_length = min(len(pattern) for pattern in patterns)\n    max_length = 104\n\n    for length in range(min_length, max_length + 1):\n        name = ''\n        for i in range(length):\n            for pattern in patterns:\n                if i < len(pattern) and pattern[i] == '*':\n                    name += chr(65 + (i % 26))\n                else:\n                    name += pattern[i]\n            break\n\n        if all(re.sub('[^A-Z*]', '', pattern) == re.sub('[^A-Z*]', '', name) for pattern in patterns):\n            print(f'Case #{_+1}: {name}')\n            break\n    else:\n        print(f'Case #{_+1}: *')\n```",
+        "generated_at": "2025-05-02T23:53:17.265301",
+        "generation_time": 3.0561225414276123
+    },
+    {
+        "source": "2020\\round_1a\\square_dance",
+        "problem_name": "Square Dance",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, C = map(int, input().split())\n    skill_levels = [list(map(int, input().split())) for _ in range(R)]\n    eliminated = set()\n    round_interest = 0\n    rounds = 1\n    while True:\n        interest = sum(skill_levels[i][j] for i in range(R) for j in range(C) if (i, j) not in eliminated)\n        eliminated = {(i, j) for i in range(R) for j in range(C) if any(neighbor in eliminated or neighbor[0] == i or neighbor[1] == j for neighbor in [(i, j-1), (i, j+1), (i-1, j), (i+1, j)])}\n        round_interest += interest\n        rounds += 1\n        if not eliminated:\n            break\n    print(f\"Case #{_+1}: {round_interest}\")",
+        "generated_at": "2025-05-02T23:53:20.725558",
+        "generation_time": 3.450723171234131
+    },
+    {
+        "source": "2020\\round_1b\\blindfolded_bullseye",
+        "problem_name": "Blindfolded Bullseye",
+        "python_code": "```\nT, A, B = map(int, input().split())\nfor _ in range(T):\n    for _ in range(300):\n        r = (A + B) // 2\n        x = int(input())\n        y = int(input())\n        if ((x**2 + y**2)**0.5 - r) % 1 < 10**(-9):\n            print(\"CENTER\")\n            break\n        elif (abs(x) > 109 or abs(y) > 109):\n            print(\"WRONG\")\n            exit()\n    else:\n        print(\"CENTER\")",
+        "generated_at": "2025-05-02T23:53:23.081524",
+        "generation_time": 2.3288681507110596
+    },
+    {
+        "source": "2020\\round_1b\\expogo",
+        "problem_name": "Expogo",
+        "python_code": "```\nt = int(input())\nfor _ in range(t):\n    x, y = map(int, input().split())\n    directions = []\n    if y < 0:\n        steps_to_goal_y = abs(y)\n        while steps_to_goal_y > 0:\n            if x > 0 and (steps_to_goal_y & 1 or not (x & 1)):\n                directions.append('E')\n                x -= 2\n            elif x < 0 and (steps_to_goal_y & 1 or not (-x & 1)):\n                directions.append('W')\n                x += 2\n            else:\n                if steps_to_goal_y & 1:\n                    directions.append('N' if y > 0 else 'S')\n                    break\n                else:\n                    directions.append('S' if y > 0 else 'N')\n                    break\n            steps_to_goal_y //= 2\n        while x:\n            directions.append('E' if x > 0 else 'W')\n            x = -x // 2\n    elif y > 0:\n        steps_to_goal_y = y\n        while steps_to_goal_y > 0:\n            if x < 0 and (steps_to_goal_y & 1 or not (-x & 1)):\n                directions.append('E')\n                x += 2\n            elif x > 0 and (steps_to_goal_y & 1 or not (x & 1)):\n                directions.append('W')\n                x -= 2\n            else:\n                if steps_to_goal_y & 1:\n                    directions.append('S' if y > 0 else 'N')\n                    break\n                else:\n                    directions.append('N' if y > 0 else 'S')\n                    break\n            steps_to_goal_y //= 2\n        while x:\n            directions.append('W' if x < 0 else 'E')\n            x = -x // 2\n    print(f\"Case #{_+1}: {'IMPOSSIBLE' if not directions else ''.join(directions)}\")",
+        "generated_at": "2025-05-02T23:53:29.624934",
+        "generation_time": 6.524311780929565
+    },
+    {
+        "source": "2020\\round_1b\\join_the_ranks",
+        "problem_name": "Join the Ranks",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, S = map(int, input().split())\n    operations = 0\n    for r in range(R):\n        for s in range(1, S+1):\n            print(f\"{r*S+1} {s}\")\n        operations += (S - 1)\n    print(f\"Case #{_+1}: {operations}\")\n```",
+        "generated_at": "2025-05-02T23:53:32.049887",
+        "generation_time": 2.413978338241577
+    },
+    {
+        "source": "2020\\round_1c\\overexcited_fan",
+        "problem_name": "Overexcited Fan",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    x, y, m = [int(i) for i in input().split()] + list(input().strip())\n    px, py = 0, 0\n    for move in m:\n        if move == 'N':\n            py += 1\n        elif move == 'S':\n            py -= 1\n        elif move == 'E':\n            px += 1\n        elif move == 'W':\n            px -= 1\n    dx = abs(x - px)\n    dy = abs(y - py)\n    if min(dx, dy) <= 5:\n        print(f\"Case #{t}: {min(dx, dy)}\")\n    else:\n        print(\"Case #{}: IMPOSSIBLE\".format(t))",
+        "generated_at": "2025-05-02T23:53:35.161361",
+        "generation_time": 3.0914034843444824
+    },
+    {
+        "source": "2020\\round_1c\\overrandomized",
+        "problem_name": "Overrandomized",
+        "python_code": "```\nimport re\nimport random\nfrom collections import defaultdict\n\nT = int(input())\npattern = r'([A-Z]{10})\\n(\\d+)\\n(.*)'\nresults = []\n\nfor _ in range(T):\n    D = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ') for _ in range(10))\n    U = 16\n    M = [random.randint(1, U-1) for _ in range(104)]\n    N = [random.randint(1, m) for m in M]\n    R = [''.join([D[int(str(n)[i])] for i in range(len(str(n)))]) for n in N]\n\n    print('Case #{}: {}'.format(_, D))\n```",
+        "generated_at": "2025-05-02T23:53:37.741580",
+        "generation_time": 2.5566675662994385
+    },
+    {
+        "source": "2020\\round_1c\\oversized_pancake_choppers",
+        "problem_name": "Oversized Pancake Choppers",
+        "python_code": "```\nimport math\n\ndef pancake_cuts():\n    t = int(input())\n    for _ in range(t):\n        n, d = map(int, input().split())\n        angles = list(map(int, input().split()))\n        total_cuts = 0\n        slices = [angles[0]]\n        while len(slices) < d:\n            new_slices = []\n            for i, angle in enumerate(slices):\n                half_angle = angle / 2.0\n                if math.isclose(half_angle, int(half_angle)):\n                    half_angle = int(half_angle)\n                else:\n                    half_angle = int(math.floor(half_angle)) + 1\n                new_slices.append(half_angle)\n                new_slices.append(angle - half_angle)\n            slices = new_slices\n            total_cuts += len(new_slices) - len(slices)\n        print('Case #{}: {}'.format(_, total_cuts))\n\npancake_cuts()",
+        "generated_at": "2025-05-02T23:53:40.985995",
+        "generation_time": 3.232218027114868
+    },
+    {
+        "source": "2020\\round_2\\emacs",
+        "problem_name": "Emacs++",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    K, Q = map(int, input().split())\n    P = input()\n    for _ in range(Q):\n        S, E = map(int, input().split())\n        N = min(E - S + 1, S) if (S % 2 == 0 and E % 2 != 0) or (S % 2 != 0 and E % 2 == 0) else abs(S - E)\n    print(f\"Case #{_+1}: {N}\")\n```",
+        "generated_at": "2025-05-02T23:53:43.109472",
+        "generation_time": 2.098146677017212
+    },
+    {
+        "source": "2020\\round_2\\incremental_house_of_pancakes",
+        "problem_name": "Incremental House of Pancakes",
+        "python_code": "```\nT = int(input())\nfor i in range(1, T+1):\n    L, R = map(int, input().split())\n    l, r = 0, 0\n    customers = 0\n    while L > 0 and R > 0:\n        if L >= R:\n            L -= min(L, R)\n            r += 1\n        else:\n            R -= min(L, R)\n            l += 1\n        if min(L, R) == 0:\n            break\n        customers += 1\n    print(f'Case #{i}: {customers} {L} {R}')",
+        "generated_at": "2025-05-02T23:53:45.968172",
+        "generation_time": 2.834758996963501
+    },
+    {
+        "source": "2020\\round_2\\security_update",
+        "problem_name": "Security Update",
+        "python_code": "```\nfrom itertools import permutations\nfor _ in range(int(input())):\n    n, m = map(int, input().split())\n    d = [int(x) for x in input().split()]\n    edges = []\n    for _ in range(m):\n        u, v = map(int, input().split())\n        edges.append((u-1, v-1))\n    min_latencies = 0\n    for p in permutations(range(n-1)):\n        latencies = [0] * m\n        for i, edge in enumerate(edges):\n            if d[edge[0]] < d[edge[1]]:\n                latencies[i] = -d[edge[0]]\n            elif d[edge[0]] > d[edge[1]]:\n                latencies[i] = -d[edge[1]]\n            else:\n                latencies[i] = 0\n        valid = True\n        for i, latency in enumerate(latencies):\n            if latency < 0 and p[i] != edge[0]:\n                valid = False\n                break\n        if valid:\n            min_latencies += 1\n    print(f\"Case #{_+1}: {' '.join(map(str, latencies))}\")\n```",
+        "generated_at": "2025-05-02T23:53:50.081421",
+        "generation_time": 4.093262195587158
+    },
+    {
+        "source": "2020\\round_2\\wormhole_in_one",
+        "problem_name": "Wormhole in One",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    holes = []\n    for _ in range(N):\n        x, y = map(int, input().split())\n        holes.append((x, y))\n    \n    max_holes = 0\n    for i in range(len(holes)):\n        for j in range(i+1, len(holes)):\n            distance = ((holes[i][0]-holes[j][0])**2 + (holes[i][1]-holes[j][1])**2)**0.5\n            if distance == int(distance):\n                holes[i] += (j,)\n                holes[j] += (i,)\n    \n    for i in range(len(holes)):\n        for hole in holes[i]:\n            if not isinstance(hole, tuple):\n                max_holes = max(max_holes, 1)\n            else:\n                for h in hole:\n                    if not isinstance(h, tuple):\n                        max_holes = max(max_holes, 1)\n    \n    print(f\"Case #{_+1}: {max_holes}\")\n```",
+        "generated_at": "2025-05-02T23:53:54.046484",
+        "generation_time": 3.953618288040161
+    },
+    {
+        "source": "2020\\round_3\\naming_compromise",
+        "problem_name": "Naming Compromise",
+        "python_code": "```\nfrom itertools import permutations\n\ndef edit_distance(s1, s2):\n    m, n = len(s1), len(s2)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    for i in range(m + 1):\n        dp[i][0] = i\n    for j in range(n + 1):\n        dp[0][j] = j\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if s1[i - 1] == s2[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1]\n            else:\n                dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])\n    return dp[m][n]\n\ndef find_compromise_name(c, j):\n    min_distance = float('inf')\n    best_name = ''\n    for p in permutations(set(c)):\n        name = ''.join(p)\n        distance_c = edit_distance(c, name)\n        distance_j = edit_distance(j, name)\n        if distance_c + distance_j < min_distance:\n            min_distance = distance_c + distance_j\n            best_name = name\n    return best_name\n\nt = int(input())\nfor i in range(t):\n    c, j = input().split()\n    print(f'Case #{i+1}: {find_compromise_name(c, j)}')",
+        "generated_at": "2025-05-02T23:53:59.374473",
+        "generation_time": 5.310946702957153
+    },
+    {
+        "source": "2020\\round_3\\pen_testing",
+        "problem_name": "Pen Testing",
+        "python_code": "```\nt, n, c = map(int, input().split())\nink_spent = [0] * t\npens_left = list(range(1, n+1))\nwhile True:\n    print(' '.join(map(str, pens_left)))\n    ink_spent += list(map(int, input().split()))\n    if all(i >= 5 for i in sum(zip(*[list(range(i, i+n)) for i in range(n)]), fillvalue=0)):\n        break\nprint(0*t)\npens_taken = []\nfor i in range(t):\n    pens_taken.append(' '.join(map(str, sorted(pens_left))))\n    if i < t-1:\n        print(0*t)\n        for _ in range(t):\n            print(0)\n```\n\nNote: This code assumes that the input is a single line containing three integers `T`, `N`, and `C`. The output consists of multiple lines, each containing either one integer or two integers.",
+        "generated_at": "2025-05-02T23:54:04.003123",
+        "generation_time": 4.618443250656128
+    },
+    {
+        "source": "2020\\round_3\\recalculating",
+        "problem_name": "Recalculating",
+        "python_code": "```\nfrom collections import Counter\n\ndef calculate_probability(D):\n    total_area = D * D * 4\n    red_area = (2 * D + 1) ** 2 - (D - 1) ** 2\n    blue_area = total_area - red_area\n    distinguishable_area = red_area\n    non_distinguishable_area = blue_area\n\n    if D == 1:\n        return 0, 1\n\n    probability = float(red_area) / float(total_area)\n    return int(probability * (10 ** 9)) % (10 ** 9), total_area\n\nT = int(input())\nfor t in range(T):\n    N, D = map(int, input().split())\n    repair_centers = []\n    for _ in range(N):\n        x, y = map(int, input().split())\n        repair_centers.append((x, y))\n    \n    red_points = set()\n    for i in range(-D, D+1):\n        for j in range(-D, D+1):\n            if abs(i) + abs(j) <= D:\n                for center in repair_centers:\n                    if abs(i - center[0]) + abs(j - center[1]) <= D:\n                        red_points.add((i, j))\n    \n    distinguishable_area = len(red_points)\n    non_distinguishable_area = (2 * D + 1) ** 2 - distinguishable_area\n    \n    probability, total_area = calculate_probability(D)\n    print(\"Case #{}: {}\".format(t+1, str(probability) + \" \" + str(total_area)))",
+        "generated_at": "2025-05-02T23:54:10.425944",
+        "generation_time": 6.413184881210327
+    },
+    {
+        "source": "2020\\round_3\\thermometers",
+        "problem_name": "Thermometers",
+        "python_code": "```\nT = int(input())\nfor i in range(T):\n    K, N = map(int, input().split())\n    X = list(map(int, input().split()))\n    T1 = list(map(int, input().split()))\n    min_thermometers = 0\n    for j in range(N-1):\n        if T1[j] != T1[j+1]:\n            min_thermometers += 1\n    print(f\"Case #{i+1}: {min_thermometers + (K//X[-1] > N)}\")\n```",
+        "generated_at": "2025-05-02T23:54:12.650562",
+        "generation_time": 2.2126762866973877
+    },
+    {
+        "source": "2020\\virtual_world_finals\\adjacent_and_consecutive",
+        "problem_name": "Adjacent and Consecutive",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    mistakes_A = 0\n    mistakes_B = 0\n    A_wins = [False] * (N + 1)\n    for i in range(1, N + 1):\n        if i % 2 == 1:\n            A_wins[i] = True\n        else:\n            B_wins = False\n            for j in range(1, min(i, N) + 1):\n                if (A_wins[j - 1] and i != j) or ((i - j) % 2 == 0):\n                    A_wins[i] = True\n                    mistakes_B += 1\n                    break\n                elif i - j == 1:\n                    B_wins = True\n            if not B_wins:\n                for j in range(i + 1, N + 1):\n                    if (A_wins[j - 1] and j != i) or ((j - i) % 2 == 0):\n                        A_wins[i] = False\n                        mistakes_A += 1\n                        break\n    print(f\"Case #{_ + 1}: {mistakes_A} {mistakes_B}\")",
+        "generated_at": "2025-05-02T23:54:16.945068",
+        "generation_time": 4.283876657485962
+    },
+    {
+        "source": "2020\\virtual_world_finals\\hexacoin_jam",
+        "problem_name": "Hexacoin Jam",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, D = map(int, input().split())\n    S, E = input(), input()\n    L = [input() for _ in range(N)]\n    hexacoins_found = 0\n    for i in range(N):\n        for j in range(i+1, N):\n            a, b = int(L[i], 16), int(L[j], 16)\n            if (a + b) % (16**D) < (int(S, 16)) or (a + b) % (16**D) > (int(E, 16)):\n                continue\n            hexacoins_found += 1\n    probability = hexacoins_found / (N * (N-1) // 2)\n    print(f\"Case # {_+1}: {probability:.0f} {1/(16**D):.0f}\")\n```",
+        "generated_at": "2025-05-02T23:54:20.416344",
+        "generation_time": 3.4563422203063965
+    },
+    {
+        "source": "2020\\virtual_world_finals\\musical_cords",
+        "problem_name": "Musical Cords",
+        "python_code": "```\nimport math\nfor _ in range(int(input())):\n    n = int(input())\n    r = float(input())\n    k = int(input())\n    Ls = [0] * n\n    for i in range(n):\n        di, Li = map(int, input().split())\n        Ls[i] = Li\n    cords = []\n    for i in range(n):\n        for j in range(i+1, n):\n            d = abs((j-i) * 360 / (n-1)) % 360\n            length = r + Ls[i] + Ls[j] - 2 * math.cos(math.radians(d)) * r\n            cords.append(length)\n    cords.sort(reverse=True)\n    print(f\"Case # {_+1}: {' '.join(map(str, cords[:k]))}\")",
+        "generated_at": "2025-05-02T23:54:23.600248",
+        "generation_time": 3.1697776317596436
+    },
+    {
+        "source": "2020\\virtual_world_finals\\pack_the_slopes",
+        "problem_name": "Pack the Slopes",
+        "python_code": "```\nT = int(input())\nfor i in range(1, T+1):\n    N = int(input())\n    graph = {}\n    for _ in range(N-1):\n        u, v, s, c = map(int, input().split())\n        if u not in graph:\n            graph[u] = []\n        if v not in graph:\n            graph[v] = []\n        graph[u].append((v, s, c))\n        graph[v].append((u, 0, -c)) # add reverse edge\n    max_skiers = 1\n    min_expense = float('inf')\n    for _ in range(N):\n        skiers = [0] * (N+1)\n        expense = 0\n        for i in range(1, N):\n            if graph[i]:\n                slope = min((v, s, c) for v, s, c in graph[i])\n                graph[i].remove(slope)\n                skiers[slope[0]] += slope[1]\n                expense += slope[2] * slope[1]\n        max_skiers = max(max_skiers, sum(skiers))\n        min_expense = min(min_expense, expense)\n    print(f\"Case #{i}: {max_skiers} {min_expense}\")",
+        "generated_at": "2025-05-02T23:54:27.984103",
+        "generation_time": 4.3749425411224365
+    },
+    {
+        "source": "2020\\virtual_world_finals\\replace_all",
+        "problem_name": "Replace All",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    S = input()\n    N = int(input())\n    replacements = [input() for _ in range(N)]\n    seen_chars = set(S)\n    max_unique_chars = len(seen_chars)\n    for a, b in replacements:\n        temp_seen_chars = set()\n        for c in seen_chars:\n            if c == a:\n                temp_seen_chars.add(b)\n            else:\n                temp_seen_chars.add(c)\n        seen_chars = temp_seen_chars\n        max_unique_chars = max(max_unique_chars, len(seen_chars))\n    print(f\"Case #{_+1}: {max_unique_chars}\")",
+        "generated_at": "2025-05-02T23:54:30.474883",
+        "generation_time": 2.4688005447387695
+    },
+    {
+        "source": "2021\\qualification_round\\cheating_detection",
+        "problem_name": "Cheating Detection",
+        "python_code": "```\nimport numpy as np\nfrom scipy.special import expit\n\nT = int(input())\np = float(input())\n\nfor _ in range(T):\n    skill_levels = np.random.uniform(-3.0, 3.0, size=100)\n    question_difficulties = np.random.uniform(-3.0, 3.0, size=10000)\n    answers = np.array([[int(expit(s-q)) for q in question_difficulties] for s in skill_levels])\n    \n    cheating_player = np.random.choice(100)\n    cheating_results = (np.random.rand(10000) < 0.5).astype(int)\n    answers[cheating_player-1, :] = (answers[cheating_player-1, :] + cheating_results).astype(int)\n    \n    correct_answers = np.sum(answers, axis=0)\n    cheater_index = np.argmax(np.mean((correct_answers[:, None] == answers) & (answers != 2), axis=(0, 1)))\n    print(f\"Case #{_+1}: {cheater_index+1}\")\n```",
+        "generated_at": "2025-05-02T23:54:34.137994",
+        "generation_time": 3.6208925247192383
+    },
+    {
+        "source": "2021\\qualification_round\\median_sort",
+        "problem_name": "Median Sort",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    Q = int(input()) * T\n    order = [-1] * N\n    queries = []\n    for _ in range(Q):\n        i, j, k = map(int, input().split())\n        queries.append((i, j, k))\n    query_count = 0\n    left = 0\n    right = N - 1\n    while query_count < Q:\n        if left + 1 <= right - 1:\n            mid = (left + right) // 2\n            order[mid] = query_count\n            query_count += 1\n            queries[query_count-1] = (min(order), mid, max(order))\n            for i in range(3):\n                if queries[query_count][i] == min(order):\n                    left = mid\n                elif queries[query_count][i] == mid:\n                    continue\n                else:\n                    right = mid\n        else:\n            order[left] = query_count\n            query_count += 1\n            for i in range(3):\n                if queries[query_count-1][i] == left:\n                    left += 1\n                elif queries[query_count-1][i] == right:\n                    right -= 1\n    print(' '.join(map(str, order)))\n```",
+        "generated_at": "2025-05-02T23:54:38.892514",
+        "generation_time": 4.72623610496521
+    },
+    {
+        "source": "2021\\qualification_round\\moons_and_umbrellas",
+        "problem_name": "Moons and Umbrellas",
+        "python_code": "```\nt = int(input())\nfor _ in range(t):\n    x, y, s = [int(i) if i.isdigit() else i for i in input().split()]\n    res = float('inf')\n    for i in range(len(s)):\n        for j in range(i+1, len(s)+1):\n            cnt_cj = s[:i].count('CJ') + s[i:j].count('CJ')\n            cnt_jc = s[:i].count('JC') + s[i:j].count('JC')\n            res = min(res, x*cnt_cj + y*cnt_jc)\n    print(f\"Case # {_+1}: {res}\")\n```",
+        "generated_at": "2025-05-02T23:54:41.334787",
+        "generation_time": 2.4296774864196777
+    },
+    {
+        "source": "2021\\qualification_round\\reversort",
+        "problem_name": "Reversort",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    L = list(map(int, input().split()))\n    cost = 0\n    for i in range(1, N):\n        j = L.index(min(L[i:]))\n        L[:j+1] = reversed(L[:j+1])\n        cost += j - i + 1\n    print(f\"Case #{_+1}: {cost}\")\n```",
+        "generated_at": "2025-05-02T23:54:43.342550",
+        "generation_time": 1.9933884143829346
+    },
+    {
+        "source": "2021\\qualification_round\\reversort_engineering",
+        "problem_name": "Reversort Engineering",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, C = map(int, input().split())\n    if C < N:\n        print('IMPOSSIBLE')\n    else:\n        res = []\n        for i in range(1, N+1):\n            res.append(N-i+1)\n        while len(res) > 0 and sum(range(1, len(res)+1)) <= C:\n            j = len(res)\n            res = res[:j//2][::-1] + res[j//2:]\n        if sum(range(1, len(res)+1)) == C:\n            print('Case #{}: {}'.format(_, ' '.join(map(str, res))))\n        else:\n            print('IMPOSSIBLE')",
+        "generated_at": "2025-05-02T23:54:46.316738",
+        "generation_time": 2.96565580368042
+    },
+    {
+        "source": "2021\\round_1a\\append_sort",
+        "problem_name": "Append Sort",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    X = list(map(int, input().split()))\n    x = [str(i) for i in X]\n    res = 0\n    for i in range(1, N):\n        while len(x[i-1]) < len(x[i]):\n            if not str(int(x[i][:-1]) + 1).endswith('9'):\n                break\n            res += 1\n    print(f\"Case #{_+1}: {res}\")\n```",
+        "generated_at": "2025-05-02T23:54:48.283091",
+        "generation_time": 1.9376695156097412
+    },
+    {
+        "source": "2021\\round_1a\\hacked_exam",
+        "problem_name": "Hacked Exam",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T + 1):\n    N, Q = map(int, input().split())\n    answers = [input() for _ in range(N)]\n    scores = list(map(int, input().split()))\n    max_score = sum(scores) / len(scores)\n    answer = ''\n    for i in range(Q):\n        t_count = 0\n        f_count = 0\n        for j in range(N):\n            if answers[j][i] == 'T':\n                t_count += 1\n            else:\n                f_count += 1\n        if t_count > f_count:\n            answer += 'T'\n        elif f_count > t_count:\n            answer += 'F'\n        else:\n            answer += 'T' if sum(1 for a in answers if a[i] == 'T') >= N // 2 else 'F'\n    print(f\"Case #{t}: {answer} {max_score:.0f}/{Q}\")\n```",
+        "generated_at": "2025-05-02T23:54:51.740756",
+        "generation_time": 3.431535243988037
+    },
+    {
+        "source": "2021\\round_1a\\prime_time",
+        "problem_name": "Prime Time",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    M = int(input())\n    primes = [int(input()) for _ in range(M)]\n    N = [0] * (M + 1)\n    for i, p in enumerate(primes):\n        N[i] = int(input())\n    max_score = 0\n    for i in range(2 ** M):\n        left_sum = 0\n        right_product = 1\n        for j in range(M):\n            if ((i >> j) & 1):\n                left_sum += primes[j] * N[j]\n            else:\n                right_product *= primes[j]\n        max_score = max(max_score, min(left_sum, right_product))\n    print(f\"Case #{_ + 1}: {max_score}\")",
+        "generated_at": "2025-05-02T23:54:54.415917",
+        "generation_time": 2.643126964569092
+    },
+    {
+        "source": "2021\\round_1b\\broken_clock",
+        "problem_name": "Broken Clock",
+        "python_code": "```\nimport math\ndef clock_angle_to_time(hours_hand_angle, minutes_hand_angle, seconds_hand_angle):\n    hours_hand_rotation = (hours_hand_angle / 360) * 12\n    minutes_hand_rotation = (minutes_hand_angle / 360) * 60\n    seconds_hand_rotation = (seconds_hand_angle / 360) * 6\n\n    total_minutes = math.floor(hours_hand_rotation * 60 + minutes_hand_rotation)\n    remaining_seconds = int((total_minutes + seconds_hand_rotation) % 60)\n\n    hours = math.floor(total_minutes / 60)\n    nanoseconds = (hours_hand_rotation * 10**9 + minutes_hand_rotation * 10**8 + seconds_hand_rotation * 10**7) % 10**9\n\n    return f\"Case #1: {hours} {remaining_seconds} {nanoseconds}\"\n\nT = int(input())\nfor _ in range(T):\n    hours_hand_angle, minutes_hand_angle, seconds_hand_angle = map(int, input().split())\n    print(clock_angle_to_time(hours_hand_angle, minutes_hand_angle, seconds_hand_angle))",
+        "generated_at": "2025-05-02T23:54:58.338162",
+        "generation_time": 3.906287431716919
+    },
+    {
+        "source": "2021\\round_1b\\digit_blocks",
+        "problem_name": "Digit Blocks",
+        "python_code": "```\nimport random\n\nT, N, B, P = map(int, input().split())\n\nscore = 0\nfor _ in range(T):\n    towers = [0] * N\n    for _ in range(N * B):\n        D = int(input())\n        i = min(range(1, N+1), key=lambda x: str(D) + str(towers[x-1]).zfill(B))\n        if len(str(towers[i-1])) > B:\n            print(-1)\n            exit()\n        towers[i-1] = 10 * towers[i-1] + D\n    score += sum(int(''.join(map(str, reversed(tower)))) for tower in reversed(towers))\n\nif score >= P:\n    print(1)\nelse:\n    print(-1)",
+        "generated_at": "2025-05-02T23:55:01.402862",
+        "generation_time": 3.043213367462158
+    },
+    {
+        "source": "2021\\round_1b\\subtransmutation",
+        "problem_name": "Subtransmutation",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, A, B = map(int, input().split())\n    U = list(map(int, input().split()))\n    stack = [(0, [])]\n    result = None\n    while stack:\n        i, path = stack.pop()\n        if sum(U[j] for j in range(N) if j >= i) == 0:\n            result = i\n            break\n        for j in range(i-1, -1, -1):\n            if U[j] > 0:\n                new_i = max(0, j-A)\n                new_path = path + [(j, B-j)]\n                stack.append((new_i, new_path))\n    print(f\"Case #{_+1}: {result if result is not None else 'IMPOSSIBLE'}\")",
+        "generated_at": "2025-05-02T23:55:04.583126",
+        "generation_time": 3.1547605991363525
+    },
+    {
+        "source": "2021\\round_1c\\closest_pick",
+        "problem_name": "Closest Pick",
+        "python_code": "```\nimport sys\nfrom math import inf\n\ndef pancake_win_probability(N, K, P):\n    min_dist = inf\n    for i in range(1, K+1):\n        if i not in P:\n            dist = sum(abs(i - p) for p in P)\n            if dist < min_dist:\n                min_dist = dist\n    return min_dist / (K * N)\n\nT = int(input())\nfor _ in range(T):\n    N, K = map(int, input().split())\n    P = list(map(int, input().split()))\n    print(f\"Case #{_+1}: {pancake_win_probability(N, K, P):.6f}\")",
+        "generated_at": "2025-05-02T23:55:07.004252",
+        "generation_time": 2.409846544265747
+    },
+    {
+        "source": "2021\\round_1c\\double_or_noting",
+        "problem_name": "Double or NOTing",
+        "python_code": "```\nimport sys\n\ndef transform(s, e):\n    t = list(s)\n    res = len(e) - len(s)\n    for i in range(res):\n        t.insert(0, '0')\n    while s != e:\n        if s == t:\n            break\n        if s < t:\n            t = ''.join('1' if c == '0' else '0' for c in t)\n        else:\n            t = ''.join('0' if c == '1' else '1' for c in t)\n        res += 1\n    return res\n\nt = int(input())\nfor _ in range(t):\n    s, e = input().split()\n    print(f\"Case # {_+1}: {transform(s, e) if s != e else 'IMPOSSIBLE'}\")",
+        "generated_at": "2025-05-02T23:55:09.923151",
+        "generation_time": 2.8927853107452393
+    },
+    {
+        "source": "2021\\round_1c\\roaring_years",
+        "problem_name": "Roaring Years",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    y = int(input())\n    s = str(y)\n    for i in range(len(s)):\n        for j in range(i+1, len(s)+1):\n            k = int(s[i:j])\n            if k > y and is_roaring(k):\n                print(f\"Case #{_+1}: {k}\")\n                break\ndef is_roaring(n):\n    s = str(n)\n    for i in range(1, len(s)):\n        if s[:i] == str(i) and all(int(s[i+j]) == i+j for j in range(len(s)-i)):\n            return True\n    return False",
+        "generated_at": "2025-05-02T23:55:12.194170",
+        "generation_time": 2.255397081375122
+    },
+    {
+        "source": "2021\\round_2\\hidden_pancakes",
+        "problem_name": "Hidden Pancakes",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    Vs = list(map(int, input().split()))\n    MOD = 1000000007\n    ans = 0\n    for i in range(N):\n        ans += sum(1 for j in range(i+1) if Vs[j] >= i+1)\n    print(f\"Case # {_+1}: {ans % MOD}\")",
+        "generated_at": "2025-05-02T23:55:13.898290",
+        "generation_time": 1.690636157989502
+    },
+    {
+        "source": "2021\\round_2\\matrygons",
+        "problem_name": "Matrygons",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T + 1):\n    N = int(input())\n    max_polygons = 0\n    for i in range(3, N // 2 + 1):\n        if i * (i - 1) <= N:\n            max_polygons = i\n            break\n    print(f\"Case #{t}: {max_polygons}\")\n```",
+        "generated_at": "2025-05-02T23:55:15.421120",
+        "generation_time": 1.5025238990783691
+    },
+    {
+        "source": "2021\\round_2\\minimum_sort",
+        "problem_name": "Minimum Sort",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    arr = [int(x) for x in input().split()]\n    low, high = 0, N-1\n    while low < high:\n        min_idx = (low + high)//2\n        if arr[min_idx] > arr[high]:\n            high = min_idx\n        elif arr[low] > arr[high]:\n            low, high = high, low\n        else:\n            high -= 1\n    print(low)\n```",
+        "generated_at": "2025-05-02T23:55:17.497059",
+        "generation_time": 2.0551278591156006
+    },
+    {
+        "source": "2021\\round_2\\retiling",
+        "problem_name": "Retiling",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, C, F, S = map(int, input().split())\n    current = [list(map(str, input().strip())) for _ in range(R)]\n    desired = [list(map(str, input().strip())) for _ in range(R)]\n    flips = sum(c != d for r in current for c, d in zip(r, desired))\n    swaps = 0\n    for i in range(R):\n        for j in range(C - 1):\n            if current[i][j] != desired[i][j] or current[i][j + 1] != desired[i][j + 1]:\n                swaps += 1\n            elif current[i][j] == desired[i][j + 1]:\n                flips += 1\n                breaks\n    print(f\"Case #{_ + 1}: {F * flips + S * swaps}\")",
+        "generated_at": "2025-05-02T23:55:20.667839",
+        "generation_time": 3.157308340072632
+    },
+    {
+        "source": "2021\\round_3\\binary_search_game",
+        "problem_name": "Binary Search Game",
+        "python_code": "```\nT = int(input())\nfor i in range(1, T + 1):\n    N, M, L = map(int, input().split())\n    A = list(map(int, input().split()))\n    MOD = 10**9 + 7\n    total_score = 0\n    for _ in range(M ** N):\n        n = len(A)\n        for j in range(L):\n            mid = (n // 2) + ((n % 2) != 0)\n            if A[mid - 1] < A[mid]:\n                left_half = A[:mid]\n                right_half = A[mid:]\n            else:\n                left_half = A[mid:]\n                right_half = A[:mid]\n            n //= 2\n        total_score += (A[-1] % M) + 1\n    print(f\"Case #{i}: {total_score % MOD}\")\n```",
+        "generated_at": "2025-05-02T23:55:23.942045",
+        "generation_time": 3.248401165008545
+    },
+    {
+        "source": "2021\\round_3\\build-a-pair",
+        "problem_name": "Build-A-Pair",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    D = list(map(int, input()))\n    D.sort()\n    res = float('inf')\n    for i in range(len(D)):\n        for j in range(i+1, len(D)):\n            a, b = 0, 0\n            k, l = 0, i\n            while k < l:\n                if D[k] > 0:\n                    a = a * 10 + D[k]\n                    k += 1\n                else:\n                    k += 1\n            while l < len(D):\n                if D[l] > 0:\n                    b = b * 10 + D[l]\n                    l += 1\n                else:\n                    l += 1\n            res = min(res, abs(a - b))\n    print(\"Case #{}: {}\".format(_, res))",
+        "generated_at": "2025-05-02T23:55:26.750624",
+        "generation_time": 2.7961745262145996
+    },
+    {
+        "source": "2021\\round_3\\fence_design",
+        "problem_name": "Fence Design",
+        "python_code": "```\nimport sys\n\ndef solve(n, poles, fences):\n    dp = [[[] for _ in range(n + 1)] for _ in range(n + 1)]\n    \n    for i in range(2, n + 1):\n        for j in range(i - 1, -1, -1):\n            if not dp[i][j]:\n                for k in range(j + 1, i):\n                    if set(poles[k]) & set(range(j, i)):\n                        dp[i][j] = [(i, k)]\n                        break\n                if not dp[i][j]:\n                    for k in range(j + 1, i):\n                        if (poles[j][0] - poles[i][0]) * (poles[k][1] - poles[j][1]) == (poles[j][1] - poles[i][1]) * (poles[k][0] - poles[j][0]):\n                            dp[i][j] = [(i, k)]\n                            break\n\n    return len(dp[-1][fences[1]]) + 2\n\nT = int(input())\nfor case in range(1, T + 1):\n    n = int(input())\n    poles = [list(map(int, input().split())) for _ in range(n)]\n    fences = [int(x) - 1 for x in map(int, input().split())]\n    result = solve(n, poles, fences)\n    print('Case #{}: {}'.format(case, result))\n    if case == T:\n        continue\n    for i, j in enumerate(dp[-1][fences[1]], start=1):\n        print(' '.join(map(str, [i + 1, j + 1])))\n```",
+        "generated_at": "2025-05-02T23:55:32.256517",
+        "generation_time": 5.489577293395996
+    },
+    {
+        "source": "2021\\round_3\\square_free",
+        "problem_name": "Square Free",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    R, C = map(int, input().split())\n    rows = list(map(int, input().split()))\n    cols = list(map(int, input().split()))\n    if sum(rows) != sum(cols):\n        print(\"IMPOSSIBLE\")\n    else:\n        matrix = [['/' for _ in range(C)] for _ in range(R)]\n        row_idx = 0\n        col_idx = 0\n        forward_diags = 0\n        backslash_diags = 0\n        for r in rows:\n            for _ in range(r):\n                if forward_diags < sum(cols) // 2:\n                    matrix[row_idx][col_idx] = '/'\n                    forward_diags += 1\n                else:\n                    matrix[row_idx][col_idx] = '\\\\'\n                    backslash_diags += 1\n                col_idx = (col_idx + 1) % C\n            row_idx += 1\n        print(\"POSSIBLE\")\n        for row in matrix:\n            print(''.join(row))",
+        "generated_at": "2025-05-02T23:55:35.978283",
+        "generation_time": 3.703761100769043
+    },
+    {
+        "source": "2021\\world_finals\\cutting_cake",
+        "problem_name": "Cutting Cake",
+        "python_code": "```\nfrom math import inf\ndef solve():\n    T = int(input())\n    for _ in range(T):\n        N, W, H = map(int, input().split())\n        P, Q, R, S = map(int, input().split())\n        A = [0] * N\n        B = [0] * N\n        for i in range(N):\n            X, Y, a, b = map(float, input().split())\n            A[i] = int(a)\n            B[i] *int(b)\n        a, b = inf, 0\n        for i in range(N):\n            area_left = max(0, (X + P - W) * Q - ((X + P) * Y + Q * H))\n            area_right = max(0, (R - X) * S - ((R * Y + S * H)))\n            a_left, b_left = 0, 0\n            for j in range(i):\n                a_left += max(0, (X + P - W) * Q - ((X + P) * Y + Q * H)) / (A[j] + B[j])\n                b_left += max(0, (R - X) * S - ((R * Y + S * H)))\n            a_right = 0\n            for j in range(i, N):\n                a_right -= max(0, (X + P - W) * Q - ((X + P) * Y + Q * H)) / (A[j] + B[j])\n                b_right += max(0, (R - X) * S - ((R * Y + S * H)))\n            if abs(a_left + a_right - b_left - b_right) < abs(a - b):\n                a, b = a_left + a_right, b_left + b_right\n        print(f\"Case # {_ + 1}: {a} / {b}\")\n```",
+        "generated_at": "2025-05-02T23:55:42.700401",
+        "generation_time": 6.67268705368042
+    },
+    {
+        "source": "2021\\world_finals\\divisible_divisions",
+        "problem_name": "Divisible Divisions",
+        "python_code": "```\nt = int(input())\nfor _ in range(t):\n    s = input()\n    d = int(input())\n    MOD = 10**9 + 7\n    n = len(s)\n    ans = 0\n    for mask in range(2**(n-1)):\n        flag = True\n        for i in range(n - 1):\n            if ((mask >> (i)) & 1) == 0:\n                continue\n            a, b = int(s[i]), int(s[i+1])\n            if (a // d + b // d) % d != 0:\n                flag = False\n                break\n        if flag:\n            ans += 1\n    print(f\"Case #{_+1}: {ans % MOD}\")\n```",
+        "generated_at": "2025-05-02T23:55:45.416889",
+        "generation_time": 2.6846277713775635
+    },
+    {
+        "source": "2021\\world_finals\\infinitree",
+        "problem_name": "Infinitree",
+        "python_code": "```\nimport heapq\n\ndef distance(L, R, A, B):\n    n = len(L)\n    queue = [(0, 1)]\n    visited = {1}\n    parent = {1: None}\n\n    while queue:\n        d, node = heapq.heappop(queue)\n\n        if node == A:\n            return d\n        if node == B:\n            return d\n\n        if L[node-1] != 0 and L[node-1] not in visited:\n            heapq.heappush(queue, (d+1, L[node-1]))\n            parent[L[node-1]] = node\n            visited.add(L[node-1])\n        if R[node-1] != 0 and R[node-1] not in visited:\n            heapq.heappush(queue, (d+1, R[node-1]))\n            parent[R[node-1]] = node\n            visited.add(R[node-1])\n\n    return -1\n\nT = int(input())\nfor i in range(1, T+1):\n    N, A, B = map(int, input().split())\n    L = list(map(int, input().split()))\n    R = list(map(int, input().split()))\n    print('Case #{}: {}'.format(i, distance(L, R, A, B)))",
+        "generated_at": "2025-05-02T23:55:49.988090",
+        "generation_time": 4.303781509399414
+    },
+    {
+        "source": "2021\\world_finals\\ropes",
+        "problem_name": "Ropes",
+        "python_code": "```\nT, N, W = map(int, input().split())\nscore1, score2 = 0, 0\nfor _ in range(T):\n    used = set()\n    for i in range(N):\n        A, B = map(int, input().split())\n        C, D = map(int, input().split())\n        if A not in used and B not in used:\n            used.add(A)\n            used.add(B)\n            score1 += len(used) - 2\n        used.add(C)\n        used.add(D)\n    result = int(input())\n    if result == 1:\n        score1 += 1\nprint(score1)\n```",
+        "generated_at": "2025-05-02T23:55:52.625001",
+        "generation_time": 2.623605251312256
+    },
+    {
+        "source": "2021\\world_finals\\slide_circuits",
+        "problem_name": "Slide Circuits",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    B, S, N = map(int, input().split())\n    enabled_slides = [False] * (S + 1)\n    circuits = []\n    for _ in range(N):\n        op, L, R, M = input().split()\n        L, R, M = map(int, (L, R, M))\n        if op == 'E':\n            for i in range(L - 1, R):\n                if i % M == 0:\n                    enabled_slides[i] = True\n        elif op == 'D':\n            for i in range(L - 1, R):\n                if i % M == 0 and enabled_slides[i]:\n                    enabled_slides[i] = False\n        else:\n            print('Invalid operation')\n            break\n    for i in range(1, B + 1):\n        if all(enabled_slides[S * (j - 1) + i % S] for j in range(1, len(circuits) + 2)):\n            circuits.append(i)\n    result = []\n    for _ in range(N):\n        y = 'X'\n        for i in range(S):\n            if enabled_slides[i]:\n                break\n        else:\n            continue\n        print(f'Case #{_+1}: {y}')\n        break\n    else:\n        for _ in range(N):\n            for i in range(S):\n                if not enabled_slides[i] and all(enabled_slides[S * (j - 1) + i % S] for j in range(1, len(circuits) + 2)):\n                    print(f'Case #{_+1}: {i+1}')\n                    break\n            else:\n                continue\n        else:\n            for _ in range(N):\n                y = 'X'\n                for i in range(S - 1, 0, -1):\n                    if not enabled_slides[i]:\n                        y = str(i + 1)\n                        break\n                print(f'Case #{_+1}: {y}')\n```",
+        "generated_at": "2025-05-02T23:55:59.775764",
+        "generation_time": 7.13046407699585
+    },
+    {
+        "source": "2022\\qualification_round\\3d_printing",
+        "problem_name": "3D Printing",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    C1, M1, Y1, K1 = map(int, input().split())\n    C2, M2, Y2, K2 = map(int, input().split())\n    C3, M3, Y3, K3 = map(int, input().split())\n    for c in range(C1+1):\n        for m in range(M1+1):\n            for y in range(Y1+1):\n                for k in range(K1+1):\n                    if c + m + y + k == 10**6 and min(c, m, y, k) <= min(C1, M1, Y1, K1) and \\\n                       min(c, m, y, k) <= min(C2, M2, Y2, K2) and min(c, m, y, k) <= min(C3, M3, Y3, K3):\n                        print(f\"Case #{_+1}: {c} {m} {y} {k}\")\n                        break\n                else:\n                    continue\n                break\n            else:\n                continue\n        else:\n            continue\n    else:\n        print(\"IMPOSSIBLE\")\n```",
+        "generated_at": "2025-05-02T23:56:04.014831",
+        "generation_time": 4.230183362960815
+    },
+    {
+        "source": "2022\\qualification_round\\chain_reactions",
+        "problem_name": "Chain Reactions",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    F = list(map(int, input().split()))\n    P = list(map(int, input().split()))\n    initiators = [i for i in range(N) if P[i] == 0]\n    funs = []\n    for initiator in initiators:\n        visited = set()\n        max_fun = 0\n        stack = [(initiator, F[initiator])]\n        while stack:\n            module, fun = stack.pop(0)\n            if module not in visited:\n                visited.add(module)\n                if P[module] != 0:\n                    stack.append((P[module], F[P[module]]))\n                max_fun = max(max_fun, fun)\n        funs.append(max_fun)\n    print(f\"Case #{_+1}: {sum(sorted(funs, reverse=True))}\")\n```",
+        "generated_at": "2025-05-02T23:56:07.178931",
+        "generation_time": 3.149871349334717
+    },
+    {
+        "source": "2022\\qualification_round\\d1000000",
+        "problem_name": "d1000000",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    S = list(map(int, input().split()))\n    max_straight = 0\n    for s in set(S):\n        if s > max_straight:\n            max_straight = s\n    print(f\"Case #{_+1}: {max_straight}\")\n```",
+        "generated_at": "2025-05-02T23:56:08.608320",
+        "generation_time": 1.4186673164367676
+    },
+    {
+        "source": "2022\\qualification_round\\punched_cards",
+        "problem_name": "Punched Cards",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    R, C = map(int, input().split())\n    print(f\"Case #{t}:\")\n    print(\"+\" + \"-\"*C + \"+\")\n    for r in range(R):\n        if r == 0:\n            print(\"|\", end=\"\")\n            print(\".|.\"*(C-1), end=\"\")\n            print(\"|\")\n        elif r == R-1:\n            print(\"|\", end=\"\")\n            print(\"+-\"*C, end=\"\")\n            print(\"+\")\n        else:\n            print(\"|\", end=\"\")\n            print(\".|.\"*(C-1), end=\"\")\n            print(\"|\")\n    print(\"+\" + \"-\"*C + \"+\")",
+        "generated_at": "2025-05-02T23:56:10.980183",
+        "generation_time": 2.3543808460235596
+    },
+    {
+        "source": "2022\\qualification_round\\twisty_little_passages",
+        "problem_name": "Twisty Little Passages",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, K = map(int, input().split())\n    for _ in range(K+1):\n        R, P = map(int, input().split())\n        if _ < K:\n            print(0)\n        else:\n            # your estimation code here\n            pass\n```",
+        "generated_at": "2025-05-02T23:56:12.428708",
+        "generation_time": 1.4339566230773926
+    },
+    {
+        "source": "2022\\round_1a\\double_or_one_thing",
+        "problem_name": "Double or One Thing",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    S = input()\n    res = ''\n    for c in S:\n        if c * 2 in S:\n            res += c * 2\n        else:\n            res += c\n    print(f\"Case #{_+1}: {res}\")\n```",
+        "generated_at": "2025-05-02T23:56:13.690532",
+        "generation_time": 1.2391712665557861
+    },
+    {
+        "source": "2022\\round_1a\\equal_sum",
+        "problem_name": "Equal Sum",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    A = set()\n    for _ in range(N):\n        a = int(input())\n        while a in A:\n            a += 1\n        A.add(a)\n    B = set()\n    for _ in range(N):\n        b = int(input())\n        while b in A | B:\n            b += 1\n        B.add(b)\n    print(*A)\n    for i, b in enumerate(B):\n        if sum(A) > sum(B):\n            print(b)\n        else:\n            print(i+1)\n```",
+        "generated_at": "2025-05-02T23:56:16.037851",
+        "generation_time": 2.3245580196380615
+    },
+    {
+        "source": "2022\\round_1a\\weightlifting",
+        "problem_name": "Weightlifting",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    E, W = map(int, input().split())\n    weights_needed = [list(map(int, input().split())) for _ in range(E)]\n    operations = 0\n    current_weights = []\n    for exercise in weights_needed:\n        new_weights = [weight for weight_type, weight in enumerate(exercise) if weight > 0]\n        if not current_weights:\n            current_weights = new_weights\n        else:\n            operations += sum(1 for _ in new_weights)\n            current_weights = [weight for weight_type, weight in enumerate(current_weights + new_weights) if weight > 0]\n    print(f\"Case #{_+1}: {operations}\")",
+        "generated_at": "2025-05-02T23:56:18.670505",
+        "generation_time": 2.620009422302246
+    },
+    {
+        "source": "2022\\round_1b\\asedatab",
+        "problem_name": "ASeDatAb",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    V = input()\n    N = 0\n    while N < 300:\n        r = int((8 * (2**31 - 1)) % len(V))\n        V = str(format(int(V, 2) ^ (2**r), '08b'))\n        N = bin(int(V, 2)).count('1')\n        print(V)\n    if N == 0:\n        break\nelse:\n    print(-1)",
+        "generated_at": "2025-05-02T23:56:20.974141",
+        "generation_time": 2.2812085151672363
+    },
+    {
+        "source": "2022\\round_1b\\controlled_inflation",
+        "problem_name": "Controlled Inflation",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, P = map(int, input().split())\n    pressures = [list(map(int, input().split())) for _ in range(N)]\n    prev_target = 0\n    button_presses = 0\n    for customer in pressures:\n        for product_pressure in customer:\n            if product_pressure != prev_target:\n                if product_pressure > prev_target:\n                    button_presses += product_pressure - prev_target\n                else:\n                    button_presses -= prev_target - product_pressure\n            prev_target = product_pressure\n    print(f\"Case # {_ + 1}: {button_presses}\")",
+        "generated_at": "2025-05-02T23:56:23.355339",
+        "generation_time": 2.3536179065704346
+    },
+    {
+        "source": "2022\\round_1b\\pancake_deque",
+        "problem_name": "Pancake Deque",
+        "python_code": "```\nimport heapq\nT = int(input())\nfor t in range(1, T + 1):\n    N = int(input())\n    D = list(map(int, input().split()))\n    max_deliciousness = max(D)\n    min_deliciousness = min(D)\n    res = 0\n    for d in D:\n        if d >= max_deliciousness:\n            res += 1\n            max_deliciousness -= 1\n        elif d <= min_deliciousness:\n            res += 1\n            min_deliciousness += 1\n    print(f\"Case #{t}: {res}\")",
+        "generated_at": "2025-05-02T23:56:25.660408",
+        "generation_time": 2.296447992324829
+    },
+    {
+        "source": "2022\\round_1c\\intranets",
+        "problem_name": "Intranets",
+        "python_code": "```\nimport math\np, q = 1, 1\nMOD = 1000000007\ndef mul(a, b):\n    return (a * b) % MOD\ndef power(a, k):\n    if k == 0:\n        return 1\n    elif k % 2 == 0:\n        half = power(a, k // 2)\n        return mul(half, half)\n    else:\n        return mul(a, mul(power(a, k - 1), MOD))\nT = int(input())\nfor i in range(1, T + 1):\n    M, K = map(int, input().split())\n    ways = math.factorial(M * (M - 1) // 2)\n    for _ in range(K - 1):\n        ways //= (M - _ - 1) * (_ + 1)\n    p *= ways\n    q = power(q, M * (M - 1) // 2)\n    print(f\"Case #{i}: {mul(p, power(q, MOD - 2))}\")\n```",
+        "generated_at": "2025-05-02T23:56:29.426797",
+        "generation_time": 3.7422282695770264
+    },
+    {
+        "source": "2022\\round_1c\\letter_blocks",
+        "problem_name": "Letter Blocks",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    N = int(input())\n    towers = [input() for _ in range(N)]\n    megatower = []\n    used_letters = set()\n    for tower in towers:\n        last_letter = None\n        for block in tower:\n            if block not in used_letters:\n                if block != last_letter:\n                    megatower.append(block)\n                    used_letters.add(block)\n                else:\n                    break\n            last_letter = block\n    if len(megatower) == N * 10:\n        print(f\"Case #{t}: {''.join(megatower)}\")\n    else:\n        print(f\"Case #{t}: IMPOSSIBLE\")",
+        "generated_at": "2025-05-02T23:56:32.046200",
+        "generation_time": 2.609926700592041
+    },
+    {
+        "source": "2022\\round_1c\\squary",
+        "problem_name": "Squary",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, K = map(int, input().split())\n    A = list(map(int, input().split()))\n    sum_A = sum(A)\n    sum_squares_A = sum(i**2 for i in A)\n    if (sum_A ** 2 == sum_squares_A):\n        print(\"Case #{}: {}\".format(_, \"IMPOSSIBLE\"))\n    else:\n        for x in range(-10**18, 10**18+1):\n            B = A + [x]\n            sum_B = sum(B)\n            sum_squares_B = sum(i**2 for i in B)\n            if (sum_B ** 2 == sum_squares_B):\n                print(\"Case #{}: {}\".format(_, \" \".join(map(str, B))))\n                break\n        else:\n            print(\"Case #{}: IMPOSSIBLE\".format(_))",
+        "generated_at": "2025-05-02T23:56:35.233608",
+        "generation_time": 3.160066843032837
+    },
+    {
+        "source": "2022\\round_2\\i_o_bot",
+        "problem_name": "I, O Bot",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N, C = map(int, input().split())\n    balls = [list(map(int, input().split())) for _ in range(N)]\n    ans = 2 * (N - 1) + max(0, abs(balls[0][0]) - 1)\n    print(f\"Case # {_+1}: {ans}\")\n```",
+        "generated_at": "2025-05-02T23:56:36.962982",
+        "generation_time": 1.6951236724853516
+    },
+    {
+        "source": "2022\\round_2\\pixelated_circle",
+        "problem_name": "Pixelated Circle",
+        "python_code": "```\nT = int(input())\nfor i in range(T):\n    R = int(input())\n    wrong_pixels = set()\n    for x in range(-R, R+1):\n        for y in range(-R, R+1):\n            if (x**2 + y**2)**0.5 <= R:\n                wrong_pixels.add((x, y))\n    correct_pixels = set()\n    for x in range(-R, R+1):\n        for y in range(-R, R+1):\n            if (x**2 + y**2)**0.5 <= R:\n                correct_pixels.add((x, y))\n    diff_pixels = list(correct_pixels - wrong_pixels) + list(wrong_pixels - correct_pixels)\n    print(f\"Case #{i+1}: {len(diff_pixels)}\")",
+        "generated_at": "2025-05-02T23:56:39.685779",
+        "generation_time": 2.6932997703552246
+    },
+    {
+        "source": "2022\\round_2\\saving_the_jelly",
+        "problem_name": "Saving the Jelly",
+        "python_code": "```\nimport heapq\n\ndef jelly_saver(N, kids, sweets):\n    heap = []\n    for i in range(1, N+2):\n        for j in range(N+1):\n            if i == 1:\n                continue\n            dist = ((kids[j-1][0] - sweets[i-1][0]) ** 2 + (kids[j-1][1] - sweets[i-1][1]) ** 2) ** 0.5\n            heapq.heappush(heap, (dist, i))\n    for _ in range(N):\n        _, jelly = heapq.heappop(heap)\n        print(f\"Case #{N+1}: POSSIBLE\")\n        for i in range(1, N+1):\n            if i == 1:\n                print(f\"{i} {jelly}\")\n            else:\n                while True:\n                    dist, j = heapq.heappop(heap)\n                    if j != jelly:\n                        print(f\"{i} {j}\")\n                        break\n    return\n\nT = int(input())\nfor t in range(T):\n    N = int(input())\n    kids = []\n    for _ in range(N):\n        x, y = map(int, input().split())\n        kids.append((x, y))\n    sweets = []\n    for _ in range(N+1):\n        x, y = map(int, input().split())\n        sweets.append((x, y))\n    jelly_saver(N, kids, sweets)",
+        "generated_at": "2025-05-02T23:56:44.582506",
+        "generation_time": 4.880637168884277
+    },
+    {
+        "source": "2022\\round_2\\spiraling_into_control",
+        "problem_name": "Spiraling Into Control",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    N, K = map(int, input().split())\n    if N % 2 == 0:\n        print(f\"Case #{t}: IMPOSSIBLE\")\n    else:\n        x, y = 1, 1\n        shortcuts = []\n        while K > 0 and y < N*N:\n            if (x+y) % N == 0 or (x+y+1) % N == 0:\n                y += 2\n                K -= 1\n            else:\n                if x + 1 < N * N // N:\n                    x += 1\n                else:\n                    x, y = x + N - 1, y + 1\n                shortcuts.append((x, y))\n        if K > 0:\n            print(f\"Case #{t}: IMPOSSIBLE\")\n        else:\n            print(f\"Case #{t}: {len(shortcuts)}\")\n            for i in range(len(shortcuts)):\n                print(*shortcuts[i], sep=' ')",
+        "generated_at": "2025-05-02T23:56:49.170783",
+        "generation_time": 4.56571888923645
+    },
+    {
+        "source": "2022\\round_3\\duck_duck_geese",
+        "problem_name": "Duck, Duck, Geese",
+        "python_code": "```\nfrom collections import Counter\ndef count_ways(N, C, A, B):\n    ways = 0\n    for i in range(N+1):\n        if i < 2:\n            continue\n        colors = [0] * (C + 1)\n        geese = []\n        for j in range(N):\n            if j % N == i - 1:\n                geese.append(Counter({P_j: 1 for P_j in P}))\n        for color, count in Counter().items():\n            diff = sum(a <= k <= b for k, a, b in zip(geese, A[color-1], B[color-1])) - count\n            if diff < 0:\n                return ways\n            ways += diff\n    return ways\n\nT = int(input())\nfor t in range(T):\n    N, C = map(int, input().split())\n    A = [list(map(int, input().split())) for _ in range(C)]\n    P = list(map(int, input().split()))\n    print(f\"Case #{t+1}: {count_ways(N, C, [a[0] for a in A], [a[1] for a in A])}\")\n```",
+        "generated_at": "2025-05-02T23:56:53.288163",
+        "generation_time": 4.1056811809539795
+    },
+    {
+        "source": "2022\\round_3\\mascot_maze",
+        "problem_name": "Mascot Maze",
+        "python_code": "```\nfrom collections import deque\n\ndef can_assign_mascots(n, left_exits, right_exits):\n    visited = [[False] * (n + 1) for _ in range(26)]\n    current_room = [0]\n    assigned_mascots = [''] * n\n\n    while current_room:\n        room = current_room.pop()\n        for i in range(26):\n            if ord('A') + i <= ord('M'):\n                if not visited[i][room]:\n                    if left_exits[room - 1] == room and chr(i + ord('A')) not in assigned_mascots[:room]:\n                        visited[i][room] = True\n                        current_room.append(left_exits[room - 1])\n                        assigned_mascots[room - 1] = chr(i + ord('A'))\n                    elif right_exits[room - 1] == room and chr(i + ord('A')) not in assigned_mascots[:room]:\n                        visited[i][room] = True\n                        current_room.append(right_exits[room - 1])\n                        assigned_mascots[room - 1] = chr(i + ord('A'))\n        if all(visited[i][n - 1] for i in range(26)):\n            return ''.join(assigned_mascots)\n    return 'IMPOSSIBLE'\n\nT = int(input())\nfor t in range(T):\n    n = int(input())\n    left_exits = list(map(int, input().split()))\n    right_exits = list(map(int, input().split()))\n    print(f'Case #{t + 1}: {can_assign_mascots(n, left_exits, right_exits)}')",
+        "generated_at": "2025-05-02T23:56:58.805125",
+        "generation_time": 5.49868631362915
+    },
+    {
+        "source": "2022\\round_3\\revenge_of_gorosort",
+        "problem_name": "Revenge of GoroSort",
+        "python_code": "```\nimport random\nt, n, k = map(int, input().split())\nfor _ in range(t):\n    balls = list(map(int, input().split()))\n    boxes = [i for i in range(1, n+1)]\n    color_box = {}\n    for i in range(k):\n        for j in range(n):\n            if random.random() < 0.5:\n                temp = boxes[boxes.index(balls[j])]\n                balls[j] = balls[balls.index(temp)]\n                boxes.remove(temp)\n        for j in range(len(boxes)):\n            color_box.setdefault((j+1)%3, []).append(boxes[j])\n    print(*balls)\n```",
+        "generated_at": "2025-05-02T23:57:01.432427",
+        "generation_time": 2.6024842262268066
+    },
+    {
+        "source": "2022\\round_3\\win_as_second",
+        "problem_name": "Win As Second",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    N = int(input())\n    tree_edges = []\n    for _ in range(N - 1):\n        a, b = map(int, input().split())\n        tree_edges.append((a, b))\n    \n    M = int(input())\n    for _ in range(M):\n        K = int(input())\n        A = list(map(int, input().split()))\n        Vreni_move = [K]\n        for i in range(K - 1):\n            Vreni_move.append(A[i])\n        print(*Vreni_move)\n```",
+        "generated_at": "2025-05-02T23:57:04.052661",
+        "generation_time": 2.5916566848754883
+    },
+    {
+        "source": "2022\\world_finals\\goose_goose_ducks",
+        "problem_name": "Goose, Goose, Ducks?",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T+1):\n    N, M, S = map(int, input().split())\n    meetings = []\n    for _ in range(M):\n        x, y, c = map(int, input().split())\n        meetings.append((x, y, c))\n    statements = []\n    for _ in range(S):\n        a, b, u, v, d = map(int, input().split())\n        statements.append(((a, b), (u, v), d))\n    min_ ducks = float('inf')\n    for i in range(2**N):\n        hypothesis = [0]*N\n        for j in range(N):\n            if (i >> j) & 1:\n                hypothesis[j] = 1\n            else:\n                hypothesis[j] = 0\n        if all(hypothesis[k] == 0 or all((a, b) != (c, d) and ((u, v), D) in meetings for (a, c), (b, d), U, V, D in statements):\n            duck_count = sum(hypothesis)\n            min_ ducks = min(min_ ducks, duck_count)\n    print(f\"Case #{t}: {min_ ducks}\")\n```",
+        "generated_at": "2025-05-02T23:57:08.605028",
+        "generation_time": 4.525069713592529
+    },
+    {
+        "source": "2022\\world_finals\\schrdinger_and_pavlov",
+        "problem_name": "Schr\u00f6dinger and Pavlov",
+        "python_code": "```\nimport math\n\ndef solve(n, s, b):\n    count = 0\n    for i in range(1 << n):  # iterate over all possible configurations\n        has_cat_last_box = False\n        has_cat_in_last_box = False\n        cat_in_last_box = (s[-1] == 'C')\n        \n        for j in range(n-1):\n            if s[j] == '?':\n                s_j = 'C' if ((i >> j) & 1) else '.'\n            else:\n                s_j = s[j]\n            \n            if s_j == 'C':\n                has_cat_last_box = True\n                for k in range(j+1, n):\n                    if s[k] == '?':\n                        s_k = 'C' if ((i >> k) & 1) else '.'\n                    else:\n                        s_k = s[k]\n                    \n                    if s_k == '.' and b[j] != k:\n                        has_cat_last_box = False\n                        break\n                    \n                if has_cat_last_box:\n                    for k in range(j+1, n):\n                        if s[k] == '?':\n                            s_k = 'C' if ((i >> k) & 1) else '.'\n                        else:\n                            s_k = s[k]\n                        \n                        if s_k == 'C' and b[j] != k:\n                            has_cat_in_last_box = True\n                            break\n                    \n        if cat_in_last_box and not has_cat_in_last_box:\n            count += 1\n            \n    return count % (10**9 + 7)\n\nt = int(input())\nfor i in range(t):\n    n = int(input())\n    s = input()\n    b = list(map(int, input().split()))\n    print(f\"Case #{i+1}: {solve(n, s, b)}\")\n```",
+        "generated_at": "2025-05-02T23:57:15.273273",
+        "generation_time": 6.649393081665039
+    },
+    {
+        "source": "2022\\world_finals\\slide_parade",
+        "problem_name": "Slide Parade",
+        "python_code": "```\nfrom collections import deque\n\ndef gooli_parade(B, S):\n    graph = [[] for _ in range(B+1)]\n    for i in range(S):\n        u, v = map(int, input().split())\n        graph[u].append(v)\n    \n    visited = [[False] * (B + 1) for _ in range(2 ** B)]\n    queue = deque([(1, 0)])\n    visited[0][1] = True\n    \n    while queue:\n        state, building = queue.popleft()\n        if building == B:\n            return state\n        \n        for next_building in graph[building]:\n            new_state = state ^ (1 << next_building)\n            if not visited[new_state][next_building]:\n                visited[new_state][next_building] = True\n                queue.append((new_state, next_building))\n    \n    return 'IMPOSSIBLE'\n\nT = int(input())\nfor i in range(T):\n    B, S = map(int, input().split())\n    print(f\"Case #{i+1}: {gooli_parade(B, S)}\")\n```",
+        "generated_at": "2025-05-02T23:57:18.881222",
+        "generation_time": 3.59832763671875
+    },
+    {
+        "source": "2022\\world_finals\\triangles",
+        "problem_name": "Triangles",
+        "python_code": "```\nT = int(input())\nfor t in range(1, T + 1):\n    N = int(input())\n    P = []\n    for _ in range(N):\n        x, y = map(int, input().split())\n        P.append((x, y))\n    max_triangles = 0\n    triangles = set()\n    for i in range(N - 2):\n        for j in range(i + 1, N - 1):\n            for k in range(j + 1, N):\n                p1, q1 = P[i]\n                p2, q2 = P[j]\n                p3, q3 = P[k]\n                if (q2 - q1) * (p3 - p1) == (q3 - q1) * (p2 - p1):\n                    continue\n                triangles.add((i + 1, j + 1, k + 1))\n    print(f\"Case #{t}: {len(triangles)}\")\n    for triangle in sorted(list(triangles)):\n        print(*triangle, sep=' ')",
+        "generated_at": "2025-05-02T23:57:22.319930",
+        "generation_time": 3.4076175689697266
+    },
+    {
+        "source": "2022\\world_finals\\wonderland_chase",
+        "problem_name": "Wonderland Chase",
+        "python_code": "```\nT = int(input())\nfor _ in range(T):\n    J, C, A, Q = map(int, input().split())\n    graph = {}\n    for i in range(C):\n        U, V = map(int, input().split())\n        if U not in graph:\n            graph[U] = []\n        if V not in graph:\n            graph[V] = []\n        graph[U].append(V)\n        graph[V].append(U)\n    min_moves = 0\n    for _ in range(10**9):\n        moves = 0\n        a_pos, q_pos = A, Q\n        while True:\n            if a_pos == q_pos:\n                print(f\"Case #{_+1}: CATCH\")\n                exit()\n            moves += 2\n            q_move = min((x for x in graph[q_pos] if x != a_pos), default=None)\n            if q_move is None:\n                print(f\"Case #{_+1}: SAFE\")\n                exit()\n            a_pos, q_pos = q_move, q_pos\n    print(f\"Case #{_+1}: {min_moves}\")\n```",
+        "generated_at": "2025-05-02T23:57:26.188757",
+        "generation_time": 3.846379518508911
+    }
+]

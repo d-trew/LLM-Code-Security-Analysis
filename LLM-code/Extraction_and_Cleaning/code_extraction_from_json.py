@@ -1,8 +1,8 @@
 import json
 import os
 
-GEMINI_RESPONSES_JSON_PATH = "LLM_Responses/gemini_responses.json"
-TARGET_DIR = "LLM_Responses/responses_into_files/gemini"
+GEMINI_RESPONSES_JSON_PATH = "LLM_Responses/wizardcoder_responses.json"
+TARGET_DIR = "LLM_Responses/responses_into_files/wizardcoder"
 
 # Ensure the target directory exists
 os.makedirs(TARGET_DIR, exist_ok=True)
