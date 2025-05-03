@@ -1,36 +1,48 @@
-from collections import Counter
+import math
 
-def calculate_probability(D):
-    total_area = D * D * 4
-    red_area = (2 * D + 1) ** 2 - (D - 1) ** 2
-    blue_area = total_area - red_area
-    distinguishable_area = red_area
-    non_distinguishable_area = blue_area
+def main():
+    test_cases = int(input())
+    for case in range(test_cases):
+        N, D = map(int, input().split())
+        repair_centers = []
+        for i in range(N):
+            x, y = map(int, input().split())
+            repair_centers.append((x, y))
+        
+        # Calculate the area of each red region
+        red_region_area = 0
+        for i in range(N):
+            for j in range(i+1, N):
+                distance = math.sqrt((repair_centers[i][0] - repair_centers[j][0])**2 + (repair_centers[i][1] - repair_centers[j][1])**2)
+                if distance <= D:
+                    red_region_area += 1
+        
+        # Calculate the area of each blue region
+        blue_region_area = 0
+        for i in range(N):
+            for j in range(i+1, N):
+                distance = math.sqrt((repair_centers[i][0] - repair_centers[j][0])**2 + (repair_centers[i][1] - repair_centers[j][1])**2)
+                if distance > D:
+                    blue_region_area += 1
+        
+        # Calculate the probability of Principia being in a red region
+        prob_red = red_region_area / (N * (N - 1))
+        
+        # Calculate the probability of Principia being in a blue region
+        prob_blue = blue_region_area / (N * (N - 1))
+        
+        # Find the minimum denominator
+        min_denom = math.inf
+        for i in range(N):
+            for j in range(i+1, N):
+                distance = math.sqrt((repair_centers[i][0] - repair_centers[j][0])**2 + (repair_centers[i][1] - repair_centers[j][1])**2)
+                if distance <= D:
+                    min_denom = min(min_denom, distance)
+        
+        # Calculate the probability of Principia being in a distinguishable location
+        prob_distinguishable = (prob_red * min_denom) / (prob_red * min_denom + prob_blue * (D - min_denom))
+        
+        print(f"Case #{case+1}: {int(prob_distinguishable*100)}/{int((prob_distinguishable*100)%100)}")
 
-    if D == 1:
-        return 0, 1
-
-    probability = float(red_area) / float(total_area)
-    return int(probability * (10 ** 9)) % (10 ** 9), total_area
-
-T = int(input())
-for t in range(T):
-    N, D = map(int, input().split())
-    repair_centers = []
-    for _ in range(N):
-        x, y = map(int, input().split())
-        repair_centers.append((x, y))
-    
-    red_points = set()
-    for i in range(-D, D+1):
-        for j in range(-D, D+1):
-            if abs(i) + abs(j) <= D:
-                for center in repair_centers:
-                    if abs(i - center[0]) + abs(j - center[1]) <= D:
-                        red_points.add((i, j))
-    
-    distinguishable_area = len(red_points)
-    non_distinguishable_area = (2 * D + 1) ** 2 - distinguishable_area
-    
-    probability, total_area = calculate_probability(D)
-    print("Case #{}: {}".format(t+1, str(probability) + " " + str(total_area)))
+if __name__ == "__main__":
+    main()

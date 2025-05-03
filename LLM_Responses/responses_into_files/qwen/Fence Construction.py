@@ -1,28 +1,29 @@
-import sys
+def can_place_printer(fences, position):
+    for fence in fences:
+        if (fence[0][0] <= position[0] <= fence[1][0] or
+            fence[0][0] >= position[0] >= fence[1][0]) and \
+           (fence[0][1] <= position[1] <= fence[1][1] or
+            fence[0][1] >= position[1] >= fence[1][1]):
+            return False
+    return True
 
-def dfs(i, fences, k, visited):
-    if i >= len(fences):
-        return True
-    for j in range(len(fences)):
-        if not visited[j] and (i == k or fences[i][0] != fences[j][0] or fences[i][1] != fences[j][1]):
-            visited[j] = True
-            if dfs(i + 1, fences, k, visited):
-                return True
-    return False
-
-def solve(fences, k):
-    for i in range(len(fences)):
-        visited = [False] * len(fences)
-        visited[k - 1] = True
-        if not dfs(0, fences, k - 1, visited):
-            return "Case #{}: Impossible".format(sys._getframe().f_lineno)
-    return "Case #{}: {}".format(sys._getframe().f_lineno, ' '.join(map(str, range(1, len(fences) + 1))))
+def find_order(fences, K):
+    order = list(range(1, len(fences) + 1))
+    for i in range(K):
+        for j in range(i + 1, len(order)):
+            if not can_place_printer(fences[:i] + fences[j:j+1] + fences[i+1:j], (fences[i][0][0], fences[i][0][1])):
+                order[i], order[j] = order[j], order[i]
+    return ' '.join(map(str, order))
 
 T = int(input())
-for t in range(T):
+for t in range(1, T + 1):
     F, K = map(int, input().split())
     fences = []
-    for i in range(K):
-        x1, y1, x2, y2 = map(int, input().split())
-        fences.append(((x1, y1), (x2, y2)))
-    print(solve(fences, K))
+    for _ in range(F):
+        A, B, C, D = map(int, input().split())
+        if A == C and B < D:
+            fences.append(((A, B), (C, D)))
+        else:
+            fences.append(((C, D), (A, B)))
+    result = find_order(fences, K)
+    print(f"Case #{t}: {result}")

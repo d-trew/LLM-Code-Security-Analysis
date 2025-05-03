@@ -1,20 +1,33 @@
-def googlement_count(G):
-    L = len(G)
-    count_dict = {0: [1]}
-    for i in range(10):
-        if i > L:
+def count_possible_googlements(G):
+    from collections import Counter
+    
+    def decay(g):
+        counts = Counter(g)
+        return ''.join(str(counts[str(i)]) for i in range(len(g) + 1))
+    
+    G_set = {G}
+    while True:
+        new_G_set = set(decay(g) for g in G_set)
+        if not new_G_set - G_set:
             break
-        new_count_dict = {}
-        for googlement, counts in count_dict.items():
-            for j in range(L+1):
-                if str(i) * (j + 1) == G[:j+1]:
-                    new_counts = list(counts)
-                    new_counts.append(int(''.join(map(str, counts))))
-                    new_count_dict.setdefault(0, []).append(new_counts)
-        count_dict = new_count_dict
-    return len(count_dict[0])
+        G_set.update(new_G_set)
+    
+    return len(G_set)
 
-T = int(input())
-for i in range(T):
-    G = input()
-    print(f"Case #{i+1}: {googlement_count(G)}")
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    results = []
+    
+    for i in range(1, T + 1):
+        G = data[i]
+        result = count_possible_googlements(G)
+        results.append(f"Case #{i}: {result}")
+    
+    print("\n".join(results))
+
+if __name__ == "__main__":
+    main()

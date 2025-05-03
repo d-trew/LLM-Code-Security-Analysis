@@ -1,6 +1,15 @@
 import re
-for _ in range(int(input())):
-    a, b = map(int, input().split())
-    pattern = re.compile(input())
-    count = sum(1 for i in range(a, b+1) if bool(pattern.match(str(i))))
-    print(f"Case # {_+1}: {count}")
+
+def count_matches(regex, A, B):
+    count = 0
+    for i in range(A, B + 1):
+        if re.match(regex, str(i)):
+            count += 1
+    return count
+
+T = int(input())
+for t in range(1, T + 1):
+    A, B = map(int, input().split())
+    regex = input()
+    result = count_matches(regex, A, B)
+    print(f"Case #{t}: {result}")

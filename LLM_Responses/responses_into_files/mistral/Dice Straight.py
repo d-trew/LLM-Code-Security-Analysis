@@ -1,12 +1,12 @@
-T = int(input())
-for t in range(1, T+1):
-    N = int(input())
-    max_len = 0
-    for i in range(N):
-        D = list(map(int, input().split()))
-        D.sort()
-        for j in range(len(D)-4):
-            if D[j+4] - D[j] == 5:
-                max_len = max(max_len, j+5)
-                break
-    print("Case #{}: {}".format(t, max_len))
+import sys
+input = sys.stdin.readlines
+
+def longest_straight(dices):
+    numbers = sorted(set([sum(sorted([d[j] for d in dices if d[j])) for j in range(6)]))
+    return max(1 + len(list(filter(lambda x: x - numbers[i] in numbers, numbers)) for i in range(len(numbers) - 1))
+
+T = int(input().strip())
+for _ in range(T):
+    N = int(input().strip())
+    dices = [list(map(int, input().strip().split())) for _ in range(N)]
+    print(f'Case #{_ + 1}: {longest_straight(dices)}')

@@ -1,22 +1,13 @@
+def print_logo(printer1, printer2, printer3):
+    for c in range(min(printer1)+1):
+        for m in range(min(printer2)+1):
+            for y in range(min(printer3)+1):
+                k = 10**6 - (c + m + y)
+                if k >= 0 and c <= printer1[0] and m <= printer2[0] and y <= printer3[0]:
+                    return f"{c} {m} {y} {k}"
+    return "IMPOSSIBLE"
+
 T = int(input())
-for _ in range(T):
-    C1, M1, Y1, K1 = map(int, input().split())
-    C2, M2, Y2, K2 = map(int, input().split())
-    C3, M3, Y3, K3 = map(int, input().split())
-    for c in range(C1+1):
-        for m in range(M1+1):
-            for y in range(Y1+1):
-                for k in range(K1+1):
-                    if c + m + y + k == 10**6 and min(c, m, y, k) <= min(C1, M1, Y1, K1) and \
-                       min(c, m, y, k) <= min(C2, M2, Y2, K2) and min(c, m, y, k) <= min(C3, M3, Y3, K3):
-                        print(f"Case #{_+1}: {c} {m} {y} {k}")
-                        break
-                else:
-                    continue
-                break
-            else:
-                continue
-        else:
-            continue
-    else:
-        print("IMPOSSIBLE")
+for t in range(1, T+1):
+    printers = [list(map(int, input().split())) for _ in range(3)]
+    print(f'Case #{t}: {print_logo(*printers)}')

@@ -1,19 +1,31 @@
-T = int(input())
-for t in range(1, T+1):
-    N = int(input())
-    workers = []
-    for _ in range(N):
-        worker = [int(c) for c in input()]
-        workers.append(worker)
-    min_spent = 0
-    for i in range(N):
-        for j in range(N):
-            if workers[i][j] == 1:
-                all_known = True
-                for k in range(N):
-                    if k != i and workers[k][j] == 1:
-                        all_known = False
-                        break
-                if not all_known:
-                    min_spent += 1
-    print(f"Case #{t}: {min_spent}")
+def min_training_cost(N, workers):
+    max_machines = [0] * N
+    for worker in workers:
+        machines = [i for i, knows in enumerate(worker) if knows == '1']
+        for machine in machines:
+            max_machines[machine] = max(max_machines[machine], len(machines))
+    
+    return sum(max_machines)
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        N = int(data[index])
+        workers = [data[index + i] for i in range(N)]
+        index += N
+        
+        result = min_training_cost(N, workers)
+        results.append(f"Case #{_ + 1}: {result}")
+    
+    for result in results:
+        print(result)
+
+if __name__ == "__main__":
+    main()

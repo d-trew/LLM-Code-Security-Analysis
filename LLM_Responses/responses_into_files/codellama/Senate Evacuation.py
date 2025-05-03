@@ -1,15 +1,17 @@
-t = int(input())
-for i in range(t):
-    n = int(input())
-    senators = list(map(int, input().split()))
-    plan = []
-    while sum(senators) > 0:
-        min_majority = float('inf')
-        for j in range(n):
-            majority = senators[j] // (j + 1)
-            if majority < min_majority and all(majority <= senators[k] // (k + 1) for k in range(j)):
-                min_majority = majority
-                best_party = j
-        plan.append(chr(65 + best_party).upper() * min_majority)
-        senators = [senators[i] - min_majority for i in range(n)]
-    print(f"Case #{i+1}: {' '.join(plan)}")
+import sys
+def solve(N,P):
+    if N==2:
+        return 'AB'
+    else:
+        ans=''
+        for i in range(len(P)):
+            if P[i]%2!=0:
+                ans+=chr(ord('A')+i)
+        for i in range(len(P)):
+            if P[i]>1:
+                ans+=chr(ord('A')+i)*int((P[i]-1)/2)
+        return ans
+T=int(input())
+for t in range(T):
+    N,P=[int(x) for x in input().split()]
+    print("Case #"+str(t+1)+": "+solve(N,P))

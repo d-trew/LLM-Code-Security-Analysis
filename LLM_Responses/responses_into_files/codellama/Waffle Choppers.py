@@ -1,27 +1,50 @@
-T = int(input())
-for _ in range(T):
-    R, C, H, V = [int(x) for x in input().split()]
-    waffle = [input() for _ in range(R)]
-    chocolate_count = sum(1 for row in waffle for cell in row if cell == '@')
-    pieces = {}
-    for i in range(H + 1):
-        for j in range(V + 1):
-            piece = ''
-            for k in range(R):
-                for l in range(C):
-                    if k < R - 1 and (i == H or k >= i):
-                        piece += waffle[k][l]
-                    else:
-                        break
-            for l in range(C):
-                if l < C - 1 and (j == V or l >= j):
-                    piece += waffle[R - 1][l]
-                else:
-                    break
-            pieces.setdefault(tuple(map(len, piece.split('.'))), []).append(piece)
-    for x in pieces.values():
-        if len(set(x)) > 1:
-            print('Case #{}: IMPOSSIBLE'.format(_ + 1))
-            break
+import sys
+
+def solve(R, C, H, V):
+    # Check if the waffle is empty
+    if R * C == 0:
+        return "IMPOSSIBLE"
+    
+    # Check if the number of horizontal and vertical cuts are valid
+    if H < 1 or V < 1 or H + 1 > R or V + 1 > C:
+        return "IMPOSSIBLE"
+    
+    # Initialize a dictionary to keep track of the chocolate chip counts
+    chip_count = {}
+    
+    # Iterate through each cell in the waffle and update the chip count dictionary
+    for i in range(R):
+        for j in range(C):
+            if grid[i][j] == "@":
+                chip_count[(i, j)] = 1
+            else:
+                chip_count[(i, j)] = 0
+    
+    # Iterate through each horizontal cut and update the chip count dictionary
+    for i in range(H):
+        start = (i + 1) * C // (H + 1) - 1
+        end = (i + 2) * C // (H + 1)
+        for j in range(start, end):
+            chip_count[(i, j)] += 1
+    
+    # Iterate through each vertical cut and update the chip count dictionary
+    for j in range(V):
+        start = (j + 1) * R // (V + 1) - 1
+        end = (j + 2) * R // (V + 1)
+        for i in range(start, end):
+            chip_count[(i, j)] += 1
+    
+    # Check if the total number of chocolate chips is divisible by the number of diners
+    if sum(chip_count.values()) % (H + 1) * (V + 1) == 0:
+        return "POSSIBLE"
     else:
-        print('Case #{}: POSSIBLE'.format(_ + 1))
+        return "IMPOSSIBLE"
+    
+# Read input
+R, C, H, V = map(int, sys.stdin.readline().split())
+grid = []
+for _ in range(R):
+    grid.append(list(sys.stdin.readline().rstrip()))
+
+# Print output
+print("Case #1: " + solve(R, C, H, V))

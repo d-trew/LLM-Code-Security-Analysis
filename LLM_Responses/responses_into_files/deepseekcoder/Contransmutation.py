@@ -1,25 +1,40 @@
-T = int(input())
-for _ in range(T):
-    M = int(input())
-    formulas = {}
-    for _ in range(M):
-        R1, R2 = map(int, input().split())
-        if R1 not in formulas:
-            formulas[R1] = []
-        if R2 not in formulas:
-            formulas[R2] = []
-        formulas[R1].append(R2)
-        formulas[R2].append(1)  # lead is always produced
-    G = list(map(int, input().split()))
-    lead = G[0]
-    stack = [(G[i], i) for i in range(M)]
-    while stack:
-        g, metal = stack.pop()
-        if metal == 1:  # lead
-            lead += g
-        else:
-            for R2 in formulas[metal]:
-                if g > 0 and R2 != metal:
-                    stack.append((g - 1, R2))
-                    break
-    print(f"Case #{_+1}: {lead % (1000000007)}")
+import sys
+from heapq import *
+
+def solve():
+    input = sys.stdin.readline
+    MOD = 10**9 + 7
+    
+    t = int(input())
+    for _ in range(t):
+        n, m = map(int, input().split())
+        
+        g = list(map(int, input().split()))
+        edges = [[] for _ in range(n+1)]
+        deg = [0] * (n + 1)
+        dp = [[0] * 2 for _ in range(n+1)]
+        res = 0
+        
+        for i in range(m):
+            a, b = map(int, input().split())
+            edges[b].append(a)
+            deg[a] += 1
+            
+        q = [i for i in range(1, n+1) if not deg[i]]
+        
+        while q:
+            new_q = []
+            for u in q:
+                dp[u][0] = max(dp[v][1] + g[v-1] for v in edges[u]) % MOD
+                dp[u][1] = max(dp[u][1], dp[u][0] if u == 1 else (max(dp[v][1] for v in edges[u]) + g[u-1]))
+                res = max(res, dp[u][1])
+                
+                deg[u] -= 1
+                for v in edges[u]:
+                    if deg[v] == 0:
+                        new_q.append(v)
+            q = new_q
+            
+        print(res % MOD)
+        
+solve()

@@ -1,36 +1,37 @@
-from collections import Counter
+import sys
+from collections import defaultdict
+from heapq import heappop, heappush
 
-def calculate_probability(D):
-    total_area = D * D * 4
-    red_area = (2 * D + 1) ** 2 - (D - 1) ** 2
-    blue_area = total_area - red_area
-    distinguishable_area = red_area
-    non_distinguishable_area = blue_area
+def manhattan_distance(x1, y1, x2, y2):
+    return abs(x1 - x2) + abs(y1 - y2)
 
-    if D == 1:
-        return 0, 1
+def solve():
+    T = int(input().strip())
+    for t in range(T):
+        n, d = map(int, input().split())
+        centers = [tuple(map(int, input().split())) for _ in range(n)]
+        
+        # Create a priority queue to store the repair center locations relative to Principia's current location.
+        pq = [(0, 0, 0)]
+        visited = defaultdict(lambda: float('inf'))
+        while pq:
+            dist, x, y = heappop(pq)
+            
+            if dist > visited[(x, y)]: continue
+            
+            for nx, ny in centers:
+                ndist = manhattan_distance(nx, ny, x, y)
+                
+                if ndist <= d and (ndist < visited[(nx - x, ny - y)] or ((ndist == visited[(nx - x, ny - y)]) and (nx < x))):
+                    visited[(nx - x, ny - y)] = ndist
+                    heappush(pq, (ndist, nx, ny))
+        
+        # Count the number of distinguishable locations.
+        count = 0
+        for dist in visited.values():
+            if dist <= d: count += 1
+                
+        print("Case #{}: {}".format(t + 1, count))
 
-    probability = float(red_area) / float(total_area)
-    return int(probability * (10 ** 9)) % (10 ** 9), total_area
-
-T = int(input())
-for t in range(T):
-    N, D = map(int, input().split())
-    repair_centers = []
-    for _ in range(N):
-        x, y = map(int, input().split())
-        repair_centers.append((x, y))
-    
-    red_points = set()
-    for i in range(-D, D+1):
-        for j in range(-D, D+1):
-            if abs(i) + abs(j) <= D:
-                for center in repair_centers:
-                    if abs(i - center[0]) + abs(j - center[1]) <= D:
-                        red_points.add((i, j))
-    
-    distinguishable_area = len(red_points)
-    non_distinguishable_area = (2 * D + 1) ** 2 - distinguishable_area
-    
-    probability, total_area = calculate_probability(D)
-    print("Case #{}: {}".format(t+1, str(probability) + " " + str(total_area)))
+if __name__ == "__main__":
+    solve()

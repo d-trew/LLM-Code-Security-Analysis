@@ -1,16 +1,21 @@
+import re
+
+def is_roaring(y):
+    y = str(y)
+    for i in range(len(y)):
+        for j in range(i+1, len(y)):
+            if int(y[i:j+1]) != j - i + int(y[j]):
+                return False
+    return True
+
+def next_roaring(y):
+    y = int(y) + 1
+    while True:
+        if is_roaring(y):
+            return y
+        y += 1
+
 T = int(input())
 for _ in range(T):
-    y = int(input())
-    s = str(y)
-    for i in range(len(s)):
-        for j in range(i+1, len(s)+1):
-            k = int(s[i:j])
-            if k > y and is_roaring(k):
-                print(f"Case #{_+1}: {k}")
-                break
-def is_roaring(n):
-    s = str(n)
-    for i in range(1, len(s)):
-        if s[:i] == str(i) and all(int(s[i+j]) == i+j for j in range(len(s)-i)):
-            return True
-    return False
+    Y = int(input())
+    print(f'Case #{_+1}: {next_roaring(Y)}')

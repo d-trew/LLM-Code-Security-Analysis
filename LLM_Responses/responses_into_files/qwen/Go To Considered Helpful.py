@@ -1,31 +1,38 @@
-T = int(input())
-for _ in range(T):
-    R, C = map(int, input().split())
-    son_location = None
-    for i in range(R):
-        row = input()
-        if 'N' in row:
-            son_location = (i, row.index('N'))
-        if 'M' in row:
-            Marlin_location = (i, row.index('M'))
-    if not son_location:
-        print("Case #{}: IMPOSSIBLE".format(_ + 1))
-        continue
-    directions = []
-    while True:
-        x, y = Marlin_location
-        dx, dy = 0, 0
-        if 'N' in row[x+1]: 
-            dx += 1
-        elif 'S' in row[x-1]:
-            dx -= 1
-        if 'E' in row[y+1]:
-            dy += 1
-        elif 'W' in row[y-1]:
-            dy -= 1
-        directions.append('N' if dx > 0 else 'S' if dx < 0 else '')
-        directions.append('E' if dy > 0 else 'W' if dy < 0 else '')
-        Marlin_location = (x + dx, y + dy)
-        if Marlin_location == son_location:
-            break
-    print("Case #{}: {}".format(_ + 1, len(directions)))
+import sys
+
+def find_min_program(R, C, matrix):
+    directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+    for dr, dc in directions:
+        r, c = R // 2, C // 2
+        while True:
+            nr, nc = r + dr, c + dc
+            if nr < 0 or nr >= R or nc < 0 or nc >= C or matrix[nr][nc] == '#':
+                break
+            if matrix[nr][nc] == 'N':
+                return 1
+            r, c = nr, nc
+    return "IMPOSSIBLE"
+
+def main():
+    input = sys.stdin.read
+    data = input().split()
+    
+    index = 0
+    T = int(data[index])
+    index += 1
+    
+    results = []
+    for _ in range(T):
+        R = int(data[index])
+        C = int(data[index + 1])
+        matrix = [data[index + 2 + i] for i in range(R)]
+        index += 2 + R
+        
+        result = find_min_program(R, C, matrix)
+        results.append(result)
+    
+    for i, result in enumerate(results):
+        print(f"Case #{i+1}: {result}")
+
+if __name__ == "__main__":
+    main()

@@ -1,14 +1,51 @@
-T, A, B = map(int, input().split())
+import sys
+
+input = sys.stdin.read
+data = input().split()
+
+T = int(data[0])
+A = int(data[1])
+B = int(data[2])
+
+index = 3
+
 for _ in range(T):
+    R = (A + B) // 2
+    X, Y = 0, 0
+    
     for _ in range(300):
-        r = (A + B) // 2
-        x = int(input())
-        y = int(input())
-        if ((x**2 + y**2)**0.5 - r) % 1 < 10**(-9):
-            print("CENTER")
+        print(X, Y)
+        sys.stdout.flush()
+        
+        response = input().strip()
+        if response == "CENTER":
             break
-        elif (abs(x) > 109 or abs(y) > 109):
+        elif response != "HIT" and response != "MISS":
             print("WRONG")
-            exit()
+            sys.exit(1)
+    
+    # Adjust the radius based on the response
+    if response == "HIT":
+        R -= 1
     else:
-        print("CENTER")
+        R += 1
+    
+    # Adjust the center based on the response
+    if response == "HIT" and X != 0:
+        if Y != 0:
+            X, Y = -X, -Y
+        else:
+            X *= -1
+    elif response == "MISS":
+        if X != 0:
+            X *= -1
+        elif Y != 0:
+            Y *= -1
+    
+    # Ensure the radius is within bounds
+    R = max(A, min(B, R))
+    
+    # Update the center based on the new radius
+    X, Y = 0, 0
+
+print("CENTER")

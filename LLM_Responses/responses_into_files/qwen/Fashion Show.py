@@ -1,52 +1,70 @@
-from collections import deque
-
-def solve_case(n, m, preplaced_models):
-    max_style = 0
-    best_solution = []
+def max_style_points(N, M, models):
+    grid = [['.' for _ in range(N)] for _ in range(N)]
     
-    for _ in range(4**m):
-        current_models = [0] * (n * n)
-        for model in preplaced_models:
-            current_models[model[1]*n+model[0]] = model[2]
+    def is_valid(r, c, model):
+        if r != 1: return False
+        for i in range(N):
+            for j in range(N):
+                if grid[i][j] == '.':
+                    continue
+                if (i == r and j == c) or (i == r and j != c) or (i != r and j == c) or (i + j == r + c) or (i - j == r - c):
+                    if model == '+' and grid[i][j] not in ['+', 'x']:
+                        return False
+                    elif model == 'x' and grid[i][j] not in ['x', '+']:
+                        return False
+        return True
+    
+    for model, r, c in models:
+        grid[r-1][c-1] = model
+    
+    added_or_substituted = 0
+    style_points = 0
+    
+    for i in range(N):
+        for j in range(N):
+            if grid[i][j] == '.' and is_valid(i+1, j+1, 'o'):
+                grid[i][j] = 'o'
+                added_or_substituted += 1
+                style_points += 2
+            elif grid[i][j] == '+' and is_valid(i+1, j+1, 'x'):
+                grid[i][j] = 'x'
+                added_or_substituted += 1
+                style_points += 1
+            elif grid[i][j] == 'x' and is_valid(i+1, j+1, '+'):
+                grid[i][j] = '+'
+                added_or_substituted += 1
+                style_points += 1
+    
+    result = []
+    for i in range(N):
+        for j in range(N):
+            if (i+1, j+1) not in [(r, c) for _, r, c in models]:
+                if grid[i][j] != '.':
+                    result.append(f"{grid[i][j]} {i+1} {j+1}")
+    
+    return style_points, added_or_substituted, result
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        N = int(data[index])
+        M = int(data[index+1])
+        models = [(data[index+2+3*i], int(data[index+3+3*i]), int(data[index+4+3*i])) for i in range(M)]
+        index += 3 * (M + 1)
         
-        visited = set()
-        queue = deque([(0, 0, 0)])
-        while queue:
-            x, y, style = queue.popleft()
-            if (x, y) not in visited:
-                visited.add((x, y))
-                current_style = style
-                if current_models[x*n+y] == '+':
-                    current_style += 1
-                elif current_models[x*n+y] == 'x':
-                    current_style += 1
-                elif current_models[x*n+y] == 'o':
-                    current_style += 2
-                
-                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                    nx, ny = x+dx, y+dy
-                    if 0 <= nx < n and 0 <= ny < n and (nx, ny) not in visited:
-                        queue.append((nx, ny, current_style))
-                
-                if len(visited) == n * n:
-                    max_style = max(max_style, current_style)
-                    best_solution = [(i*n+j, 'o' if current_models[i*n+j] == '+' else ('x' if current_models[i*n+j] == 'x' else '.'), i+1, j+1) for i in range(n) for j in range(n) if (i, j) not in visited and current_models[i*n+j] != 'o']
+        style_points, added_or_substituted, result = max_style_points(N, M, models)
+        results.append(f"Case #{_+1}: {style_points} {added_or_substituted}")
+        results.extend(result)
     
-    return max_style, len(best_solution)
+    for line in results:
+        print(line)
 
-T = int(input())
-for t in range(1, T+1):
-    n, m = map(int, input().split())
-    preplaced_models = []
-    for _ in range(m):
-        x, y, model_type = input().split()
-        x, y = int(x), int(y)
-        if model_type == '+':
-            model_type = 'o'
-        elif model_type == 'x':
-            model_type = 'o'
-        preplaced_models.append((y, x, model_type[0]))
-    style, added_models = solve_case(n, m, preplaced_models)
-    print(f"Case #{t}: {style} {len(added_models)}")
-    for model in added_models:
-        print(*model)
+if __name__ == "__main__":
+    main()

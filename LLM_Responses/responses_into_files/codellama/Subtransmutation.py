@@ -1,17 +1,18 @@
-T = int(input())
-for _ in range(T):
+read T
+for i in range(T):
     N, A, B = map(int, input().split())
     U = list(map(int, input().split()))
-    stack = [(0, [])]
-    result = None
-    while stack:
-        i, path = stack.pop()
-        if sum(U[j] for j in range(N) if j >= i) == 0:
-            result = i
+    if any(U[i] <= A for i in range(N)) or any(U[i] <= B for i in range(N)):
+        print("IMPOSSIBLE")
+        continue
+    smallest_metal = 1
+    while True:
+        if all(U[i] >= A + B for i in range(N)):
             break
-        for j in range(i-1, -1, -1):
-            if U[j] > 0:
-                new_i = max(0, j-A)
-                new_path = path + [(j, B-j)]
-                stack.append((new_i, new_path))
-    print(f"Case #{_+1}: {result if result is not None else 'IMPOSSIBLE'}")
+        for i in range(N):
+            if U[i] == 0:
+                continue
+            elif U[i] - A > 0 and U[i] - B > 0:
+                smallest_metal = min(smallest_metal, i)
+                break
+    print("Case #" + str(i+1) + ": " + str(smallest_metal))

@@ -1,9 +1,20 @@
+def find_winning_program(adversaries):
+    def beats(move1, move2):
+        return (move1 == 'R' and move2 == 'S') or \
+               (move1 == 'P' and move2 == 'R') or \
+               (move1 == 'S' and move2 == 'P')
+
+    for length in range(1, 501):
+        for program in (''.join(p) for p in itertools.product('RPS', repeat=length)):
+            if all(beats(program[i % len(program)], adv[i % len(adv)]) for i, adv in enumerate(adversaries)):
+                return program
+    return "IMPOSSIBLE"
+
+import itertools
+
 T = int(input())
-for _ in range(T):
+for t in range(T):
     A = int(input())
-    robots = [input() for _ in range(A)]
-    win_program = "R" * (len(robots[0]) // 3) + "P"
-    if any(len(program) % 3 != 0 or program[:3] == win_program[:3] for program in robots):
-        print(f"Case #{_+1}: IMPOSSIBLE")
-    else:
-        print(f"Case #{_+1}: {win_program}")
+    adversaries = [input().strip() for _ in range(A)]
+    result = find_winning_program(adversaries)
+    print(f"Case #{t+1}: {result}")

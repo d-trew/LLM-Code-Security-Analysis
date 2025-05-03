@@ -1,46 +1,39 @@
-T = int(input())
-for t in range(1, T + 1):
-    R, C = map(int, input().split())
-    courtiers = list(map(int, input().split()))
-    graph = {}
-    for i in range(len(courtiers)):
-        pair = tuple(sorted([courtiers[i], courtiers[(i+1)%len(courtiers)]]))
-        if pair not in graph:
-            graph[pair] = []
-        graph[pair].append((R-1, C-1))
-    visited = set()
-    def dfs(x, y):
-        for dx, dy in [(0, 1), (1, 0), (-1, 0), (0, -1)]:
-            nx, ny = x + dx, y + dy
-            if 0 <= nx < R and 0 <= ny < C and (nx, ny) not in visited:
-                for pair, paths in graph.items():
-                    if (nx, ny) in paths:
-                        for px, py in paths:
-                            if dfs(px, py):
-                                return True
-                visited.add((nx, ny))
-                return False
-        return True
+def solve_maze(R, C, lovers):
+    if len(lovers) != R*C - 1:
+        return "IMPOSSIBLE"
+    
+    maze = [['/' for _ in range(2 * (R + C))] for _ in range(R)]
+    
+    def dfs(i, j):
+        if i < 0 or i >= R or j < 0 or j >= 2*(R+C) or maze[i][j] != '/':
+            return False
+        
+        maze[i][j] = 'X'
+        if (j == len(maze[0]) - 1) or dfs(i, j + 2):
+            return True
+            
+        if i < R - 1 and maze[i+1][j] != '/':
+            maze[i][j] = '\\'
+            return False
+        
+        if dfs(i + 1, j + 2) or (j > 0 and dfs(i, j - 2)):
+            return True
+            
+        maze[i][j] = '/'
+        return False
+    
+    for i in range(R):
+        dfs(i, 0)
+        
+    if any('X' in row for row in maze):
+        return "IMPOSSIBLE"
+    
+    return '\n'.join([''.join([cell for cell in row]) for row in maze]) + '\n'
 
-    result = "IMPOSSIBLE"
-    for r in range(R):
-        for c in range(C):
-            if (r, c) not in visited and dfs(r, c):
-                result = ""
-                for row in range(R):
-                    for col in range(C):
-                        if (row, col) == (0, 0): 
-                            print("Case #{}:".format(t), end="")
-                        elif row == R - 1:
-                            if col == C - 1: 
-                                print("/")
-                            else: 
-                                print("\\")
-                        else:
-                            if col == C - 1: 
-                                print("/")
-                            else: 
-                                print("\\")
-                break
-    if result == "IMPOSSIBLE":
-        print(result)
+T = int(input())
+for tc in range(1, T + 1):
+    R, C = map(int, input().split())
+    lovers = list(map(int, input().split()))
+    result = solve_maze(R, C, lovers)
+    
+    print("Case #{}: {}".format(tc, result))

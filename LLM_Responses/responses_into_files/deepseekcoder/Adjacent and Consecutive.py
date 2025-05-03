@@ -1,25 +1,32 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    mistakes_A = 0
-    mistakes_B = 0
-    A_wins = [False] * (N + 1)
-    for i in range(1, N + 1):
-        if i % 2 == 1:
-            A_wins[i] = True
+def calculate_mistakes(n, moves):
+    # Initialize counters for each player
+    mistakes = [0, 0]
+    
+    # Iterate over the moves
+    for i in range(1, n+1):
+        if i % 2 == 0:
+            player = 1
         else:
-            B_wins = False
-            for j in range(1, min(i, N) + 1):
-                if (A_wins[j - 1] and i != j) or ((i - j) % 2 == 0):
-                    A_wins[i] = True
-                    mistakes_B += 1
-                    break
-                elif i - j == 1:
-                    B_wins = True
-            if not B_wins:
-                for j in range(i + 1, N + 1):
-                    if (A_wins[j - 1] and j != i) or ((j - i) % 2 == 0):
-                        A_wins[i] = False
-                        mistakes_A += 1
-                        break
-    print(f"Case #{_ + 1}: {mistakes_A} {mistakes_B}")
+            player = 0
+        
+        # Check if current move creates a winning state
+        if abs(moves[i-2][0] - moves[i-1][0]) == 1 and (moves[i-2][1] == moves[i-1][1] or moves[i-2][1]+1 == moves[i-1][1] or moves[i-2][1]-1 == moves[i-1][1]):
+            # If current move creates a winning state, the other player made a mistake
+            mistakes[player] += 1
+    
+    return mistakes
+
+# Read number of test cases
+t = int(input())
+for case in range(1, t+1):
+    n = int(input())
+    moves = []
+    
+    # Read the moves
+    for _ in range(n):
+        m, c = map(int, input().split())
+        moves.append((m, c))
+        
+    mistakes = calculate_mistakes(n, sorted(moves))
+    
+    print("Case #{}: {} {}".format(case, mistakes[0], mistakes[1]))

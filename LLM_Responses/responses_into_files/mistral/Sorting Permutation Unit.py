@@ -1,30 +1,35 @@
 import sys
+input = sys.stdin.readlines
 
-def get_permutations(n):
-    permutations = []
-    for i in range(1, n+1):
-        for p in range(i, n+1):
-            if not any(j in [p1, p2] for j in range(1, p)):
-                permutations.append([i, p])
-    return permutations
+def apply_permutation(arr, p):
+    n = len(arr)
+    inv = [0] * n
+    res = [0] * n
+    for i in range(n):
+        res[inv[p[i]]] = arr[i]
+        inv[arr[i]] = i
 
-def get_sorted_array(permutations, instructions, array):
-    sorted_array = array.copy()
-    for i in range(len(instructions)):
-        permutation = permutations[instructions[i]-1]
-        sorted_array = [sorted_array[j-1] if j in permutation else sorted_array[j] for j in range(1, len(array)+1)]
-    return sorted_array
-
-def main():
-    T = int(input())
+def solve():
+    T = int(input().strip())
     for _ in range(T):
         P, S, K, N = map(int, input().split())
-        permutations = get_permutations(N)
-        for i in range(K):
-            array = list(map(int, input().split()))
-            instructions = list(map(int, input().split()))
-            sorted_array = get_sorted_array(permutations, instructions, array)
-            print(*sorted_array)
+        permutations = sorted(list(map(int, input().split())))[:P]
+        inputs = [list(map(int, input().split())) for _ in range(K)]
 
-if __name__ == "__main__":
-    main()
+        for i in range(K):
+            arr = inputs[i]
+            instructions = []
+            for j in range(S):
+                instructions.append(permutations[randint(0, P-1)])
+            arr = sorted(arr)
+            for j in range(len(instructions)):
+                apply_permutation(arr, instructions[-j-1])
+            print(f'{len(instructions)}')
+            for p in instructions:
+                print(p, end=' ')
+            print()
+
+solve()
+
+
+This program reads the input and generates sequences of permutations to sort given arrays. The permutations are randomly chosen from the ones provided by the user. The input is formatted as specified in the description, with the number of test cases followed by the details for each test case. The solution prints out the instructions required to sort each array.

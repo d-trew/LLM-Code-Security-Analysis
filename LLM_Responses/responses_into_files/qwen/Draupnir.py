@@ -1,28 +1,40 @@
-T = int(input())
-W = int(input())
+import sys
 
-for _ in range(T):
-    R1 = 0
-    R2 = 0
-    R3 = 0
-    R4 = 0
-    R5 = 0
-    R6 = 0
+def query(day):
+    print(f"Q {day}")
+    sys.stdout.flush()
+    return int(input())
+
+def main():
+    T, W = map(int, input().split())
     
-    for _ in range(W):
-        query = int(input())
+    for _ in range(T):
+        R = [0] * 7
         
-        if query % 263 == 0:
-            R1 += query // 1
-        elif query % 131 == 0:
-            R2 += query // 2
-        elif query % 87 == 0:
-            R3 += query // 3
-        elif query % 43 == 0:
-            R4 += query // 4
-        elif query % 29 == 0:
-            R5 += query // 5
-        else:
-            R6 += query // 6
+        # Make initial guesses based on the constraints
+        for i in range(1, 7):
+            R[i] = query(0)
         
-    print(R1, R2, R3, R4, R5, R6)
+        # Use the well of knowledge up to W times
+        for _ in range(W):
+            day = int(input())
+            if day == -1:
+                break
+            
+            count = [0] * 7
+            for i in range(1, 7):
+                count[i] = query(day)
+            
+            # Update the R values based on the counts
+            for i in range(1, 7):
+                R[i] += count[i]
+        
+        # Output the final R values modulo 263
+        print("A")
+        for r in R[1:]:
+            print(f"{r} ", end="")
+        print()
+        sys.stdout.flush()
+
+if __name__ == "__main__":
+    main()

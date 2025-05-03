@@ -1,16 +1,15 @@
-T = int(input())
-for _ in range(T):
-    N, C = map(int, input().split())
-    if C < N:
-        print('IMPOSSIBLE')
-    else:
-        res = []
-        for i in range(1, N+1):
-            res.append(N-i+1)
-        while len(res) > 0 and sum(range(1, len(res)+1)) <= C:
-            j = len(res)
-            res = res[:j//2][::-1] + res[j//2:]
-        if sum(range(1, len(res)+1)) == C:
-            print('Case #{}: {}'.format(_, ' '.join(map(str, res))))
-        else:
-            print('IMPOSSIBLE')
+def reversort(n, c):
+    if n * (n - 1) // 2 < c or c % 2 != n % 2:
+        return "IMPOSSIBLE"
+    lst = list(range(1, n + 1))
+    res = []
+    for i in range(n - 1):
+        j = min(c - (i * (i + 1) // 2), ((n - i) * (n - i - 1) // 2) + i)
+        c -= j - i
+        lst[i:j] = reversed(lst[i:j])
+    return ' '.join(map(str, lst))
+
+t = int(input())
+for case in range(1, t + 1):
+    n, c = map(int, input().split())
+    print("Case #{}: {}".format(case, reversort(n, c)))

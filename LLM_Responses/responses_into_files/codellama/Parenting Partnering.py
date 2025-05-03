@@ -1,31 +1,38 @@
-from math import inf
+import sys
 
-def min_exchanges(Cameron, Jamie):
-    end_time = 24 * 60
-    Cameron_activities = sorted([(Ci, Di) for Ci, Di in zip(*[iter(Cameron[i:i+2]) for i in range(0, len(Cameron), 2)]))
-    Jamie_activities = sorted([(Ji, Ki) for Ji, Ki in zip(*[iter(Jamie[i:i+2]) for i in range(0, len(Jamie), 2)]])
-    
-    free_time = [end_time]
-    for Ci, Di in Cameron_activities:
-        free_time.append(Ci)
-        free_time.append(Di)
-    for Ji, Ki in Jamie_activities:
-        free_time.append(Ji)
-        free_time.append(Ki)
-
+def solve(n, AC, AJ):
+    # Initialize variables
     exchanges = 0
-    prev_free_time = 0
-    for time in sorted(free_time):
-        if time > prev_free_time:
+    schedule = []
+    
+    # Check if the input is valid
+    if n < 1 or AC < 0 or AJ < 0:
+        return -1
+    
+    # Add activities to the schedule
+    for i in range(AC):
+        start, end = map(int, input().split())
+        schedule.append((start, end))
+    
+    for i in range(AJ):
+        start, end = map(int, input().split())
+        schedule.append((start, end))
+    
+    # Sort the schedule by start time
+    schedule.sort(key=lambda x: x[0])
+    
+    # Iterate through the schedule and check for exchanges
+    for i in range(len(schedule) - 1):
+        if schedule[i][1] > schedule[i + 1][0]:
             exchanges += 1
-        prev_free_time = time
-
+    
     return exchanges
 
-T = int(input())
-for i in range(1, T + 1):
-    AC, AJ = map(int, input().split())
-    Cameron = [int(x) for x in input().split()] * (AC // 2)
-    Jamie = [int(x) for x in input().split()] * (AJ // 2)
-    
-    print(f"Case #{i}: {min_exchanges(Cameron, Jamie)}")
+# Read input
+n = int(input())
+AC = int(input())
+AJ = int(input())
+
+# Call the solve function and print the result
+result = solve(n, AC, AJ)
+print(result)

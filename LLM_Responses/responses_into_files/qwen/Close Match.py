@@ -1,14 +1,43 @@
-from itertools import product
-
-T = int(input())
-for t in range(1, T + 1):
-    C, J = input().split()
+def fill_scoreboard(C, J):
     min_diff = float('inf')
-    result_C, result_J = None, None
-    for c, j in product(map(int, '0123456789'), repeat=len(C)):
-        if str(c) == C.replace('?','0') and str(j) == J.replace('?','0'):
-            diff = abs(int(str(c)) - int(str(j)))
+    best_C = C
+    best_J = J
+
+    for c in range(10**len(C)):
+        for j in range(10**len(J)):
+            C_filled = str(c).zfill(len(C))
+            J_filled = str(j).zfill(len(J))
+            diff = abs(int(C_filled) - int(J_filled))
             if diff < min_diff:
                 min_diff = diff
-                result_C, result_J = str(c), str(j)
-    print(f"Case #{t}: {result_C} {result_J}")
+                best_C = C_filled
+                best_J = J_filled
+            elif diff == min_diff:
+                if int(C_filled) < int(best_C):
+                    best_C = C_filled
+                    best_J = J_filled
+                elif int(C_filled) == int(best_C) and int(J_filled) < int(best_J):
+                    best_C = C_filled
+                    best_J = J_filled
+
+    return best_C, best_J
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    results = []
+    
+    for i in range(1, 2*T+1, 2):
+        C = data[i]
+        J = data[i+1]
+        best_C, best_J = fill_scoreboard(C, J)
+        results.append(f"Case #{i//2 + 1}: {best_C} {best_J}")
+    
+    for result in results:
+        print(result)
+
+if __name__ == "__main__":
+    main()

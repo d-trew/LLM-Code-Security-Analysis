@@ -1,20 +1,16 @@
-from collections import Counter
-
-def magnificent_arrangement(jugglers):
+def find_magnificent_arrangement(N, positions):
     pairs = []
-    for i in range(len(jugglers) // 2):
-        j1 = i * 2
-        j2 = (i * 2) + 1
-        pair = tuple(sorted([j1, j2]))
-        pairs.append(pair)
-    return ' '.join(map(str, [pair[0] + 1 for pair in pairs]))
+    for i in range(0, 2*N, 2):
+        pairs.append((positions[i], positions[i+1]))
+    return [f"{i+1}{j+1}" for i, j in enumerate(pairs)]
 
 T = int(input())
-for t in range(T):
+for case in range(T):
     N = int(input())
-    jugglers = []
-    for _ in range(N * 2):
+    positions = []
+    for _ in range(2*N):
         x, y = map(int, input().split())
-        jugglers.append((x, y))
-    arrangement = magnificent_arrangement(jugglers)
-    print(f'Case #{t + 1}: {arrangement}')
+        positions.append((x, y))
+    
+    result = find_magnificent_arrangement(N, positions)
+    print(f"Case #{case+1}: {' '.join(result)}")

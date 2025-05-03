@@ -1,16 +1,45 @@
-from collections import defaultdict
+import sys
 
-T = int(input())
-for i in range(1, T + 1):
-    N = int(input())
-    topics = [input().split() for _ in range(N)]
-    first_words = set()
-    second_words = set()
-    fake_topics = 0
-    for topic in topics:
-        if topic[0] not in first_words and topic[1] not in second_words:
-            first_words.add(topic[0])
-            second_words.add(topic[1])
+def largest_number_of_faked_topics(topics):
+    """
+    Finds the largest number of topics that could have possibly been faked.
+
+    Args:
+        topics (list[str]): List of topics to check for fake topics.
+
+    Returns:
+        int: The largest number of fake topics in the list.
+    """
+    # Initialize a counter for the total number of fake topics
+    num_fake_topics = 0
+
+    # Iterate through each topic in the list
+    for i in range(len(topics)):
+        # Check if the current topic is already on the sheet
+        if topics[i] in topics:
+            # If it is, then it cannot be a fake topic
+            continue
         else:
-            fake_topics += 1
-    print(f"Case #{i}: {fake_topics}")
+            # Otherwise, check if any of the other topics can be used to form this topic
+            for j in range(len(topics)):
+                # Check if the current topic is already on the sheet
+                if topics[j] in topics:
+                    # If it is, then it cannot be a fake topic
+                    continue
+                else:
+                    # Otherwise, check if the other topic can be used to form this topic
+                    if " ".join([topics[i], topics[j]]) in topics:
+                        # If it can, then increase the number of fake topics by 1
+                        num_fake_topics += 1
+
+    return num_fake_topics
+
+if __name__ == "__main__":
+    test_cases = int(input())
+    for case in range(test_cases):
+        N = int(input())
+        topics = []
+        for _ in range(N):
+            topic = input().split()
+            topics.append(" ".join(topic))
+        print(f"Case #{case+1}: {largest_number_of_faked_topics(topics)}")

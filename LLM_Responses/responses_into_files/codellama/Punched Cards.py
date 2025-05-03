@@ -1,19 +1,22 @@
-T = int(input())
-for t in range(1, T+1):
-    R, C = map(int, input().split())
-    print(f"Case #{t}:")
-    print("+" + "-"*C + "+")
-    for r in range(R):
-        if r == 0:
-            print("|", end="")
-            print(".|."*(C-1), end="")
-            print("|")
-        elif r == R-1:
-            print("|", end="")
-            print("+-"*C, end="")
-            print("+")
-        else:
-            print("|", end="")
-            print(".|."*(C-1), end="")
-            print("|")
-    print("+" + "-"*C + "+")
+import sys
+
+def punched_card(R, C):
+    # Top row
+    top = '+' + '-' * (C - 1) + '+\n'
+    
+    # Middle rows
+    middle = []
+    for i in range(R - 2):
+        line = '| ' + '. ' * (C - 2) + '|\n'
+        middle.append(line)
+    
+    # Bottom row
+    bottom = '+' + '-' * (C - 1) + '+\n'
+    
+    return top + ''.join(middle) + bottom
+
+if __name__ == "__main__":
+    input = sys.stdin.read()
+    R, C = map(int, input.split())
+    print("Case #1:")
+    print(punched_card(R, C))

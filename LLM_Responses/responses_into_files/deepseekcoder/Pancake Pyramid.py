@@ -1,21 +1,27 @@
-def pyramidification_cost(S, P):
-    H = [0] + P
-    cost = 0
-    for i in range(1, S):
-        if H[i] < H[i-1]:
-            diff = H[i-1] - H[i]
-            cost += diff
-            H[i] += diff
-    return cost
+def solve():
+    T = int(input())
+    for t in range(T):
+        S = int(input())
+        P = list(map(int, input().split()))
+        
+        MOD = 10**9 + 7
+        ans = 0
+        
+        # Iterate over all possible values of L and R.
+        for l in range(min(S-2, 500)):
+            for r in range(l+1):
+                # The remaining stacks are P[l], P[l+1], ..., P[S-r-1].
+                stack = sorted(P[i] for i in range(l, S-r))
+                
+                # Calculate the pyramidification cost of the current sequence.
+                cost = 0
+                for i in range(len(stack)-1):
+                    diff = stack[i] - stack[i+1] + 1
+                    if diff > 0:
+                        cost += diff
+                
+                ans += cost
+        
+        print("Case #{}: {}".format(t+1, ans % MOD))
 
-T = int(input())
-for t in range(1, T+1):
-    S = int(input())
-    P = list(map(int, input().split()))
-    total_cost = 0
-    for L in range(S-3):
-        for R in range(min(S-L-3, L+1)):
-            H = [0] + P[L+1:L+R+1]
-            cost = pyramidification_cost(len(H), H)
-            total_cost += cost
-    print(f"Case #{t}: {total_cost % 1000000007}")
+solve()

@@ -1,26 +1,31 @@
-import math
+from sympy import *
+import random
 
-def next_power_of_two(n):
-    return int(math.pow(2, math.ceil(math.log2(n))))
+def generate_jamcoin(n):
+    return bin(random.randint(2**(n-1) + 1, 2**n - 1))[2:]
 
-def check_jamcoin(jamcoin, n):
-    for i in range(2, 11):
-        base = str(i)
-        value = int(jamcoin, base)
-        for j in range(2, value + 1):
-            if value % j == 0:
-                return True
-    return False
+def find_divisor(s):
+    for i in range(2, int(sqrt(int(s, 2)))+1):
+        if int(s, 2) % i == 0:
+            return i
+    return None
 
-def generate_jamcoin(n, j):
-    while True:
-        jamcoin = ''.join([str(random.randint(0, 1)) for _ in range(n)])
-        if check_jamcoin(jamcoin, n) and not any([jamcoin == jam for jam in jams]):
-            jams.append(jamcoin)
-            if len(jams) == j + 1:
-                break
+def generate_jamcoins(n, j):
+    jamcoins = []
+    while len(jamcoins) < j:
+        s = generate_jamcoin(n)
+        divisors = [find_divisor(s[i-1:] + '0') for i in range(1, n+1)]
+        if all(d is not None for d in divisors):
+            jamcoins.append((s, divisors))
+    return jamcoins
 
-jams = []
-n, j = int(input()), int(input())
-for i in range(1, j + 1):
-    print(f"Case #{i}: {generate_jamcoin(n, j)}")
+def main():
+    t = 1  # number of test cases
+    for case_no in range(1, t + 1):
+        n, j = map(int, input().split())
+        print('Case #{}:'.format(case_no))
+        for jamcoin, divisors in generate_jamcoins(n, j):
+            print(jamcoin + ' ' + ' '.join(map(str, divisors)))
+
+if __name__ == "__main__":
+    main()

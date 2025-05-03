@@ -1,30 +1,47 @@
-import heapq
+import sys
+from math import inf
+from heapq import heappush, heappop
 
-def pony_express(N, E, D):
-    horse_speeds = [[0] * (N+1) for _ in range(N+1)]
-    horse_distances = [[float('inf')] * (N+1) for _ in range(N+1)]
+def dijkstra(dist, cities, edges):
+    h = []
+    for c in cities:
+        dist[c] = float('inf')
+        heappush(h, (0, c))
 
-    for i in range(1, N+1):
-        horse_speeds[i][i] = 1
-        horse_distances[i][i] = 0
+    while h:
+        d, u = heappop(h)
+        if d > dist[u]: continue
+        for v, w in edges[u]:
+            if dist[v] > dist[u] + w:
+                dist[v] = dist[u] + w
+                heappush(h, (dist[v], v))
+    return dist
 
-    for i in range(1, N+1):
-        for j in range(i+1, N+2):
-            if D[i-1][j-i-1] != -1:
-                horse_speeds[i][j] = min(horse_speeds[i][j], horse_speeds[i][i] + E[i-1])
-                horse_distances[i][j] = min(horse_distances[i][j], horse_distances[i][i] + D[i-1][j-i-1])
+def pony_express(cities, edges):
+    N = len(cities)
+    start, end = 1, N
+    dist = [0] * (N+1)
+    dist[start] = 0
+    dist[end] = 0
+    edges.append([(start, -1, float('inf'))] + [[(end, -1, 0)]])
 
-    Q = 1
-    U = 1
-    V = N
+    for i in range(2, N):
+        dist[i] = dijkstra(dist, cities, edges)[i]
 
-    total_time = horse_distances[U][V]
+    return dist[end]
 
-    return Case #{}: {:.6f}\n'.format(Q, total_time)
+def main():
+    T = int(sys.stdin.readline())
+    for _ in range(T):
+        N, E = map(int, sys.stdin.readline().split())
+        cities = list(range(1, N+1))
+        edges = []
+        for _ in range(E):
+            u, v, w = map(int, sys.stdin.readline().split())
+            edges.append((u, [(v, -1, w)]))
+        print("Case #{}: {}".format(_+1, pony_express(cities, edges)))
 
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    E = [int(x) for x in input().split()]
-    D = [[int(x) for x in input().split()] for _ in range(N)]
-    print(pony_express(N, E, D))
+main()
+
+
+This code reads the number of test cases and then iterates through each case to calculate the minimum time necessary for each delivery. It uses Dijkstra's algorithm to find the shortest path from the starting city to the destination city, taking into account that the horses have a maximum total distance they can travel before becoming too tired. The input is read line by line, and the output is printed for each test case in the format specified in the problem description.

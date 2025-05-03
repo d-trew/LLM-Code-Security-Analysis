@@ -1,14 +1,30 @@
-T = int(input())
-for _ in range(T):
-    A = int(input())
-    prepared = set()
-    for _ in range(1000):
+import sys
+
+def read_input():
+    return int(sys.stdin.readline().strip())
+
+def write_output(x, y):
+    print(f"{x} {y}")
+    sys.stdout.flush()
+
+def main():
+    T = read_input()
+    for _ in range(T):
+        A = read_input()
+        prepared = set()
+        
         while True:
-            I, J = map(int, input().split())
-            if (I, J) not in prepared and 2 <= I <= 999 and 2 <= J <= 999:
+            if len(prepared) >= A:
                 break
-        prepared.add((I, J))
-        print(I, J)
-        response = input().split()
-        if response == ['0', '0']:
-            break
+            
+            i, j = 2 + (len(prepared) % 987), 2 + (len(prepared) // 987)
+            write_output(i, j)
+            
+            x, y = map(int, sys.stdin.readline().strip().split())
+            if x == -1 and y == -1:
+                break
+            
+            prepared.add((x, y))
+
+if __name__ == "__main__":
+    main()

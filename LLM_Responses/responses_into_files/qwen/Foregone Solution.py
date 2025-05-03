@@ -1,8 +1,10 @@
+def find_a_b(N):
+    for i in range(1, N):
+        if '4' not in str(i) and '4' not in str(N - i):
+            return i, N - i
+
 T = int(input())
-for t in range(1, T+1):
+for t in range(1, T + 1):
     N = int(input())
-    for a in range(1, N//2 + 1):
-        b = N - a
-        if '4' not in str(a) and '4' not in str(b):
-            print(f"Case #{t}: {a} {b}")
-            break
+    A, B = find_a_b(N)
+    print(f"Case #{t}: {A} {B}")

@@ -1,53 +1,70 @@
-T = int(input())
-for _ in range(T):
-    R, C, D = [int(x) for x in input().split()]
-    map_data = [list(input()) for _ in range(R)]
-    start_pos = None
-    finish_pos = None
+from collections import deque
+
+def bfs(grid, start, end):
+    R, C = len(grid), len(grid[0])
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    queue = deque([start])
+    distance = {start: 0}
+    
+    while queue:
+        x, y = queue.popleft()
+        if (x, y) == end:
+            return distance[(x, y)]
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < R and 0 <= ny < C and grid[nx][ny] != '#' and (nx, ny) not in distance:
+                queue.append((nx, ny))
+                distance[(nx, ny)] = distance[(x, y)] + 1
+    
+    return float('inf')
+
+def remove_walls(grid, start, end, D):
+    R, C = len(grid), len(grid[0])
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    
+    def is_valid(grid):
+        return bfs(grid, start, end) <= D
+    
     for i in range(R):
         for j in range(C):
-            if map_data[i][j] == 'S':
-                start_pos = (i, j)
-            elif map_data[i][j] == 'F':
-                finish_pos = (i, j)
+            if grid[i][j] == '#':
+                new_grid = [row[:] for row in grid]
+                new_grid[i][j] = '.'
+                if is_valid(new_grid):
+                    return True, new_grid
+    return False, None
 
-    def bfs(map_data, start_pos, finish_pos):
-        R, C = len(map_data), len(map_data[0])
-        queue = [(start_pos, 0)]
-        visited = set([start_pos])
-        while queue:
-            pos, dist = queue.pop(0)
-            if pos == finish_pos:
-                return dist
-            for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                new_x, new_y = pos[0] + x, pos[1] + y
-                if 0 <= new_x < R and 0 <= new_y < C and map_data[new_x][new_y] != '#' and (new_x, new_y) not in visited:
-                    queue.append(((new_x, new_y), dist + 1))
-                    visited.add((new_x, new_y))
-
-    def dfs(map_data, start_pos, finish_pos):
-        R, C = len(map_data), len(map_data[0])
-        queue = [(start_pos, 0)]
-        visited = set([start_pos])
-        while queue:
-            pos, dist = queue.pop(0)
-            if pos == finish_pos:
-                return dist
-            for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                new_x, new_y = pos[0] + x, pos[1] + y
-                if 0 <= new_x < R and 0 <= new_y < C and map_data[new_x][new_y] != '#' and (new_x, new_y) not in visited:
-                    queue.append(((new_x, new_y), dist + 1))
-                    visited.add((new_x, new_y))
-
-    def check(map_data, D):
-        R, C = len(map_data), len(map_data[0])
+def solve():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        R, C, D = map(int, data[index:index+3])
+        index += 3
+        grid = [list(data[index + i]) for i in range(R)]
+        start = None
+        end = None
+        
         for i in range(R):
             for j in range(C):
-                if map_data[i][j] == '#':
-                    temp_map = [list(x) for x in map_data]
-                    temp_map[i][j] = '.'
-                    if bfs(temp_map, start_pos, finish_pos) == D:
-                        return 'POSSIBLE'
-        return 'IMPOSSIBLE'
+                if grid[i][j] == 'S':
+                    start = (i, j)
+                elif grid[i][j] == 'F':
+                    end = (i, j)
+        
+        possible, new_grid = remove_walls(grid, start, end, D)
+        results.append("POSSIBLE" if possible else "IMPOSSIBLE")
+        if possible:
+            for row in new_grid:
+                results.append(''.join(row))
+    
+    for i, result in enumerate(results):
+        print(f"Case #{i+1}: {result}")
 
-    print(f'Case #{"{}":>1}: {check(map_data, D)}')
+if __name__ == "__main__":
+    solve()

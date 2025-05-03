@@ -1,18 +1,24 @@
-T = int(input())
-for _ in range(T):
-    A, B = map(int, input().split())
-    N = int(input())
-    P = None
-    for _ in range(N):
-        Q = int(input("Guess: "))
-        if Q < A or Q > B:
-            print("WRONG_ANSWER")
-            break
-        elif Q == P:
-            print("CORRECT")
-            break
-        else:
-            if Q < P:
-                print("TOO_SMALL")
-            else:
-                print("TOO_BIG")
+import sys
+
+def binary_search(low, high):
+    print((low + high) // 2)
+    sys.stdout.flush()
+    response = input().strip()
+    
+    if response == 'CORRECT':
+        return
+    elif response == 'TOO_SMALL':
+        binary_search(high, high * 2)
+    else: # TOO_BIG
+        binary_search(low // 2 + 1, low)
+
+def main():
+    T = int(input().strip())
+    
+    for _ in range(T):
+        A, B, N = map(int, input().strip().split())
+        
+        binary_search(A+1, min(B, 2**63-1))
+
+if __name__ == "__main__":
+    main()

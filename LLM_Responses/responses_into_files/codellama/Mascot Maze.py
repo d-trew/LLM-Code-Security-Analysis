@@ -1,30 +1,39 @@
-from collections import deque
-
-def can_assign_mascots(n, left_exits, right_exits):
-    visited = [[False] * (n + 1) for _ in range(26)]
-    current_room = [0]
-    assigned_mascots = [''] * n
-
-    while current_room:
-        room = current_room.pop()
-        for i in range(26):
-            if ord('A') + i <= ord('M'):
-                if not visited[i][room]:
-                    if left_exits[room - 1] == room and chr(i + ord('A')) not in assigned_mascots[:room]:
-                        visited[i][room] = True
-                        current_room.append(left_exits[room - 1])
-                        assigned_mascots[room - 1] = chr(i + ord('A'))
-                    elif right_exits[room - 1] == room and chr(i + ord('A')) not in assigned_mascots[:room]:
-                        visited[i][room] = True
-                        current_room.append(right_exits[room - 1])
-                        assigned_mascots[room - 1] = chr(i + ord('A'))
-        if all(visited[i][n - 1] for i in range(26)):
-            return ''.join(assigned_mascots)
-    return 'IMPOSSIBLE'
-
-T = int(input())
-for t in range(T):
+import sys
+input = sys.stdin.readline
+# t = int(input())
+t = 1
+for case in range(1, t+1):
     n = int(input())
-    left_exits = list(map(int, input().split()))
-    right_exits = list(map(int, input().split()))
-    print(f'Case #{t + 1}: {can_assign_mascots(n, left_exits, right_exits)}')
+    left_exits = []
+    right_exits = []
+    for i in range(n):
+        left_exit = int(input()) - 1
+        right_exit = int(input()) - 1
+        left_exits.append(left_exit)
+        right_exits.append(right_exit)
+    # Check if it's possible to assign mascots while obeying the rules explained above
+    if is_possible(n, left_exits, right_exits):
+        print("Case #{}: Possible".format(case))
+    else:
+        print("Case #{}: Impossible".format(case))
+
+def is_possible(n, left_exits, right_exits):
+    # Initialize a dictionary to keep track of the mascots for each room
+    mascots = {}
+    for i in range(n):
+        mascots[i] = []
+    
+    # Assign mascots to rooms based on the left and right exits
+    for i in range(n):
+        if len(mascots[left_exits[i]]) == 0:
+            mascots[i].append("A")
+        elif len(mascots[right_exits[i]]) == 0:
+            mascots[i].append("B")
+    
+    # Check if any three consecutive rooms have three different mascots
+    for i in range(n-2):
+        if mascots[i] != mascots[i+1] and mascots[i+1] != mascots[i+2]:
+            return False
+    
+    # If we reach this point, it means that any three consecutive rooms have three different mascots, so the assignment is possible
+    return True

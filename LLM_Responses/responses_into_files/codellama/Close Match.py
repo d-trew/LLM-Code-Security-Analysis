@@ -1,14 +1,21 @@
-from itertools import product
+import sys
 
-T = int(input())
-for t in range(1, T + 1):
-    C, J = input().split()
-    min_diff = float('inf')
-    result_C, result_J = None, None
-    for c, j in product(map(int, '0123456789'), repeat=len(C)):
-        if str(c) == C.replace('?','0') and str(j) == J.replace('?','0'):
-            diff = abs(int(str(c)) - int(str(j)))
-            if diff < min_diff:
-                min_diff = diff
-                result_C, result_J = str(c), str(j)
-    print(f"Case #{t}: {result_C} {result_J}")
+def solve(candj):
+    c = candj[0].replace("?", "0")
+    j = candj[1].replace("?", "0")
+    c_nums = list(map(int, c))
+    j_nums = list(map(int, j))
+    min_abs_diff = abs(c_nums[-1] - j_nums[-1])
+    for i in range(len(c_nums) - 2):
+        diff = abs(c_nums[i] - j_nums[i])
+        if diff < min_abs_diff:
+            min_abs_diff = diff
+    return "Case #" + str(case_number) + ": " + c.replace("?", str(c_nums[-1])) + " " + j.replace("?", str(j_nums[-1]))
+
+if __name__ == '__main__':
+    case_number = 1
+    t = int(input())
+    for _ in range(t):
+        candj = input().split()
+        print(solve(candj))
+        case_number += 1

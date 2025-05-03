@@ -1,21 +1,18 @@
-import sys
+import math
 
-def transform(s, e):
-    t = list(s)
-    res = len(e) - len(s)
-    for i in range(res):
-        t.insert(0, '0')
-    while s != e:
-        if s == t:
-            break
-        if s < t:
-            t = ''.join('1' if c == '0' else '0' for c in t)
+def number_of_operations(S, E):
+    count = 0
+    while S != E:
+        if S[0] == '1':
+            S = '0' + S[1:]
+            count += 1
         else:
-            t = ''.join('0' if c == '1' else '1' for c in t)
-        res += 1
-    return res
+            S = '1' + S
+            count += 1
+    return count
 
-t = int(input())
-for _ in range(t):
-    s, e = input().split()
-    print(f"Case # {_+1}: {transform(s, e) if s != e else 'IMPOSSIBLE'}")
+if __name__ == "__main__":
+    T = int(input())
+    for i in range(T):
+        S, E = input().split()
+        print("Case #" + str(i+1) + ":", number_of_operations(S, E))

@@ -1,16 +1,22 @@
-import heapq
-T = int(input())
-for t in range(1, T + 1):
-    N = int(input())
-    D = list(map(int, input().split()))
-    max_deliciousness = max(D)
-    min_deliciousness = min(D)
-    res = 0
-    for d in D:
-        if d >= max_deliciousness:
-            res += 1
-            max_deliciousness -= 1
-        elif d <= min_deliciousness:
-            res += 1
-            min_deliciousness += 1
-    print(f"Case #{t}: {res}")
+from collections import deque
+
+def max_customers(pancakes):
+    pancakes = sorted([(i, x) for i, x in enumerate(pancakes)], key=lambda x: (-x[1], x[0]))
+    dp = [0] * len(pancakes)
+    longest_increasing_subsequence = []
+    
+    for _, (_, val) in pancakes:
+        idx = bisect.bisect_left(longest_increasing_subsequence, val)
+        if idx == len(longest_increasing_subsequence):
+            longest_increasing_subsequence.append(val)
+        else:
+            longest_increasing_subsequence[idx] = val
+        dp[-1] = max(dp[-1], idx+1)
+    
+    return len(deque(pancakes)) - dp[-1] + 1
+
+T = int(input().strip())
+for t in range(T):
+    N = int(input().strip())
+    pancakes = list(map(int, input().strip().split()))
+    print("Case #{}: {}".format(t+1, max_customers(pancakes)))

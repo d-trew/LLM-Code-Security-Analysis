@@ -1,14 +1,12 @@
+import sys
+
 T = int(input())
-B = 10
-bits = [0]*B
-queries = []
-for _ in range(T):
-    for _ in range(150):
-        query = int(input())
-        queries.append(query)
-        if query % 10 == 1:
-            bits[query//10] = (bits[query//10]+1)%2
-    answer = ''
-    for bit in bits:
-        answer += str(bit)
-    print(answer)
+B = int(input())
+
+for i in range(T):
+    arr = list(map(int, input().split()))
+    queries = []
+    for j in range(150):
+        queries.append(list(map(int, input().split())))
+    queries.append([])
+    print(*arr)

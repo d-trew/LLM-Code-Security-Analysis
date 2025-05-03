@@ -1,29 +1,40 @@
-from collections import deque
+from collections import defaultdict
+import sys
+input = sys.stdin.readline
 
-def gooli_parade(B, S):
-    graph = [[] for _ in range(B+1)]
-    for i in range(S):
+def solve():
+    B, S = map(int, input().split())
+    graph = defaultdict(list)
+    for _ in range(S):
         u, v = map(int, input().split())
         graph[u].append(v)
-    
-    visited = [[False] * (B + 1) for _ in range(2 ** B)]
-    queue = deque([(1, 0)])
-    visited[0][1] = True
-    
-    while queue:
-        state, building = queue.popleft()
-        if building == B:
-            return state
+        graph[v].append(u)
         
-        for next_building in graph[building]:
-            new_state = state ^ (1 << next_building)
-            if not visited[new_state][next_building]:
-                visited[new_state][next_building] = True
-                queue.append((new_state, next_building))
+    visited = [0]*(B+1)
+    path = []
     
-    return 'IMPOSSIBLE'
-
+    def dfs(node):
+        if not visited[node]:
+            visited[node] = 1
+            for i in graph[node]:
+                if not visited[i]:
+                    path.append((node,i))
+                    dfs(i)
+                    
+    dfs(1)
+    
+    if len(path) < B-1:
+        return "IMPOSSIBLE"
+        
+    path = [(1,2)] + path[:B-2] + [(1,2)][::-1]
+    res = [1]*(len(path)*2+1)
+    
+    for i in range(len(path)):
+        u, v = path[i]
+        res[i], res[-(i+3)] = (u,v) if i%2 else (v,u)
+        
+    return " ".join([str(i) for i in [1] + res])
+    
 T = int(input())
-for i in range(T):
-    B, S = map(int, input().split())
-    print(f"Case #{i+1}: {gooli_parade(B, S)}")
+for t in range(1, T + 1):
+    print("Case #{}: {}".format(t, solve()))

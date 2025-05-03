@@ -1,30 +1,37 @@
-import sys
-
-def get_permutations(n):
+def sort_arrays(P, S, K, N, arrays):
     permutations = []
-    for i in range(1, n+1):
-        for p in range(i, n+1):
-            if not any(j in [p1, p2] for j in range(1, p)):
-                permutations.append([i, p])
-    return permutations
+    for i in range(1, P + 1):
+        perm = list(range(N))
+        random.shuffle(perm)
+        permutations.append(perm)
 
-def get_sorted_array(permutations, instructions, array):
-    sorted_array = array.copy()
-    for i in range(len(instructions)):
-        permutation = permutations[instructions[i]-1]
-        sorted_array = [sorted_array[j-1] if j in permutation else sorted_array[j] for j in range(1, len(array)+1)]
-    return sorted_array
+    results = []
+    for array in arrays:
+        sorted_array = sorted(array)
+        instructions = []
+        for _ in range(S):
+            current_perm = permutations[random.randint(0, P - 1)]
+            if array == sorted_array:
+                break
+            applied_perm = [array[current_perm[i] - 1] for i in range(N)]
+            array = applied_perm
+            instructions.append(current_perm)
+        results.append((instructions, array))
 
-def main():
-    T = int(input())
-    for _ in range(T):
-        P, S, K, N = map(int, input().split())
-        permutations = get_permutations(N)
-        for i in range(K):
-            array = list(map(int, input().split()))
-            instructions = list(map(int, input().split()))
-            sorted_array = get_sorted_array(permutations, instructions, array)
-            print(*sorted_array)
+    return results
 
-if __name__ == "__main__":
-    main()
+# Example usage
+import random
+
+P = 20
+S = 450
+K = 30
+N = 50
+arrays = [[random.randint(1, 1000) for _ in range(N)] for _ in range(K)]
+
+sorted_results = sort_arrays(P, S, K, N, arrays)
+for i, (instructions, sorted_array) in enumerate(sorted_results):
+    print(f"Case #{i + 1}:")
+    print(len(instructions))
+    for perm in instructions:
+        print(" ".join(map(str, perm)))

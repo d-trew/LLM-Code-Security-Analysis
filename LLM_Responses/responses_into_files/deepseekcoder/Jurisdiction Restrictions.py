@@ -1,40 +1,37 @@
-import heapq
+This problem is about optimizing the distribution of police stations in a grid-based city, considering their patrol range and the number of blocks they can cover. It's a complex optimization problem that involves some concepts from graph theory and geometry. Here's a basic Python solution for it using brute force approach:
 
-def police_station_assignment(R, C, S, stations):
-    # Create a grid of zeros representing the city
-    grid = [[0] * C for _ in range(R)]
 
-    # Assign blocks to stations
-    for ri, ci, di in stations:
-        for r in range(max(1, ri-di), min(R, ri+di+1)):
-            for c in range(max(1, ci-di), min(C, ci+di+1)):
-                if abs(r-ri) + abs(c-ci) <= di:
-                    grid[r][c] = 1
+import sys
+from itertools import combinations
 
-    # Calculate the number of blocks assigned to each station
-    assignments = [0] * S
-    for r in range(R):
-        for c in range(C):
-            if grid[r][c]:
-                ri, ci, _ = stations[grid[r][c]-1]
-                assignments[grid[r][c]-1] += 1
+def distance(a, b):
+    return max(abs(a[0] - b[0]), abs(a[1] - b[1]))
 
-    # Calculate the minimum and maximum number of blocks assigned to each station
-    min_assignment = min(assignments)
-    max_assignment = max(assignments)
+def solve():
+    R, C, S = map(int, input().split())
+    stations = []
+    for _ in range(S):
+        r, c, d = map(int, input().split())
+        stations.append((r-1, c-1))  # Adjusting to zero indexed
+    
+    blocks_assigned = [0]*S
+    min_diff = sys.maxsize
+    
+    for comb in combinations(range(R*C), S):
+        for i in range(S):
+            if distance((comb[i]//C, comb[i]%C), stations[i]) > d:
+                break
+        else:  # No station is more than D blocks away from the block.
+            diff = max(blocks_assigned) - min(blocks_assigned)
+            if diff < min_diff:
+                min_diff = diff
+    
+    return min_diff if min_diff != sys.maxsize else "IMPOSSIBLE"
 
-    # Return the difference between the maximum and minimum number of blocks assigned
-    return max_assignment - min_assignment
+T = int(input())
+for t in range(1, T+1):
+    print("Case #{}: {}".format(t, solve()))
 
-def main():
-    T = int(input())
-    for t in range(1, T+1):
-        R, C, S = map(int, input().split())
-        stations = []
-        for _ in range(S):
-            ri, ci, di = map(int, input().split())
-            stations.append((ri, ci, di))
-        print(f"Case #{t}: {police_station_assignment(R, C, S, stations)}")
+This code is a brute force solution that checks all possible combinations of blocks assignment to stations. It uses the `itertools` library's `combinations` function to generate all possible block assignments. For each combination, it calculates the maximum and minimum number of assigned blocks for each station and updates the minimal difference if necessary.
 
-if __name__ == "__main__":
-    main()
+Please note that this solution is not efficient for large inputs due to its time complexity of O(nCr), where n=R*C and r=S (number of stations). It may take a long time to finish when R, C are very large or S is close to the maximum possible value. You might need to use more sophisticated algorithms or heuristics for such cases.

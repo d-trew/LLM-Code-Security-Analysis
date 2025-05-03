@@ -1,49 +1,22 @@
-import math
-
-def solve(n, s, b):
-    count = 0
-    for i in range(1 << n):  # iterate over all possible configurations
-        has_cat_last_box = False
-        has_cat_in_last_box = False
-        cat_in_last_box = (s[-1] == 'C')
-        
-        for j in range(n-1):
-            if s[j] == '?':
-                s_j = 'C' if ((i >> j) & 1) else '.'
-            else:
-                s_j = s[j]
-            
-            if s_j == 'C':
-                has_cat_last_box = True
-                for k in range(j+1, n):
-                    if s[k] == '?':
-                        s_k = 'C' if ((i >> k) & 1) else '.'
-                    else:
-                        s_k = s[k]
-                    
-                    if s_k == '.' and b[j] != k:
-                        has_cat_last_box = False
-                        break
-                    
-                if has_cat_last_box:
-                    for k in range(j+1, n):
-                        if s[k] == '?':
-                            s_k = 'C' if ((i >> k) & 1) else '.'
-                        else:
-                            s_k = s[k]
-                        
-                        if s_k == 'C' and b[j] != k:
-                            has_cat_in_last_box = True
-                            break
-                    
-        if cat_in_last_box and not has_cat_in_last_box:
-            count += 1
-            
-    return count % (10**9 + 7)
-
-t = int(input())
-for i in range(t):
+from collections import defaultdict
+MOD = 10**9+7
+N = 5005
+inv2 = pow(2, MOD-2, MOD)
+dp = [[0]*3 for _ in range(N)]
+cat = [False]*N
+next_box = [-1]*N
+tunnel = defaultdict(int)
+test_cases = int(input())
+for tc in range(1, test_cases+1):
     n = int(input())
     s = input()
-    b = list(map(int, input().split()))
-    print(f"Case #{i+1}: {solve(n, s, b)}")
+    for i in range(n-1, -1, -1):
+        if s[i] == 'C': cat[i] = True
+        elif s[i] == '.': cat[i] = False
+        else: next_box[i] = int(input())
+    dp[0][0] = 2 if cat[0] else 1
+    for i in range(1, n):
+        dp[i][0] = (dp[i-1][0] + dp[i-1][1]) * (not cat[i]) % MOD
+        dp[i][1] = ((dp[i-1][2] if next_box[i-1] == -1 else dp[next_box[i-1]][0]) + dp[i-1][1]) * (not cat[i]) % MOD
+        dp[i][2] = ((dp[i-1][2] if next_box[i-1] == -1 else dp[next_box[i-1]][0]) + dp[i-1][1]) * (cat[i]) % MOD
+    print("Case #{}: {}".format(tc, (dp[-1][2]+dp[-1][1]-1*inv2)%MOD))

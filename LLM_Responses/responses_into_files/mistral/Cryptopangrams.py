@@ -1,34 +1,30 @@
-def prime_factors(n):
-    i = 2
-    factors = []
-    while i * i <= n:
-        if n % i:
-            i += 1
-        else:
-            n //= i
-            factors.append(i)
-    if n > 1:
-        factors.append(n)
-    return factors
+import math
+from sympy import isprime
 
-def decrypt(ciphertext, N):
-    plaintext = [''] * len(ciphertext)
-    for i in range(len(ciphertext)):
-        prime_factors_list = [N]
-        for j in range(i):
-            prime_factors_list.append(ciphertext[j])
+def encrypt(n, p):
+    primes = [2] + list(filter(isprime, range(3, n, 2)))
+    return [primes[i-1]*primes[i%len(primes)] for i in range(1, len(p))]
+
+def decrypt(n, ciphertext):
+    primes = [2] + list(filter(isprime, range(3, n, 2)))
+    plaintext_length = len(ciphertext) + 1
+    plaintext = ['A' + chr(ord('A')+i) for i in range(plaintext_length)]
+    products = ciphertext
+    for i in range(plaintext_length - 2, 0, -1):
         product = 1
-        for num in prime_factors_list:
-            product *= num
-        prime_index = (product - 2) % 26
-        if prime_index < 10:
-            plaintext[i] = chr(ord('A') + prime_index)
-        else:
-            plaintext[i] = chr(ord('a') + prime_index - 10)
+        for j in range(i-1, i-plaintext_length, -plaintext_length):
+            product *= primes[j]
+        plaintext[i] = chr((products[i-1]*product**(-1) - products[i-plaintext_length]) % n + ord('A'))
     return ''.join(plaintext)
 
-T = int(input())
-for t in range(T):
-    N, L = map(int, input().split())
-    ciphertext = list(map(int, input().split()))
-    print(f"Case #{t+1}: {decrypt(ciphertext, N)}")
+def solve():
+    T = int(input())
+    for _ in range(T):
+        n, L = map(int, input().split())
+        ciphertext = list(map(int, input().split()))
+        print(f'Case #{_ + 1}: {decrypt(n, ciphertext)}')
+
+solve()
+
+
+This code reads the test cases from standard input and outputs the decrypted messages to standard output. The `encrypt` function calculates the ciphertext given the prime number N and plaintext message, while the `decrypt` function recovers the plaintext message from the given ciphertext and prime number N.

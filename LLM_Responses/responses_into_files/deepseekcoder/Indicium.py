@@ -1,39 +1,25 @@
-from itertools import permutations
-
-def is_valid_natural_latin_square(n, latin_square):
-    for i in range(n):
-        row = set()
-        col = set()
-        for j in range(n):
-            if latin_square[i][j] in row:
-                return False
-            row.add(latin_square[i][j])
-            if latin_square[j][i] in col:
-                return False
-            col.add(latin_square[j][i])
-    return True
-
-def calculate_trace(n, latin_square):
-    trace = 0
-    for i in range(n):
-        trace += latin_square[i][i]
-    return trace
-
-def find_natural_latin_square(n, k):
-    if n > k:
+def generate_latin_square(n, k):
+    if n * (n*n + 1) // 2 < k:
         return "IMPOSSIBLE"
-    for latin_square in permutations(range(1, n+1), n*n).reshape((n,n)):
-        if is_valid_natural_latin_square(n, latin_square) and calculate_trace(n, latin_square) == k:
-            return latin_square
-    return "IMPOSSIBLE"
+    
+    matrix = [[0]*n for _ in range(n)]
+    numbers = list(range(1, n+1))
+    
+    for i in range(n):
+        row = [numbers[(i+j)%n] for j in range(k)]
+        if sum(row) != k:
+            return "IMPOSSIBLE"
+        matrix[i] = row
+        
+    return "\n".join(" ".join(str(cell) for cell in row) for row in matrix)
 
-T = int(input())
-for t in range(T):
-    N, K = map(int, input().split())
-    result = find_natural_latin_square(N, K)
-    if result == "IMPOSSIBLE":
-        print("Case #{}: {}".format(t+1, result))
+t = int(input().strip())
+for i in range(1, t + 1):
+    n, k = map(int, input().strip().split())
+    result = generate_latin_square(n, k)
+    
+    if "IMPOSSIBLE" not in result:
+        print(f"Case #{i}: POSSIBLE")
+        print(result)
     else:
-        print("Case #{}: POSSIBLE".format(t+1))
-        for row in result:
-            print(' '.join(map(str, row)))
+        print(f"Case #{i}: {result}")

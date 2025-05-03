@@ -1,29 +1,23 @@
-import random
+Here's a Python program that follows the problem description:
 
-T = int(input())
+
+import sys
+from random import choices
+
+def solve(flavors, preferences):
+    sold = [False] * len(flavors)
+    for pref in preferences:
+        if all(choices([0, 1], weights=[1 - p, p], k=len(pref)) for p in pref):
+            for f in sorted(range(len(pref)), key=lambda i: pref[i]):
+                if not sold[f]:
+                    sold[f] = True
+                    return f
+    return -1
+
+T = int(sys.stdin.readline().strip())
 for _ in range(T):
-    N = int(input())
-    flavors_like = {}
-    for _ in range(N):
-        D = int(input())
-        likes = [int(x) for x in input().split()]
-        for like in likes:
-            if like not in flavors_like:
-                flavors_like[like] = set()
-            flavors_like[like].add(like)
-    for N in range(N):
-        if N not in flavors_like:
-            print(-1)
-            continue
-        preferences = {}
-        for flavor_id, liked_flavors in flavors_like.items():
-            if N not in liked_flavors:
-                probability = 0.005 + (0.1 - 0.005) * random.random()
-            else:
-                probability = 0.5
-            preferences[flavor_id] = probability
-        max_probability = max(preferences.values())
-        for flavor_id, probability in preferences.items():
-            if probability == max_probability:
-                print(flavor_id)
-                break
+    N = int(sys.stdin.readline().strip())
+    preferences = [list(map(int, sys.stdin.readline().strip().split()))[1:] for _ in range(N)]
+    print(solve([], preferences))
+
+This program reads the number of test cases and then processes each one. For each case, it reads the number of lollipops (and customers) and the customer's preferences. It then calls a function `solve` that tries to sell a flavor to each customer based on their preferences. The solve function uses Python's built-in `choices` function to simulate random liking of flavors by the customers. If all customers have been served, it returns -1.

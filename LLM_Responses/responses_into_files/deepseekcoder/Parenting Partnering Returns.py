@@ -1,23 +1,24 @@
-import sys
-
-def find_schedule(activities):
-    activities.sort()
-    cam_activities = []
-    jamie_activities = []
-
-    for start, end in activities:
-        if not cam_activities or cam_activities[-1][1] < start:
-            cam_activities.append((start, end))
+def solve(activities):
+    # Sort the activities by their end time.
+    activities.sort(key=lambda x: x[1])
+    
+    # Initialize two lists to store Cameron's and Jamie's activities.
+    cameron = []
+    jamie = []
+    
+    for activity in activities:
+        if not cameron or cameron[-1][1] < activity[0]:
+            cameron.append(activity)
+        elif not jamie or jamie[-1][1] < activity[0]:
+            jamie.append(activity)
         else:
-            jamie_activities.append((start, end))
+            return "IMPOSSIBLE"
+    
+    return "".join(['C' if i % 2 == 0 else 'J' for i in range(len(cameron + jamie))])
 
-    return 'C' * len(cam_activities) + 'J' * len(jamie_activities)
-
-T = int(sys.stdin.readline().strip())
-for t in range(1, T+1):
-    N = int(sys.stdin.readline().strip())
-    activities = []
-    for i in range(N):
-        start, end = map(int, sys.stdin.readline().split())
-        activities.append((start, end))
-    print(f"Case #{t}: {find_schedule(activities) if all(not overlap(cam_activities, jamie_activities)) else 'IMPOSSIBLE'}")
+T = int(input())
+for t in range(1, T + 1):
+    N = int(input())
+    activities = [tuple(map(int, input().split())) for _ in range(N)]
+    result = solve(activities)
+    print("Case #{}: {}".format(t, result))

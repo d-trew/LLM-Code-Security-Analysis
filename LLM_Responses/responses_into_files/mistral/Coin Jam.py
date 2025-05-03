@@ -1,26 +1,33 @@
-import math
+from math import gcd
+import itertools
 
-def next_power_of_two(n):
-    return int(math.pow(2, math.ceil(math.log2(n))))
+def find_jamcoin(n):
+    jamcoins = set()
+    divisors = set()
 
-def check_jamcoin(jamcoin, n):
-    for i in range(2, 11):
-        base = str(i)
-        value = int(jamcoin, base)
-        for j in range(2, value + 1):
-            if value % j == 0:
-                return True
-    return False
+    for a in range(1, n // 2 + 1):
+        for b in range(a + 1, n // 2 + 1):
+            num = (a << n - b) | (b << b)
+            if is_prime(num): continue
+            divisors.add(num)
+            jamcoins.add(bin(num)[2:])
+    for j in range(len(jamcoins)):
+        jamcoin = list(itertools.islice(jamcoins, j))[0]
+        divisors[(2,)] = gcd(divisors[(2,)], int(jamcoin, 2))
+        for i in range(3, 11):
+            divisors[(i,)] = gcd(divisors[(i,)], int(jamcoin, i))
+        print("Case #1:")
+        print(f"{jamcoin} {', '.join(str(d) for d in divisors)}")
 
-def generate_jamcoin(n, j):
-    while True:
-        jamcoin = ''.join([str(random.randint(0, 1)) for _ in range(n)])
-        if check_jamcoin(jamcoin, n) and not any([jamcoin == jam for jam in jams]):
-            jams.append(jamcoin)
-            if len(jams) == j + 1:
-                break
+def is_prime(n):
+    if n <= 1 or (n % 2 == 0 and n > 2): return False
+    root = int(n ** 0.5) + 1
+    for i in range(3, root, 2):
+        if n % i == 0: return False
+    return True
 
-jams = []
-n, j = int(input()), int(input())
-for i in range(1, j + 1):
-    print(f"Case #{i}: {generate_jamcoin(n, j)}")
+find_jamcoin(16)
+find_jamcoin(32)
+
+
+This script generates jamcoins of length N and their corresponding divisors for each base from 2 to 10, as described in the problem statement. It uses a set to store generated jamcoins and their divisors. The `is_prime()` function checks if a number is prime or not.

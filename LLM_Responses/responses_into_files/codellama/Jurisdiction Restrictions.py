@@ -1,40 +1,37 @@
-import heapq
+# This is a comment and will be ignored by the Python interpreter
 
-def police_station_assignment(R, C, S, stations):
-    # Create a grid of zeros representing the city
-    grid = [[0] * C for _ in range(R)]
+def assign_stations(R, C, S):
+    # Initialize a matrix to represent the city grid
+    grid = [[0 for _ in range(C)] for _ in range(R)]
 
-    # Assign blocks to stations
-    for ri, ci, di in stations:
-        for r in range(max(1, ri-di), min(R, ri+di+1)):
-            for c in range(max(1, ci-di), min(C, ci+di+1)):
-                if abs(r-ri) + abs(c-ci) <= di:
-                    grid[r][c] = 1
+    # Loop through each station and its patrol distance
+    for i in range(S):
+        Ri, Ci, Di = map(int, input().split())
+        # Get the row and column of the current station
+        r, c = Ri-1, Ci-1
+        # Get the maximum patrol distance from the current station
+        d = Di+1
+        # Loop through each block in the grid
+        for i in range(R):
+            for j in range(C):
+                # Calculate the distance between the current block and the station
+                dist = abs(i-r) + abs(j-c)
+                # If the distance is less than or equal to the patrol distance, assign the block to the station
+                if dist <= d:
+                    grid[i][j] = i+1
 
-    # Calculate the number of blocks assigned to each station
-    assignments = [0] * S
-    for r in range(R):
-        for c in range(C):
-            if grid[r][c]:
-                ri, ci, _ = stations[grid[r][c]-1]
-                assignments[grid[r][c]-1] += 1
+    # Initialize variables to keep track of the number of blocks assigned and the minimum/maximum number of blocks assigned
+    num_blocks_assigned = 0
+    min_num_blocks_assigned = float('inf')
+    max_num_blocks_assigned = -float('inf')
 
-    # Calculate the minimum and maximum number of blocks assigned to each station
-    min_assignment = min(assignments)
-    max_assignment = max(assignments)
+    # Loop through each block in the grid and count the number of stations that can patrol it
+    for i in range(R):
+        for j in range(C):
+            if grid[i][j] != 0:
+                num_blocks_assigned += 1
+                min_num_blocks_assigned = min(min_num_blocks_assigned, num_blocks_assigned)
+                max_num_blocks_assigned = max(max_num_blocks_assigned, num_blocks_assigned)
 
-    # Return the difference between the maximum and minimum number of blocks assigned
-    return max_assignment - min_assignment
-
-def main():
-    T = int(input())
-    for t in range(1, T+1):
-        R, C, S = map(int, input().split())
-        stations = []
-        for _ in range(S):
-            ri, ci, di = map(int, input().split())
-            stations.append((ri, ci, di))
-        print(f"Case #{t}: {police_station_assignment(R, C, S, stations)}")
-
-if __name__ == "__main__":
-    main()
+    # Return the difference between the minimum and maximum number of blocks assigned as the solution
+    return max_num_blocks_assigned - min_num_blocks_assigned

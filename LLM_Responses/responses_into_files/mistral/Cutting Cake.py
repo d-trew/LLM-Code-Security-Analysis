@@ -1,27 +1,41 @@
-from math import inf
-def solve():
-    T = int(input())
-    for _ in range(T):
-        N, W, H = map(int, input().split())
-        P, Q, R, S = map(int, input().split())
-        A = [0] * N
-        B = [0] * N
-        for i in range(N):
-            X, Y, a, b = map(float, input().split())
-            A[i] = int(a)
-            B[i] *int(b)
-        a, b = inf, 0
-        for i in range(N):
-            area_left = max(0, (X + P - W) * Q - ((X + P) * Y + Q * H))
-            area_right = max(0, (R - X) * S - ((R * Y + S * H)))
-            a_left, b_left = 0, 0
-            for j in range(i):
-                a_left += max(0, (X + P - W) * Q - ((X + P) * Y + Q * H)) / (A[j] + B[j])
-                b_left += max(0, (R - X) * S - ((R * Y + S * H)))
-            a_right = 0
-            for j in range(i, N):
-                a_right -= max(0, (X + P - W) * Q - ((X + P) * Y + Q * H)) / (A[j] + B[j])
-                b_right += max(0, (R - X) * S - ((R * Y + S * H)))
-            if abs(a_left + a_right - b_left - b_right) < abs(a - b):
-                a, b = a_left + a_right, b_left + b_right
-        print(f"Case # {_ + 1}: {a} / {b}")
+import fractions
+from collections import defaultdict
+import math
+
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+def lcm(a, b):
+    return abs(a * b) // gcd(a, b)
+
+def solve(triangles, w, h):
+    n = len(triangles)
+    area = defaultdict(int)
+    for x1, y1, a, _ in triangles:
+        area[(x1, y1)] += abs(a)
+
+    # Calculate the area of the cake
+    total_area = lcm(w, h)
+    min_diff = float('inf')
+
+    for x in range(total_area + 1):
+        left_area = sum([area[(x1, y)] for x1, _, _, _ in triangles if x <= x1 < (x + w)])
+        right_area = total_area - left_area
+
+        diff = abs(left_area - right_area)
+        min_diff = min(min_diff, diff)
+
+    # The result may have a large numerator and denominator. Convert it to lowest terms.
+    g = math.gcd(min_diff, total_area)
+    return str(fractions.Fraction(min_diff // g, total_area // g))
+
+T = int(input())
+for t in range(1, T + 1):
+    w, h, n = map(int, input().split())
+    triangles = []
+    for _ in range(n):
+        x1, y1, a, b = map(int, input().split())
+        triangles.append((x1, y1, a, b))
+    print(f"Case # {t}: {solve(triangles, w, h)}")

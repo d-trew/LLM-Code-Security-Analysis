@@ -1,45 +1,32 @@
-t = int(input())
-for _ in range(t):
-    x, y = map(int, input().split())
-    directions = []
-    if y < 0:
-        steps_to_goal_y = abs(y)
-        while steps_to_goal_y > 0:
-            if x > 0 and (steps_to_goal_y & 1 or not (x & 1)):
-                directions.append('E')
-                x -= 2
-            elif x < 0 and (steps_to_goal_y & 1 or not (-x & 1)):
-                directions.append('W')
-                x += 2
-            else:
-                if steps_to_goal_y & 1:
-                    directions.append('N' if y > 0 else 'S')
-                    break
-                else:
-                    directions.append('S' if y > 0 else 'N')
-                    break
-            steps_to_goal_y //= 2
-        while x:
-            directions.append('E' if x > 0 else 'W')
-            x = -x // 2
-    elif y > 0:
-        steps_to_goal_y = y
-        while steps_to_goal_y > 0:
-            if x < 0 and (steps_to_goal_y & 1 or not (-x & 1)):
-                directions.append('E')
-                x += 2
-            elif x > 0 and (steps_to_goal_y & 1 or not (x & 1)):
-                directions.append('W')
-                x -= 2
-            else:
-                if steps_to_goal_y & 1:
-                    directions.append('S' if y > 0 else 'N')
-                    break
-                else:
-                    directions.append('N' if y > 0 else 'S')
-                    break
-            steps_to_goal_y //= 2
-        while x:
-            directions.append('W' if x < 0 else 'E')
-            x = -x // 2
-    print(f"Case #{_+1}: {'IMPOSSIBLE' if not directions else ''.join(directions)}")
+from itertools import count, chain, product
+
+def manhattan_distance(x1, y1, x2, y2):
+    return abs(x1 - x2) + abs(y1 - y2)
+
+def find_shortest_path(x, y):
+    steps = [(0, 0)]
+    directions = {'N': (0, 1), 'S': (0, -1), 'E': (1, 0), 'W': (-1, 0)}
+
+    queue = [steps]
+
+    while queue:
+        steps = queue.pop(0)
+        x, y = steps[-1]
+
+        if (x, y) == (x, y):  # base case: we've reached the goal
+            return ''.join(map(lambda d: d[1], steps))
+
+        for direction, step in product(['N', 'S', 'E', 'W'], range(1, manhattan_distance(*steps[-1], x, y) + 2)):
+            nx, ny = x + directions[direction][0] * (step - 1), y + directions[direction][1] * (step - 1)
+            if manhattan_distance(nx, ny, x, y) <= step:
+                queue.append([*steps, (nx, ny)])
+
+    return "IMPOSSIBLE"
+
+def main():
+    T = int(input())
+    for _ in range(T):
+        x, y = map(int, input().split())
+        print(f'Case #{_ + 1}: {find_shortest_path(0, 0)}')
+
+main()

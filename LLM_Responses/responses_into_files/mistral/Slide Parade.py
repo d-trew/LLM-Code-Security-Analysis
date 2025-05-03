@@ -1,29 +1,33 @@
-from collections import deque
+import sys
+from collections import defaultdict
+input = sys.stdin.readline
 
-def gooli_parade(B, S):
-    graph = [[] for _ in range(B+1)]
-    for i in range(S):
+def solve(B, S):
+    graph = defaultdict(list)
+    for _ in range(S):
         u, v = map(int, input().split())
         graph[u].append(v)
-    
-    visited = [[False] * (B + 1) for _ in range(2 ** B)]
-    queue = deque([(1, 0)])
-    visited[0][1] = True
-    
-    while queue:
-        state, building = queue.popleft()
-        if building == B:
-            return state
-        
-        for next_building in graph[building]:
-            new_state = state ^ (1 << next_building)
-            if not visited[new_state][next_building]:
-                visited[new_state][next_building] = True
-                queue.append((new_state, next_building))
-    
-    return 'IMPOSSIBLE'
 
-T = int(input())
-for i in range(T):
-    B, S = map(int, input().split())
-    print(f"Case #{i+1}: {gooli_parade(B, S)}")
+    visited = set([1])
+    queue = [(1, 1)]
+    steps = 0
+
+    while queue:
+        b, s = queue.pop(0)
+        for next_b in graph[b]:
+            if next_b not in visited:
+                visited.add(next_b)
+                queue.append((next_b, s+1))
+                steps += 1
+
+    if len(visited) != B:
+        return "IMPOSSIBLE"
+
+    route = [1] + list(visited) * (steps - 1) + [1]
+    return f'Case #{T+1}: {len(route)}' + '\n' + ' '.join(str(x) for x in route)
+
+if __name__ == "__main__":
+    T = int(input())
+    for _ in range(T):
+        B, S = map(int, input().split())
+        print(solve(B, S))

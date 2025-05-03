@@ -1,20 +1,32 @@
-import sys
+def min_rides(N, M, tickets):
+    # Initialize variables
+    seats = [0]*N
+    promotions = 0
+    rides = 0
+    
+    # Process each ticket
+    for pos, buyer in tickets:
+        # If the seat is empty or occupied by another customer, promote it
+        while seats[pos-1] != 0 and seats[pos-1] != buyer:
+            promotions += 1
+            pos -= 1
+        
+        # Assign the ticket to the seat if it's not already taken
+        if seats[pos-1] == 0 or seats[pos-1] == buyer:
+            seats[pos-1] = buyer
+    
+    # Count the number of rides
+    for i in range(N):
+        if seats[i]:
+            rides += 1
+            
+    return rides, promotions
 
-def min_rides_and_promotions(n, m, buyers):
-    buyers.sort()
-    last_seat = [0] * (n + 1)
-    for i in range(m):
-        buyer = buyers[i]
-        seat = buyers.index(buyer) + 1
-        if seat > last_seat[seat]:
-            return "Case #{}: {} {}".format(sys._getframe().f_lineno, m, m - len([i for i in buyers if buyers.index(i) >= seat]))
-    seats_used = sum([i > j for i, j in zip(buyers, buyers[1:])])
-    rides = (seats_used + 1) // n
-    promotions = seats_used % n
-    return "Case #{}: {} {}".format(1, rides, promotions)
-
-T = int(input())
-for _ in range(T):
-    n, c, m = map(int, input().split())
-    buyers = [int(x) for x in input().split()]
-    print(min_rides_and_promotions(n, m, buyers))
+T = int(input())  # Number of test cases
+for tc in range(1, T+1):
+    N, C, M = map(int, input().split())  # Seat count, customer count, ticket count
+    tickets = [tuple(map(int, input().split())) for _ in range(M)]  # Ticket details (position, buyer)
+    
+    rides, promotions = min_rides(N, M, tickets)
+    
+    print("Case #{}: {} {}".format(tc, rides, promotions))

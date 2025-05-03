@@ -1,25 +1,28 @@
+def max_kits(N, P, packages):
+    from collections import defaultdict
+
+    def can_form_kit(serving_size, packages):
+        needs = [serving_size * r for r in R]
+        for i in range(P):
+            if not (0.9 * needs[i] <= packages[i][1] <= 1.1 * needs[i]):
+                return False
+        return True
+
+    packages.sort(key=lambda x: x[1])
+    R = [int(input()) for _ in range(N)]
+    packages = [[int(input()), int(input())] for _ in range(P)]
+
+    left, right = min(p[0] for p in packages), max(p[0] for p in packages)
+    while left < right:
+        mid = (left + right + 1) // 2
+        if can_form_kit(mid, packages):
+            left = mid
+        else:
+            right = mid - 1
+
+    return left
+
 T = int(input())
-for _ in range(T):
+for t in range(1, T + 1):
     N, P = map(int, input().split())
-    packages = []
-    for _ in range(N):
-        package = list(map(int, input().split()))
-        packages.append(package)
-    max_kits = 0
-    for i in range(1 << N):
-        valid = True
-        kit_serving = 0
-        total_packages = [0] * P
-        for j in range(N):
-            if (i & (1 << j)):
-                kit_serving += 1
-                for k in range(P):
-                    total_packages[k] += packages[j][k]
-        for j in range(P):
-            if packages[0][j] * .9 <= total_packages[j] <= packages[0][j] * 1.1:
-                continue
-            valid = False
-            break
-        if valid and kit_serving > max_kits:
-            max_kits = kit_serving
-    print(f"Case # {_ + 1}: {max_kits}")
+    print(f"Case #{t}: {max_kits(N, P, packages)}")

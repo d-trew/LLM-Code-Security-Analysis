@@ -1,20 +1,46 @@
-from collections import Counter
+import sys
+from collections import defaultdict
+from math import sqrt
 
-def magnificent_arrangement(jugglers):
-    pairs = []
-    for i in range(len(jugglers) // 2):
-        j1 = i * 2
-        j2 = (i * 2) + 1
-        pair = tuple(sorted([j1, j2]))
-        pairs.append(pair)
-    return ' '.join(map(str, [pair[0] + 1 for pair in pairs]))
+def distance(x1, y1, x2, y2):
+    return sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
-T = int(input())
-for t in range(T):
-    N = int(input())
+def solve():
+    input = sys.stdin.readline().strip()
+    N = int(input)
     jugglers = []
     for _ in range(N * 2):
-        x, y = map(int, input().split())
+        x, y = map(int, sys.stdin.readline().strip().split())
         jugglers.append((x, y))
-    arrangement = magnificent_arrangement(jugglers)
-    print(f'Case #{t + 1}: {arrangement}')
+    
+    # Sort the jugglers by their x-coordinates
+    jugglers.sort()
+    
+    pairs = defaultdict(list)
+    for i in range(N * 2):
+        if len(pairs[jugglers[i][1]]) < N:
+            # Find the nearest neighbor to the right that has not been paired yet
+            for j in range(i + 1, N * 2):
+                if jugglers[j][1] == jugglers[i][1]:
+                    pairs[jugglers[i][1]].append((jugglers[i][0], jugglers[j][0]))
+                    break
+    
+    # Sort the pairs by their y-coordinates
+    for key in pairs.keys():
+        pairs[key].sort(reverse=True)
+        
+    result = []
+    for i in range(N * 2):
+        if jugglers[i][1] in pairs:
+            pair = pairs[jugglers[i][1]].pop()
+            result.append((jugglers[i][0], pair[1]))
+            
+    return result
+
+T = int(sys.stdin.readline().strip())
+for t in range(1, T + 1):
+    pairs = solve()
+    print('Case #{}:'.format(t), end=' ')
+    for pair in pairs:
+        print(*pair, end=' ')
+    print()

@@ -1,23 +1,47 @@
-def pascal_walk(n):
-    triangle = [[1], [1, 1]]
-    s = 0
-    while len(triangle) <= n:
+def generate_pascal_triangle(n):
+    triangle = [[1]]
+    for i in range(1, n):
         row = [1]
-        for i in range(len(triangle[-1]) - 1):
-            row.append(triangle[-1][i] + triangle[-1][i+1])
+        for j in range(1, i):
+            row.append(triangle[i-1][j-1] + triangle[i-1][j])
         row.append(1)
         triangle.append(row)
-        s += len(triangle) - 1
-    total = sum(int(x) for row in triangle for x in row)
-    if total < n:
-        return "Case #1: 1 1"
-    else:
-        for i, (row, pos) in enumerate(zip(triangle, range(1, s+1))):
-            if total - sum(triangle[pos-1]) == int(row[0]):
-                return f"Case #{pos}: {pos} {len(triangle[pos-1])}"
-        return "Case #1: 1 1"
+    return triangle
 
-T = int(input())
-for _ in range(T):
-    n = int(input())
-    print(pascal_walk(n))
+def find_pascal_walk(n, max_steps=500):
+    pascal_triangle = generate_pascal_triangle(max_steps)
+    walk = [(1, 1)]
+    current_sum = 1
+    for i in range(2, max_steps + 1):
+        if current_sum >= n:
+            break
+        for j in range(1, i):
+            value = pascal_triangle[i-1][j]
+            if current_sum + value <= n:
+                walk.append((i+1, j+1))
+                current_sum += value
+                break
+
+    return walk[:n]
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    results = []
+    index = 1
+    
+    for _ in range(T):
+        N = int(data[index])
+        index += 1
+        walk = find_pascal_walk(N)
+        results.append(f"Case #{_+1}:")
+        for pos in walk:
+            results.append(f"{pos[0]} {pos[1]}")
+    
+    print("\n".join(results))
+
+if __name__ == "__main__":
+    main()

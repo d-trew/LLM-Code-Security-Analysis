@@ -1,32 +1,30 @@
-import sys
+def count_winning_moves(grid, r, c):
+    def dfs(x, y, dx, dy):
+        nonlocal grid
+        x += dx
+        y += dy
+        if not (0 <= x < len(grid) and 0 <= y < len(grid[0])):
+            return True
+        if grid[x][y] == '.':
+            grid[x][y] = 'V' if dx else 'H'
+            if dfs(x, y, dx, dy):
+                return True
+            grid[x][y] = '.'
+        elif grid[x][y].isalpha():
+            return False
+        return False
 
-def solve(R, C):
-    board = [['.' for _ in range(C)] for _ in range(R)]
-    for i in range(R):
-        line = list(input())
-        for j in range(C):
-            if line[j] == '#':
-                board[i][j] = '#'
-    winning_moves = 0
-    for i in range(R):
-        for j in range(C):
-            if board[i][j] == '.':
-                board[i][j] = 'H'
-                winning_moves += check_winning_moves(board, R, C)
-                board[i][j] = '.'
-                board[i][j] = 'V'
-                winning_moves += check_winning_moves(board, R, C)
-                board[i][j] = '.'
-    print(f"Case #{R*C}: {winning_moves}")
-
-def check_winning_moves(board, R, C):
-    for i in range(R):
-        for j in range(C):
-            if board[i][j] == '.':
-                return 1
-    return 0
+    count = 0
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            if grid[i][j] == '.':
+                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    if dfs(i, j, dx, dy):
+                        count += 1
+    return count
 
 T = int(input())
-for _ in range(T):
+for case in range(1, T + 1):
     R, C = map(int, input().split())
-    solve(R, C)
+    grid = [list(input()) for _ in range(R)]
+    print('Case #{}: {}'.format(case, count_winning_moves(grid, R, C)))

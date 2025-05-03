@@ -1,37 +1,81 @@
-import re
+from itertools import product
 
-def solve_case(case):
-    board = [list(line) for line in case[:3]]
-    tile1 = [list(line) for line in case[3:6]]
-    tile2 = [list(line) for line in case[6:]]
+def rotate(tile):
+    return [list(x[::-1]) for x in zip(*tile)]
 
-    def is_valid_red_pattern(pattern):
-        return all(all(c == '@' or c == '.' and (c == '@' or c in pattern[0][1:]) for c in row) for row in pattern)
+def reflect(tile):
+    return [x[::-1] for x in tile]
 
-    valid_tiles = []
-    for i in range(2**64):
-        red_cells = [int(c) for line in [(j & 1 << k) for j, k in zip(*[[int(c) for c in line] for line in board])) for c in line if c == '@']
-        pattern = [[0 if c == '.' else 1 for c in line] for line in board]
-        is_solvable = True
-        for tile in [tile1, tile2]:
-            tile_pattern = [[(j & 1 << k) for j, k in zip(*[[int(c) for c in line] for line in tile])) for line in tile]
-            if not all(all(pattern[i][j] == tile_pattern[i][j] and pattern[i][j] != 0 or c != '@' for i, j in zip(*[[i, j] for i, j in enumerate(line)])) for line in board):
-                is_solvable = False
-                break
-        if is_solvable:
-            valid_tiles.append(red_cells)
+def is_valid_placement(board, tile, r, c):
+    for i in range(3):
+        for j in range(3):
+            if board[r+i][c+j] != '.' and (board[r+i][c+j] == '!' or board[r+i][c+j] == '@'):
+                return False
+    return True
 
-    return 'POSSIBLE' if any(valid_tiles) else 'IMPOSSIBLE'
+def place_tile(board, tile, r, c, char):
+    for i in range(3):
+        for j in range(3):
+            if tile[i][j] != '.':
+                board[r+i][c+j] = char
 
-T = int(input())
-for t in range(1, T + 1):
-    case = [list(line) for line in [input().strip() for _ in range(4)]]
-    print(f"Case #{t}: {solve_case(case)}")
-    if solve_case(case) == 'POSSIBLE':
+def remove_tile(board, tile, r, c):
+    for i in range(3):
+        for j in range(3):
+            if tile[i][j] != '.' and (board[r+i][c+j] == '!' or board[r+i][c+j] == '@'):
+                board[r+i][c+j] = '.'
+
+def is_solution(board, tile1, tile2):
+    for r in range(6):
+        for c in range(6):
+            if is_valid_placement(board, tile1, r, c):
+                place_tile(board, tile1, r, c, 'A')
+                if is_solution(board, tile2, tile1):
+                    return True
+                remove_tile(board, tile1, r, c)
+    return False
+
+def solve_puzzle(tile1, tile2):
+    for red_cells in product(range(8), repeat=8):
         board = [['.' for _ in range(8)] for _ in range(8)]
-        red_cells = valid_tiles[0]
-        for i, j in zip(*[[i, j] for i, j in enumerate(board)]):
-            if red_cells[i*8 + j]:
-                board[i][j] = '@'
-        for line in [str(''.join(['.' if c == '.' else '@' if i < 3 and j < 3 else ' ' for c in line])) for line in board]:
-            print(line)
+        valid = True
+        for i in range(8):
+            if red_cells[i] == 0:
+                continue
+            r, c = divmod(i, 8)
+            tile = [list(x) for x in tile1]
+            if not is_valid_placement(board, tile, r, c):
+                valid = False
+                break
+            place_tile(board, tile, r, c, chr(ord('!') + i))
+        if not valid:
+            continue
+        if is_solution(board, tile2, tile1):
+            return True
+    return False
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        tile1 = [data[index:index+3] for index in range(index, index+9)]
+        index += 9
+        tile2 = [data[index:index+3] for index in range(index, index+9)]
+        index += 9
+        
+        if solve_puzzle(tile1, tile2):
+            results.append("POSSIBLE")
+        else:
+            results.append("IMPOSSIBLE")
+    
+    for i, result in enumerate(results, start=1):
+        print(f"Case #{i}: {result}")
+
+if __name__ == "__main__":
+    main()

@@ -1,40 +1,34 @@
-import heapq
+from sys import stdin, setrecursionlimit
+setrecursionlimit(3000)
 
-def police_station_assignment(R, C, S, stations):
-    # Create a grid of zeros representing the city
-    grid = [[0] * C for _ in range(R)]
-
-    # Assign blocks to stations
-    for ri, ci, di in stations:
-        for r in range(max(1, ri-di), min(R, ri+di+1)):
-            for c in range(max(1, ci-di), min(C, ci+di+1)):
-                if abs(r-ri) + abs(c-ci) <= di:
-                    grid[r][c] = 1
-
-    # Calculate the number of blocks assigned to each station
-    assignments = [0] * S
-    for r in range(R):
-        for c in range(C):
-            if grid[r][c]:
-                ri, ci, _ = stations[grid[r][c]-1]
-                assignments[grid[r][c]-1] += 1
-
-    # Calculate the minimum and maximum number of blocks assigned to each station
-    min_assignment = min(assignments)
-    max_assignment = max(assignments)
-
-    # Return the difference between the maximum and minimum number of blocks assigned
-    return max_assignment - min_assignment
-
-def main():
-    T = int(input())
-    for t in range(1, T+1):
-        R, C, S = map(int, input().split())
+def min_diff():
+    for _ in range(int(stdin.readline())):
+        R, C, S = map(int, stdin.readline().split())
+        grid = [[False] * C for _ in range(R)]
         stations = []
         for _ in range(S):
-            ri, ci, di = map(int, input().split())
-            stations.append((ri, ci, di))
-        print(f"Case #{t}: {police_station_assignment(R, C, S, stations)}")
+            ri, ci, di = map(int, stdin.readline().split())
+            if not grid[ri-1][ci-1]:
+                grid[ri-1][ci-1] = True
+                stations.append((ri, ci, di))
 
-if __name__ == "__main__":
-    main()
+        assignments = [0]*S
+        blocks_count = R*C - len([x for x in grid if x])
+        for station in stations:
+            assigned_blocks = []
+            for i in range(max(0, station[0]-station[2]), min(station[0]+station[2]+1, R+1)):
+                for j in range(max(0, station[1]-station[2]), min(station[1]+station[2]+1, C+1)):
+                    if grid[i-1][j-1]:
+                        assigned_blocks.append((i, j))
+                        grid[i-1][j-1] = False
+                        blocks_count -= 1
+            assignments[stations.index(station)] += len(assigned_blocks)
+
+        min_assignments = max(assignments)
+        max_assignments = min(assignments)
+        print(f"Case #{stdin.readline().strip()}: {max_assignments - min_assignments}")
+
+min_diff()
+
+
+This code reads the input, processes it, and outputs the solution for each test case as required by the problem description. The code assumes that the input is given line-by-line in the format specified in the description.

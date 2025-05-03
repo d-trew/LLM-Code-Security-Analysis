@@ -1,23 +1,23 @@
+from itertools import permutations
+import sys
+input = sys.stdin.readline
+
+def min_diff(digits):
+    digits = list(set(digits))  # Remove duplicates
+    if len(digits) < 2 or not any(d != '0' for d in digits):
+        return -1
+    diff_min = float('inf')
+
+    for i in range(2, len(digits)+1):
+        for pair in permutations(digits, i):
+            if all(pair[0] < pair[1] for pair in zip(pair, sorted(pair, reverse=True))):  # Ensure no leading zeros
+                num1 = int(''.join(str(d) for d in pair[:i]))
+                num2 = int(''.join(str(d) for d in digits[i:]))
+                diff = abs(num1 - num2)
+                diff_min = min(diff, diff_min)
+
+    return diff_min if diff_min != float('inf') else -1
+
 T = int(input())
 for _ in range(T):
-    D = list(map(int, input()))
-    D.sort()
-    res = float('inf')
-    for i in range(len(D)):
-        for j in range(i+1, len(D)):
-            a, b = 0, 0
-            k, l = 0, i
-            while k < l:
-                if D[k] > 0:
-                    a = a * 10 + D[k]
-                    k += 1
-                else:
-                    k += 1
-            while l < len(D):
-                if D[l] > 0:
-                    b = b * 10 + D[l]
-                    l += 1
-                else:
-                    l += 1
-            res = min(res, abs(a - b))
-    print("Case #{}: {}".format(_, res))
+    print(f"Case #{_+1}: {min_diff(input().strip())}")

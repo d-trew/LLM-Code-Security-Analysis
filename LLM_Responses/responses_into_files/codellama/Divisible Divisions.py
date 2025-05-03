@@ -1,19 +1,27 @@
-t = int(input())
-for _ in range(t):
-    s = input()
-    d = int(input())
-    MOD = 10**9 + 7
-    n = len(s)
-    ans = 0
-    for mask in range(2**(n-1)):
-        flag = True
-        for i in range(n - 1):
-            if ((mask >> (i)) & 1) == 0:
-                continue
-            a, b = int(s[i]), int(s[i+1])
-            if (a // d + b // d) % d != 0:
-                flag = False
+import math
+
+def solve(S, D):
+    # Calculate the number of possible divisions of S
+    num_divisions = 2 ** (len(S) - 1)
+
+    # Initialize a counter to keep track of the number of divisible divisions
+    count = 0
+
+    # Iterate through each division of S
+    for i in range(num_divisions):
+        # Convert the binary representation of i to a string
+        s = bin(i)[2:]
+
+        # Check if the current division is divisible by D
+        divisible = True
+        for j in range(len(s) - 1):
+            if int(s[j:j+2]) % D != 0:
+                divisible = False
                 break
-        if flag:
-            ans += 1
-    print(f"Case #{_+1}: {ans % MOD}")
+
+        # Increment the counter if the current division is divisible by D
+        if divisible:
+            count += 1
+
+    # Return the remainder of dividing the number of divisible divisions by the prime 10^9 + 7
+    return count % (10 ** 9 + 7)

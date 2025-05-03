@@ -1,18 +1,33 @@
-T = int(input())
-for _ in range(T):
-    hd, ad, hk, ak, b, d = map(int, input().split())
-    if (hk - ad) // d > 0:
-        print(f"Case # {_+1}: IMPOSSIBLE")
-    else:
+def dragon_knight():
+    T = int(input())
+    for t in range(1, T + 1):
+        Hd, Ad, Hk, Ak, B, D = map(int, input().split())
         turns = 0
-        while hd > 0 and hk > 0:
-            turns += 1
-            hk -= max(0, ad)
-            ad += b
-            if ak - d > 0:
-                hd -= min(hd, ak - d)
-            else:
-                hd -= ak
-            if hd <= 0 or hk <= 0:
+        while True:
+            if Hk <= 0:
+                print("Case #{}: {}".format(t, turns))
                 break
-        print(f"Case # {_+1}: {turns}")
+            else:
+                Hd -= max(Ak - B, 0)
+                turns += 1
+            if Hd <= 0:
+                print("Case #{}: IMPOSSIBLE".format(t))
+                break
+            else:
+                Hk -= Ad
+                turns += 1
+        if Hk > 0 and Hd > 0:
+            while True:
+                if Hd <= 0:
+                    print("Case #{}: {}".format(t, turns))
+                    break
+                else:
+                    Hk -= max(Ad - D, 0)
+                    turns += 1
+                if Hk <= 0:
+                    print("Case #{}: IMPOSSIBLE".format(t))
+                    break
+                else:
+                    Hd -= Ak
+                    turns += 1
+dragon_knight()

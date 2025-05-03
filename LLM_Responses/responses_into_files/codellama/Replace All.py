@@ -1,17 +1,22 @@
+# Test cases
 T = int(input())
-for _ in range(T):
-    S = input()
-    N = int(input())
-    replacements = [input() for _ in range(N)]
-    seen_chars = set(S)
-    max_unique_chars = len(seen_chars)
-    for a, b in replacements:
-        temp_seen_chars = set()
-        for c in seen_chars:
-            if c == a:
-                temp_seen_chars.add(b)
-            else:
-                temp_seen_chars.add(c)
-        seen_chars = temp_seen_chars
-        max_unique_chars = max(max_unique_chars, len(seen_chars))
-    print(f"Case #{_+1}: {max_unique_chars}")
+for t in range(T):
+    # Read input
+    S, N = input().split()
+    R = []
+    for i in range(N):
+        R.append(input().split())
+    
+    # Perform replacements
+    text = S
+    for r in R:
+        a, b = r[0], r[1]
+        text = text.replace(a, b)
+    
+    # Count unique characters
+    unique_chars = set()
+    for c in text:
+        if c not in unique_chars:
+            unique_chars.add(c)
+    
+    print("Case #{}: {}".format(t+1, len(unique_chars)))

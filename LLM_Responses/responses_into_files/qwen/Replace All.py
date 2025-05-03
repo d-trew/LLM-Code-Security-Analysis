@@ -1,17 +1,21 @@
-T = int(input())
-for _ in range(T):
-    S = input()
-    N = int(input())
-    replacements = [input() for _ in range(N)]
-    seen_chars = set(S)
-    max_unique_chars = len(seen_chars)
-    for a, b in replacements:
-        temp_seen_chars = set()
-        for c in seen_chars:
-            if c == a:
-                temp_seen_chars.add(b)
-            else:
-                temp_seen_chars.add(c)
-        seen_chars = temp_seen_chars
-        max_unique_chars = max(max_unique_chars, len(seen_chars))
-    print(f"Case #{_+1}: {max_unique_chars}")
+def max_unique_characters(test_cases):
+    results = []
+    for i, (text, n, replacements) in enumerate(test_cases, start=1):
+        unique_chars = set(text)
+        for a, b in replacements:
+            if a in text or b in text:
+                unique_chars |= {c for c in text if c == a or c == b}
+        results.append(f"Case #{i}: {len(unique_chars)}")
+    return results
+
+# Example usage
+test_cases = [
+    ("CODEJAMWORLDFINALS", 2, [('A', 'O'), ('O', 'Y')]),
+    ("1234567890", 1, [('1', 'A')]),
+    ("ABCD", 2, [('A', 'B'), ('C', 'D')]),
+    ("Xx", 2, [('X', 'a'), ('x', 'b')])
+]
+
+results = max_unique_characters(test_cases)
+for result in results:
+    print(result)

@@ -1,25 +1,23 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    mistakes_A = 0
-    mistakes_B = 0
-    A_wins = [False] * (N + 1)
-    for i in range(1, N + 1):
-        if i % 2 == 1:
-            A_wins[i] = True
-        else:
-            B_wins = False
-            for j in range(1, min(i, N) + 1):
-                if (A_wins[j - 1] and i != j) or ((i - j) % 2 == 0):
-                    A_wins[i] = True
-                    mistakes_B += 1
-                    break
-                elif i - j == 1:
-                    B_wins = True
-            if not B_wins:
-                for j in range(i + 1, N + 1):
-                    if (A_wins[j - 1] and j != i) or ((j - i) % 2 == 0):
-                        A_wins[i] = False
-                        mistakes_A += 1
-                        break
-    print(f"Case #{_ + 1}: {mistakes_A} {mistakes_B}")
+import sys
+input = sys.stdin.readline
+N = int(input())
+
+for i in range(1, N+1):
+    Mi, Ci = map(int, input().split())
+    if (Mi == 3 and Ci == 2) or (Mi == 4 and Ci == 1):
+        break
+if i % 2:
+    a_mistake = True
+else:
+    b_mistake = True
+for j in range(i+1, N+1):
+    Mi, Ci = map(int, input().split())
+    if (Mi == 3 and Ci == 4) or (Mi == 2 and Ci == 3):
+        a_mistake = False
+        break
+for k in range(j+1, N+1):
+    Mi, Ci = map(int, input().split())
+    if (Mi == 4 and Ci == 3) or (Mi == 1 and Ci == 2):
+        b_mistake = False
+        break
+print("Case #x:", a_mistake + b_mistake)

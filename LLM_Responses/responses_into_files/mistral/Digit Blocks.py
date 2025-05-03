@@ -1,20 +1,20 @@
 import random
 
-T, N, B, P = map(int, input().split())
+def solve():
+    T, N, B, P = map(int, input().split())
+    towers = [[0]*B for _ in range(N)]
+    score = 0
 
-score = 0
-for _ in range(T):
-    towers = [0] * N
-    for _ in range(N * B):
-        D = int(input())
-        i = min(range(1, N+1), key=lambda x: str(D) + str(towers[x-1]).zfill(B))
-        if len(str(towers[i-1])) > B:
-            print(-1)
-            exit()
-        towers[i-1] = 10 * towers[i-1] + D
-    score += sum(int(''.join(map(str, reversed(tower)))) for tower in reversed(towers))
+    for _ in range(T):
+        digit = int(input())
 
-if score >= P:
-    print(1)
-else:
-    print(-1)
+        # Find the first empty tower or the one with less than B blocks
+        for i in range(1, N+1):
+            if sum(towers[i-1]) < B:
+                towers[i-1].append(digit)
+                score += 10**(len(towers[i-1]) - 1) * digit
+                break
+
+    print(score)
+
+solve()

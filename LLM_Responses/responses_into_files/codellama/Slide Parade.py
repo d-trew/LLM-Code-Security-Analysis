@@ -1,29 +1,26 @@
-from collections import deque
+import sys
 
-def gooli_parade(B, S):
-    graph = [[] for _ in range(B+1)]
+def solve(B, S):
+    # Initialize a dictionary to store the number of times each building appears in the parade route
+    building_count = {i: 0 for i in range(1, B+1)}
+    
+    # Iterate through each slide and update the building count accordingly
     for i in range(S):
         u, v = map(int, input().split())
-        graph[u].append(v)
+        building_count[u] += 1
+        building_count[v] += 1
     
-    visited = [[False] * (B + 1) for _ in range(2 ** B)]
-    queue = deque([(1, 0)])
-    visited[0][1] = True
+    # Check if all buildings appear the same number of times in the parade route
+    for i in range(1, B+1):
+        if building_count[i] != S:
+            return "IMPOSSIBLE"
     
-    while queue:
-        state, building = queue.popleft()
-        if building == B:
-            return state
-        
-        for next_building in graph[building]:
-            new_state = state ^ (1 << next_building)
-            if not visited[new_state][next_building]:
-                visited[new_state][next_building] = True
-                queue.append((new_state, next_building))
-    
-    return 'IMPOSSIBLE'
+    # Return the length of the parade route
+    return len(building_count) + 1
 
-T = int(input())
-for i in range(T):
-    B, S = map(int, input().split())
-    print(f"Case #{i+1}: {gooli_parade(B, S)}")
+# Read input
+B = int(input())
+S = int(input())
+
+# Solve the problem and print output
+print("Case #1:", solve(B, S))

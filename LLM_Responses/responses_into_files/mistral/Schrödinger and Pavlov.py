@@ -1,49 +1,32 @@
-import math
+from math import comb
+from sys import stdin, setrecursionlimit
+setrecursionlimit(5000)
 
-def solve(n, s, b):
-    count = 0
-    for i in range(1 << n):  # iterate over all possible configurations
-        has_cat_last_box = False
-        has_cat_in_last_box = False
-        cat_in_last_box = (s[-1] == 'C')
-        
-        for j in range(n-1):
-            if s[j] == '?':
-                s_j = 'C' if ((i >> j) & 1) else '.'
-            else:
-                s_j = s[j]
-            
-            if s_j == 'C':
-                has_cat_last_box = True
-                for k in range(j+1, n):
-                    if s[k] == '?':
-                        s_k = 'C' if ((i >> k) & 1) else '.'
-                    else:
-                        s_k = s[k]
-                    
-                    if s_k == '.' and b[j] != k:
-                        has_cat_last_box = False
-                        break
-                    
-                if has_cat_last_box:
-                    for k in range(j+1, n):
-                        if s[k] == '?':
-                            s_k = 'C' if ((i >> k) & 1) else '.'
-                        else:
-                            s_k = s[k]
-                        
-                        if s_k == 'C' and b[j] != k:
-                            has_cat_in_last_box = True
-                            break
-                    
-        if cat_in_last_box and not has_cat_in_last_box:
-            count += 1
-            
-    return count % (10**9 + 7)
+mod = 10**9 + 7
 
-t = int(input())
-for i in range(t):
-    n = int(input())
-    s = input()
-    b = list(map(int, input().split()))
-    print(f"Case #{i+1}: {solve(n, s, b)}")
+def dfs(box, cats, unknowns):
+    if box == n:
+        return 1 if cats[box] else 0
+
+    res = 0
+    for i in range(1, n+1):
+        if (not cats[i] and not unknowns[i]) or (i == box):
+            continue
+        unknowns[i], unknowns[box] = unknowns[box], unknowns[i]
+        res += dfs(box + 1, cats, unknowns)
+        unknowns[i], unknowns[box] = unknowns[box], unknowns[i]
+    return res
+
+def solve():
+    n, s = map(int, stdin.readline().split())
+    tunnels = list(map(int, stdin.readline().split()))
+    cats = [0 if s[i] == '.' else 1 for i in range(n)]
+    unknowns = [0]*n
+    res = sum([dfs(1, cats, unknowns) for _ in range(2**unknowns.count(?))])
+    print(f'Case #{stdin.readline().strip()}: {res % mod}')
+
+for _ in range(int(stdin.readline())):
+    solve()
+
+
+This code reads the input from standard input, calculates the number of configurations that result in a cat being in the last box using depth-first search, and prints the answer for each test case modulo 10^9+7. The recursion limit is set to 5000 to handle cases with up to 5000 boxes.

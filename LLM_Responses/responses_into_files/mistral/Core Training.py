@@ -1,27 +1,24 @@
-import math
+from fractions import Fraction
+import sys
+input = sys.stdin.readline
 
-def calculate_probability():
-    T = int(input())
-    results = []
-    
-    for _ in range(T):
-        N, K = map(int, input().split())
-        U = float(input())
-        
-        P = list(map(float, input().split()))
-        
-        P.sort(reverse=True)
-        used_units = 0
-        
-        for i in range(N):
-            if used_units + (1 - P[i]) > U:
-                break
-            used_units += 1
-        
-        probability = 1
-        for i in range(K-1, N):
-            probability *= P[i]
-        
-        results.append(f"Case # {_+1}: {probability:.6f}")
-    
-    print('\n'.join(results))
+def gcd(a, b):
+    while b: a, b = b, a % b
+    return a
+
+T = int(input())
+for t in range(1, T+1):
+    N, K = map(int, input().split())
+    U = Fraction(*map(Fraction, input().split()))
+    P = list(map(Fraction, input().split()))
+
+    # Calculate the maximum probability of success if all cores are trained to 1
+    max_prob = (1 - U / N) ** (N - K)
+
+    # Calculate the minimum probability of success for each core individually
+    min_prob = [(P[i] * (1 - U / N)) ** (N - K) for i in range(N)]
+
+    # Find the maximum probability among all possible assignments
+    max_assignment = max([min(sum(min_prob), 1.0) for min_prob in itertools.combinations(min_prob, N-K)])
+
+    print('Case #{}: {}'.format(t, max_assignment))

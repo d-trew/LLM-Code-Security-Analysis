@@ -1,33 +1,28 @@
-def check_magnificent(T):
-    for _ in range(T):
-        N = int(input())
-        pairs = []
-        magnificent = True
-        for _ in range(N):
-            x1, y1, x2, y2 = map(int, input().split())
-            pairs.append(((x1, y1), (x2, y2)))
-        for i in range(N):
-            for j in range(i+1, N):
-                if not intersect(pairs[i][0], pairs[j][0]):
-                    magnificent = False
-                    break
-        if magnificent:
-            print(f"Case # {_+1}: MAGNIFICENT")
+import sys
+from itertools import combinations
+
+def solve(cases):
+    for i, test_case in enumerate(cases):
+        n = test_case[0]
+        pairs = sorted([list(map(tuple, pair)) for pair in combinations(test_case[1:], 2)])
+        intersections = []
+        for i, (x1, y1), (x2, y2) in enumerate(pairs):
+            for j, (x3, y3), (x4, y4) in pairs[i + 1:]:
+                if ((x1 == x3 and y1 == y3 and x2 == x4 and y2 == y4) or
+                        (x1 - x3) * (y2 - y4) - (x2 - x4) * (y1 - y3)):
+                    intersections.append(i + 1)
+
+        if len(intersections) > 25:
+            print("Case #{}: Magnificent".format(i + 1))
         else:
-            print(f"Case # {_+1}: {' '.join(map(str, range(1, N+1)))}")
+            print("Case #{}: {}".format(i + 1, ", ".join(str(x) for x in sorted(set(intersections)))))
 
-def intersect(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
-    if x1 == x2:
-        return False
-    a = (y2 - y1) / (x2 - x1)
-    b = y1 - a * x1
-    for point in [(x1, y1), (x2, y2)]:
-        x, y = point
-        if a * x + b != y:
-            return False
-    return True
-
-T = int(input())
-check_magnificent(T)
+if __name__ == "__main__":
+    T = int(sys.stdin.readline())
+    for _ in range(T):
+        N = int(sys.stdin.readline().strip())
+        data = []
+        for _ in range(N):
+            x, y, x_, y_ = map(int, sys.stdin.readline().split())
+            data.append((x, y, x_, y_))
+        solve([[data]])

@@ -1,16 +1,20 @@
-def hack_program(program):
-    n = len(program)
-    dp = [float('inf')] * (n + 1)
-    dp[0] = 0
-    for i in range(1, n):
-        if program[i-1] == 'S':
-            dp[i] = min(dp[i], dp[i-1] + 1)
-        elif program[i-1] == 'C' and i > 1:
-            dp[i] = min(dp[i], dp[i-2] + 1)
-    return 'IMPOSSIBLE' if dp[-1] == float('inf') else str(min(dp))
+import sys
 
-t = int(input())
+def solve(d, p):
+    if d >= len(p):
+        return "IMPOSSIBLE"
+    else:
+        hacks = 0
+        while d > 0:
+            hacks += 1
+            for i in range(len(p) - 1):
+                if p[i] == "C" and p[i + 1] == "S":
+                    p[i], p[i + 1] = p[i + 1], p[i]
+                    d -= 2
+                    break
+        return hacks
+
+t = int(sys.stdin.readline())
 for _ in range(t):
-    d, program = input().split()
-    d = int(d)
-    print(f"Case #{_+1}: {hack_program(program)}")
+    d, p = map(str, sys.stdin.readline().split())
+    print("Case #" + str(_ + 1) + ": " + solve(int(d), p))

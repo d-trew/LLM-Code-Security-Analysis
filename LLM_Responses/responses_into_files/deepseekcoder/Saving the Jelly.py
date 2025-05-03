@@ -1,36 +1,35 @@
 import heapq
+from math import sqrt
 
-def jelly_saver(N, kids, sweets):
-    heap = []
-    for i in range(1, N+2):
-        for j in range(N+1):
-            if i == 1:
-                continue
-            dist = ((kids[j-1][0] - sweets[i-1][0]) ** 2 + (kids[j-1][1] - sweets[i-1][1]) ** 2) ** 0.5
-            heapq.heappush(heap, (dist, i))
-    for _ in range(N):
-        _, jelly = heapq.heappop(heap)
-        print(f"Case #{N+1}: POSSIBLE")
-        for i in range(1, N+1):
-            if i == 1:
-                print(f"{i} {jelly}")
-            else:
-                while True:
-                    dist, j = heapq.heappop(heap)
-                    if j != jelly:
-                        print(f"{i} {j}")
-                        break
-    return
+def euclidean_distance(point1, point2):
+    return sqrt((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2)
 
-T = int(input())
-for t in range(T):
+def solve():
     N = int(input())
-    kids = []
+    children = []
+    sweets = [None] * (N+1)
+    
     for _ in range(N):
         x, y = map(int, input().split())
-        kids.append((x, y))
-    sweets = []
-    for _ in range(N+1):
+        children.append((x,y))
+        
+    for i in range(1, N+1):
         x, y = map(int, input().split())
-        sweets.append((x, y))
-    jelly_saver(N, kids, sweets)
+        sweets[i] = (x,y)
+    
+    # Sort the children by their initial position
+    children.sort()
+    
+    # Create a priority queue to hold the distances and corresponding indices of the sweets
+    pq = [(euclidean_distance(children[0], sweets[i]), i) for i in range(1, N+1)]
+    heapq._heapify_max(pq)  # Priority queue with max-heap property
+    
+    result = []
+    while pq:
+        _, idx = heapq.heappop(pq)
+        if not pq or pq[0][0] < euclidean_distance(children[len(result)+1], sweets[idx]):
+            # The closest sweet to the next child is this one, so assign it
+            result.append((len(result)+1, idx))
+        else:
+            # There exists a sweet that is closer to the next child than this one
+            heapq.heappush(pq, (euclidean<｜begin▁of▁sentence｜>

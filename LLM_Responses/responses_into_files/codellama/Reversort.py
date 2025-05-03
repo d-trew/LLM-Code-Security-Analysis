@@ -1,10 +1,10 @@
 T = int(input())
-for _ in range(T):
+for t in range(T):
     N = int(input())
-    L = list(map(int, input().split()))
+    L = [int(x) for x in input().split()]
     cost = 0
-    for i in range(1, N):
-        j = L.index(min(L[i:]))
-        L[:j+1] = reversed(L[:j+1])
+    for i in range(N-1):
+        j = L.index(min(L[i:])) + i
         cost += j - i + 1
-    print(f"Case #{_+1}: {cost}")
+        L[i:j+1] = L[i:j+1][::-1]
+    print("Case #" + str(t+1) + ": " + str(cost))

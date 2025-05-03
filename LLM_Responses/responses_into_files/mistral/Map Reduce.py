@@ -1,53 +1,38 @@
+import sys
+input = sys.stdin.readline
 T = int(input())
 for _ in range(T):
-    R, C, D = [int(x) for x in input().split()]
-    map_data = [list(input()) for _ in range(R)]
-    start_pos = None
-    finish_pos = None
-    for i in range(R):
-        for j in range(C):
-            if map_data[i][j] == 'S':
-                start_pos = (i, j)
-            elif map_data[i][j] == 'F':
-                finish_pos = (i, j)
+    R, C, D = map(int, input().split())
+    grid = [list(input().strip()) for _ in range(R)]
+    start_x, start_y = 0, 0
+    for i, row in enumerate(grid):
+        for j, cell in enumerate(row):
+            if cell == 'S':
+                start_x, start_y = i, j
 
-    def bfs(map_data, start_pos, finish_pos):
-        R, C = len(map_data), len(map_data[0])
-        queue = [(start_pos, 0)]
-        visited = set([start_pos])
-        while queue:
-            pos, dist = queue.pop(0)
-            if pos == finish_pos:
-                return dist
-            for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                new_x, new_y = pos[0] + x, pos[1] + y
-                if 0 <= new_x < R and 0 <= new_y < C and map_data[new_x][new_y] != '#' and (new_x, new_y) not in visited:
-                    queue.append(((new_x, new_y), dist + 1))
-                    visited.add((new_x, new_y))
+    visited = [[False] * C for _ in range(R)]
+    queue = [(start_x, start_y, 0)]
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
-    def dfs(map_data, start_pos, finish_pos):
-        R, C = len(map_data), len(map_data[0])
-        queue = [(start_pos, 0)]
-        visited = set([start_pos])
-        while queue:
-            pos, dist = queue.pop(0)
-            if pos == finish_pos:
-                return dist
-            for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                new_x, new_y = pos[0] + x, pos[1] + y
-                if 0 <= new_x < R and 0 <= new_y < C and map_data[new_x][new_y] != '#' and (new_x, new_y) not in visited:
-                    queue.append(((new_x, new_y), dist + 1))
-                    visited.add((new_x, new_y))
+    while queue:
+        x, y, steps = queue.pop(0)
 
-    def check(map_data, D):
-        R, C = len(map_data), len(map_data[0])
-        for i in range(R):
-            for j in range(C):
-                if map_data[i][j] == '#':
-                    temp_map = [list(x) for x in map_data]
-                    temp_map[i][j] = '.'
-                    if bfs(temp_map, start_pos, finish_pos) == D:
-                        return 'POSSIBLE'
-        return 'IMPOSSIBLE'
+        if grid[x][y] == 'F':
+            if steps <= D:
+                print(f'Case #{_ + 1}: POSSIBLE')
+                for row in grid:
+                    print(''.join(row))
+                continue
+            else:
+                print(f'Case #{_ + 1}: IMPOSSIBLE')
+                continue
 
-    print(f'Case #{"{}":>1}: {check(map_data, D)}')
+        if not visited[x][y]:
+            visited[x][y] = True
+
+            for dx, dy in directions:
+                nx, ny = x + dx * 2, y + dy * 2
+                if 0 <= nx < R and 0 <= ny < C and grid[nx][ny] != '#':
+                    queue.append((nx, ny, steps + 1))
+
+    print(f'Case #{_ + 1}: IMPOSSIBLE')

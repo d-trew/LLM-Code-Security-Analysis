@@ -1,23 +1,33 @@
 import sys
 
-def find_schedule(activities):
-    activities.sort()
-    cam_activities = []
-    jamie_activities = []
-
-    for start, end in activities:
-        if not cam_activities or cam_activities[-1][1] < start:
-            cam_activities.append((start, end))
+def main():
+    t = int(input())
+    
+    for i in range(1, t + 1):
+        n = int(input())
+        
+        activities = []
+        for j in range(n):
+            start, end = map(int, input().split())
+            activities.append((start, end))
+            
+        print("Case #" + str(i) + ":", end="")
+        
+        if not valid_schedule(activities):
+            print("IMPOSSIBLE")
         else:
-            jamie_activities.append((start, end))
+            for activity in activities:
+                if activity[0] % 2 == 0:
+                    print("C", end="")
+                else:
+                    print("J", end="")
+            
+def valid_schedule(activities):
+    for i in range(len(activities)):
+        for j in range(i + 1, len(activities)):
+            if (activities[i][0] < activities[j][0] and activities[i][1] > activities[j][0]) or (activities[i][0] > activities[j][0] and activities[i][1] < activities[j][0]):
+                return False
+    return True
 
-    return 'C' * len(cam_activities) + 'J' * len(jamie_activities)
-
-T = int(sys.stdin.readline().strip())
-for t in range(1, T+1):
-    N = int(sys.stdin.readline().strip())
-    activities = []
-    for i in range(N):
-        start, end = map(int, sys.stdin.readline().split())
-        activities.append((start, end))
-    print(f"Case #{t}: {find_schedule(activities) if all(not overlap(cam_activities, jamie_activities)) else 'IMPOSSIBLE'}")
+if __name__ == "__main__":
+    main()

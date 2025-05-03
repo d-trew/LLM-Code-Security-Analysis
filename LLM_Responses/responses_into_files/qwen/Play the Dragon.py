@@ -1,18 +1,47 @@
-T = int(input())
+def min_turns_to_defeat_knight(Hd, Ad, Hk, Ak, B, D):
+    if Hd <= Ak:
+        return "IMPOSSIBLE"
+    
+    turns = 0
+    while True:
+        # Your turn
+        turns += 1
+        Hk -= Ad
+        if Hk <= 0:
+            return str(turns)
+        
+        # Knight's turn
+        turns += 1
+        Hd -= Ak
+        if Hd <= 0:
+            return "IMPOSSIBLE"
+
+# Read input
+import sys
+input = sys.stdin.read
+data = input().split()
+
+# Process each test case
+T = int(data[0])
+results = []
+index = 1
 for _ in range(T):
-    hd, ad, hk, ak, b, d = map(int, input().split())
-    if (hk - ad) // d > 0:
-        print(f"Case # {_+1}: IMPOSSIBLE")
-    else:
-        turns = 0
-        while hd > 0 and hk > 0:
-            turns += 1
-            hk -= max(0, ad)
-            ad += b
-            if ak - d > 0:
-                hd -= min(hd, ak - d)
-            else:
-                hd -= ak
-            if hd <= 0 or hk <= 0:
-                break
-        print(f"Case # {_+1}: {turns}")
+    Hd = int(data[index])
+    index += 1
+    Ad = int(data[index])
+    index += 1
+    Hk = int(data[index])
+    index += 1
+    Ak = int(data[index])
+    index += 1
+    B = int(data[index])
+    index += 1
+    D = int(data[index])
+    index += 1
+    
+    result = min_turns_to_defeat_knight(Hd, Ad, Hk, Ak, B, D)
+    results.append(result)
+
+# Output results
+for i, result in enumerate(results):
+    print(f"Case #{i + 1}: {result}")

@@ -1,57 +1,52 @@
-from fractions import Fraction
-import sys
+import fractions
 
-def is_neat(napkin, k):
-    for i in range(k-1):
-        x0 = napkin[i][0]
-        y0 = napkin[i][1]
-        x1 = napkin[(i+1)%k][0]
-        y1 = napkin[(i+1)%k][1]
-        if is_collinear(x0, y0, x1, y1):
-            return False
-    return True
+def is_neat(napkin):
+    if len(napkin) < 3 or napkin[0] == napkin[-1]:
+        return False
 
-def is_collinear(x0, y0, x1, y1):
-    dx = (x1 - x0)
-    dy = (y1 - y0)
-    dxdy = (dx * dy) if dx != 0 else float('inf')
-    d2 = max((abs(dx)), (abs(dy)))
-    return abs(dxdy) <= d2
+    def find_symmetric(line, region):
+        line_points = set(map(tuple, line))
+        for p in region:
+            if p not in line_points:
+                return False
+        return True
 
-def find_pattern(napkin, k):
-    for i in range(len(napkin)-1):
-        x0 = napkin[i][0]
-        y0 = napkin[i][1]
-        x1 = napkin[(i+1)%len(napkin)][0]
-        y1 = napkin[(i+1)%len(napkin)][1]
-        if is_collinear(x0, y0, x1, y1):
-            for j in range(len(napkin)-1):
-                x2 = napkin[j][0]
-                y2 = napkin[j][1]
-                x3 = napkin[(j+1)%len(napkin)][0]
-                y3 = napkin[(j+1)%len(napkin)][1]
-                if is_collinear(x2, y2, x3, y3):
-                    continue
-                for _ in range(k-1):
-                    return [(Fraction(x0), Fraction(y0)), (Fraction(x1), Fraction(y1))]
-    return None
+    segments = []
+    folding_lines = set()
+    for i in range(len(napkin)):
+        j = (i + 1) % len(napkin)
+        line = [(napkin[i], napkin[j])]
+        if not find_symmetric(line, [napkin[i]]):
+            continue
+        folding_lines.add(line)
+
+        region = {napkin[i]}
+        for k in range((i + 2) % len(napkin), len(napkin)):
+            l = (k + 1) % len(napkin)
+            if not find_symmetric([(napkin[i], napkin[k]), (napkin[k], napkin[l])], region):
+                break
+            region.add(napkin[k])
+        else:
+            segments += line
+
+    return len(segments) == k - 1, segments
 
 def main():
     T = int(input())
-    for t in range(T):
-        N, K = map(int, input().split())
-        napkin = []
-        for _ in range(N):
-            x, y = map(int, input().split())
-            napkin.append((x, y))
-        if is_neat(napkin, K):
-            print(f"Case #{t+1}: POSSIBLE")
-            pattern = find_pattern(napkin, K)
-            if pattern:
-                for segment in pattern:
-                    print(*segment)
-        else:
-            print(f"Case #{t+1}: IMPOSSIBLE")
+    for _ in range(T):
+        k, n = map(int, input().split())
+        napkin = [tuple(map(int, input().split())) for _ in range(n)]
+        possible, segments = is_neat(napkin)
+        print(f"Case #{_+1}: {('POSSIBLE' if possible else 'IMPOSSIBLE')}")
+        if possible:
+            for s in segments:
+                print(f"{s[0][0]}/{s[0][1]} {s[1][0]}/{s[1][1]}")
 
-if __name__ == "__main__":
-    main()
+main()
+
+
+This program takes as input the number of test cases, followed by the description of each test case. Each test case consists of two integers (N and K) representing the number of vertices in the polygon defining Chalk's napkin and the number of regions to split the napkin into with a neat folding pattern containing K-1 line segments. The polygon is represented as a list of N tuples, each containing the x and y coordinates of a vertex.
+
+The program defines an `is_neat` function that checks if it's possible to find a neat folding pattern for the given napkin with K regions. If such a pattern exists, it returns a tuple (True, segments) where segments is a list of line segments representing the neat folding pattern. Otherwise, it returns (False, []).
+
+The main function reads the input, iterates through each test case, and prints the result for each test case in the format specified in the problem statement.

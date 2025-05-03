@@ -1,12 +1,21 @@
-T = int(input())
-for t in range(1, T+1):
-    N = int(input())
-    max_len = 0
-    for i in range(N):
-        D = list(map(int, input().split()))
-        D.sort()
-        for j in range(len(D)-4):
-            if D[j+4] - D[j] == 5:
-                max_len = max(max_len, j+5)
-                break
-    print("Case #{}: {}".format(t, max_len))
+import sys
+
+def longest_straight(dice):
+    # Find the longest straight in the list of dice
+    longest = []
+    for die in dice:
+        straight = sorted(set(die))
+        if len(straight) > len(longest):
+            longest = straight
+    return longest
+
+if __name__ == "__main__":
+    t = int(input())
+    for _ in range(t):
+        n = int(input())
+        dice = []
+        for i in range(n):
+            die = list(map(int, input().split()))
+            dice.append(die)
+        longest = longest_straight(dice)
+        print("Case #{}".format(_+1), len(longest))

@@ -1,32 +1,26 @@
-import sys
-
-def solve(R, C):
-    board = [['.' for _ in range(C)] for _ in range(R)]
-    for i in range(R):
-        line = list(input())
-        for j in range(C):
-            if line[j] == '#':
-                board[i][j] = '#'
-    winning_moves = 0
-    for i in range(R):
-        for j in range(C):
-            if board[i][j] == '.':
-                board[i][j] = 'H'
-                winning_moves += check_winning_moves(board, R, C)
-                board[i][j] = '.'
-                board[i][j] = 'V'
-                winning_moves += check_winning_moves(board, R, C)
-                board[i][j] = '.'
-    print(f"Case #{R*C}: {winning_moves}")
-
-def check_winning_moves(board, R, C):
-    for i in range(R):
-        for j in range(C):
-            if board[i][j] == '.':
-                return 1
-    return 0
-
-T = int(input())
-for _ in range(T):
+for t in range(int(input())):
     R, C = map(int, input().split())
-    solve(R, C)
+    matrix = []
+    for i in range(R):
+        matrix.append(list(input()))
+    # Check if there are any empty cells in the matrix
+    if not any("." in row for row in matrix):
+        print("Case #" + str(t+1) + ": 0")
+        continue
+    # Initialize variables to keep track of Becca's moves and wins
+    becca_moves = []
+    becca_wins = 0
+    # Iterate through the matrix, checking for empty cells and counting wins
+    for i in range(R):
+        for j in range(C):
+            if matrix[i][j] == ".":
+                becca_moves.append((i, j))
+            elif matrix[i][j] == "#":
+                becca_wins += 1
+    # If Becca has no empty cells to choose from on her next turn, she loses
+    if not becca_moves:
+        print("Case #" + str(t+1) + ": 0")
+        continue
+    # Count the number of distinct winning opening moves for Becca
+    distinct_moves = len(set(becca_moves))
+    print("Case #" + str(t+1) + ": " + str(distinct_moves))

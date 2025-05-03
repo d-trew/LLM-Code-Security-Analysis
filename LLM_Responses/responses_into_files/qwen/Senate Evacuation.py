@@ -1,15 +1,36 @@
-t = int(input())
-for i in range(t):
-    n = int(input())
-    senators = list(map(int, input().split()))
+def evacuate_senate(N, P):
     plan = []
-    while sum(senators) > 0:
-        min_majority = float('inf')
-        for j in range(n):
-            majority = senators[j] // (j + 1)
-            if majority < min_majority and all(majority <= senators[k] // (k + 1) for k in range(j)):
-                min_majority = majority
-                best_party = j
-        plan.append(chr(65 + best_party).upper() * min_majority)
-        senators = [senators[i] - min_majority for i in range(n)]
-    print(f"Case #{i+1}: {' '.join(plan)}")
+    while sum(P) > 1:
+        if len(plan) % 2 == 0:
+            for i in range(26):
+                if P[i] > 0:
+                    plan.append(chr(i + ord('A')))
+                    P[i] -= 1
+                    break
+        else:
+            max_index = P.index(max(P))
+            plan.append(chr(max_index + ord('A')))
+            P[max_index] -= 1
+    return ' '.join(plan)
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        N = int(data[index])
+        P = list(map(int, data[index + 1:index + N + 1]))
+        index += N + 1
+        result = evacuate_senate(N, P)
+        results.append(f"Case #{_+1}: {result}")
+    
+    for result in results:
+        print(result)
+
+if __name__ == "__main__":
+    main()

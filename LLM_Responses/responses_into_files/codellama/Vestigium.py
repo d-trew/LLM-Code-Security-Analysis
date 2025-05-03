@@ -1,20 +1,19 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
+import sys
+input = sys.stdin.read()
+t=int(input[0])
+for i in range(1,t+1):
+    n = int(input[i])
     matrix = []
-    for _ in range(N):
-        row = list(map(int, input().split()))
-        matrix.append(row)
-    
-    trace = sum(matrix[i][i] for i in range(N))
-    repeated_rows = set()
-    repeated_cols = set()
-    for i in range(N):
-        row_set = set(matrix[i])
-        col_set = set(x[i] for x in matrix)
-        if len(row_set) != N:
-            repeated_rows.add(i+1)
-        if len(col_set) != N:
-            repeated_cols.add(i+1)
-    
-    print(f"Case #{_+1}: {trace} {(len(repeated_rows))} {(len(repeated_cols))}")
+    for j in range(n):
+        matrix.append([int(x) for x in input[j+2].split()])
+    trace=0
+    repeated_rows = 0
+    repeated_cols = 0
+    for row in matrix:
+        if len(set(row)) != n:
+            repeated_rows += 1
+    for col in zip(*matrix):
+        if len(set(col)) != n:
+            repeated_cols += 1
+    trace = sum([x for x in matrix[i][i] for i in range(n)])
+    print("Case #{} {} {}".format(i,trace,repeated_rows+repeated_cols))

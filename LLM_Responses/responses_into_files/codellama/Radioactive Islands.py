@@ -1,15 +1,27 @@
 import math
 
-def min_radiation(A, B, C):
-    X = abs(B - A)
-    Y = 0
-    for c in C:
-        D = abs(c - A) if c < A else abs(c - B)
-        Y += (D ** 2) / (X + D)
-    return Y
+def get_minimum_radiation(N, A, B, C):
+    # Calculate the distance between each pair of islands
+    distances = []
+    for i in range(len(C)):
+        for j in range(i + 1, len(C)):
+            distances.append(math.sqrt((C[i] - C[j]) ** 2))
 
-T = int(input())
-for t in range(1, T+1):
-    N, A, B = map(float, input().split())
-    C = [float(x) for x in input().split()]
-    print(f"Case #{t}: {min_radiation(A, B, C)}")
+    # Calculate the total radiation received from each island
+    total_radiation = []
+    for i in range(len(distances)):
+        total_radiation.append(distances[i] - 2)
+
+    # Calculate the minimum total radiation dose
+    min_dose = 0
+    for i in range(len(total_radiation)):
+        min_dose += total_radiation[i]
+
+    return min_dose
+
+if __name__ == "__main__":
+    T = int(input())
+    for t in range(T):
+        N, A, B = map(float, input().split())
+        C = list(map(float, input().split()))
+        print("Case #{}: {}".format(t + 1, get_minimum_radiation(N, A, B, C)))

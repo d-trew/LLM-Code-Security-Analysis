@@ -1,20 +1,40 @@
-T = int(input())
-for i in range(1, T+1):
-    N, K = map(int, input().split())
-    stalls = ['O'] * (N + 2)
-    for j in range(K-1):
-        if 'O' == stalls[j+1]:
-            stalls[j] = 'O'
-        else:
-            stalls[j+1] = 'O'
-    max_ls_rs = 0
-    min_ls_rs = float('inf')
-    for j in range(2, N + 1):
-        ls = 0 if 'O' == stalls[j-1] else j - 1
-        rs = 0 if 'O' == stalls[j+1] else N - j
-        if min(ls, rs) > min_ls_rs:
-            max_ls_rs = max(max_ls_rs, max(ls, rs))
-            min_ls_rs = min(ls, rs)
-        elif min(ls, rs) == min_ls_rs and max(ls, rs) > max_ls_rs:
-            max_ls_rs = max(ls, rs)
-    print(f"Case #{i}: {max_ls_rs} {min_ls_rs}")
+def find_stall(N, K):
+    if N == 1:
+        return (0, 0)
+    elif N == 2:
+        return (1, 0)
+    else:
+        stalls = [0] * (N + 2)
+        stalls[0], stalls[N + 1] = -1, -1
+        left, right = 1, N
+        for _ in range(K):
+            mid = (left + right) // 2
+            if mid == left:
+                left += 1
+            elif mid == right:
+                right -= 1
+            else:
+                if stalls[mid - 1] < stalls[mid + 1]:
+                    left = mid
+                else:
+                    right = mid
+        LS, RS = min(mid - stalls[left], stalls[right] - mid), max(stalls[left] - mid, mid - stalls[right])
+        return (max(LS, RS), min(LS, RS))
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    T = int(data[0])
+    index = 1
+    results = []
+    for _ in range(T):
+        N = int(data[index])
+        K = int(data[index + 1])
+        index += 2
+        result = find_stall(N, K)
+        results.append(f"Case #{_+1}: {result[0]} {result[1]}")
+    print("\n".join(results))
+
+if __name__ == "__main__":
+    main()

@@ -1,13 +1,33 @@
-T = int(input())
-for t in range(1, T+1):
-    K = int(input())
-    N = 3 + K // 2 if K % 2 == 0 else 3 + (K - 1) // 2
-    graph = [['0'] * N for _ in range(N)]
-    for i in range(N):
-        for j in range(i+1, N):
-            if (i+j) <= N:
-                graph[i][j] = '1'
-                graph[j][i] = '1'
-    print(f"Case #{t}: {N}")
-    for row in graph:
-        print(''.join(row))
+import sys
+
+def get_spanning_trees(n):
+    trees = []
+    for i in range(1, n+1):
+        tree = []
+        for j in range(1, n+1):
+            if i != j:
+                tree.append([i, j])
+        trees.append(tree)
+    return trees
+
+def get_different_spanning_trees(n, k):
+    trees = get_spanning_trees(n)
+    different_trees = []
+    for i in range(k):
+        tree = []
+        for j in range(len(trees)):
+            tree.append(trees[j][i])
+        different_trees.append(tree)
+    return different_trees
+
+def main():
+    t = int(input())
+    for i in range(t):
+        n, k = map(int, input().split())
+        trees = get_different_spanning_trees(n, k)
+        print("Case #" + str(i+1) + ": " + str(len(trees)))
+        for tree in trees:
+            print(*tree, sep='')
+
+if __name__ == "__main__":
+    main()

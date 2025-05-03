@@ -1,45 +1,22 @@
-import itertools
-T = int(input())
-for _ in range(T):
-    S = int(input())
-    K = 3
-    while True:
-        for L in range(1, (S//10)+2):
-            for P in itertools.product('0123456789', repeat=L):
-                P_str = ''.join(P)
-                if int(P_str) <= S:
-                    if K == 1:
-                        print(f'Case #{"":_;}: {P_str}')
-                        break
-                    else:
-                        S -= int(P_str)
-                        K -= 1
-                        if K > 0:
-                            for L2 in range(1, (S//10)+2):
-                                for P2 in itertools.product('0123456789', repeat=L2):
-                                    P2_str = ''.join(P2)
-                                    if int(P2_str) <= S:
-                                        if K == 2:
-                                            print(f'Case #{"":_;}: {P_str}{P2_str}')
-                                            break
-                                        else:
-                                            S -= int(P2_str)
-                                            K -= 1
-                                            if K > 0:
-                                                for L3 in range(1, (S//10)+2):
-                                                    for P3 in itertools.product('0123456789', repeat=L3):
-                                                        P3_str = ''.join(P3)
-                                                        if int(P3_str) <= S:
-                                                            print(f'Case #{"":_;}: {P_str}{P2_str}{P3_str}')
-                                                            break
-                                        break
-                                else:
-                                    continue
-                            else:
-                                continue
-                        else:
-                            break
-                else:
-                    continue
-        else:
-            break
+Here is the Python code based on your description:
+
+
+def min_palindromes(s):
+    if s == s[::-1]:
+        return [s]
+    else:
+        for i in range(1, len(s) // 2 + 1):
+            if s[:i] == s[-i:][::-1]:
+                return min_palindromes(s[:-i]) + [s[-i:]]
+        return min_palindromes(s[1:]) + [s[0]]
+
+def solve():
+    t = int(input())
+    for i in range(t):
+        s = input()
+        palindromes = min_palindromes(s)
+        print('Case #{}: {}'.format(i+1, ' '.join(palindromes)))
+
+solve()
+
+This Python program uses a recursive function to find the minimum number of palindrome terms that sum up to the given integer. The `min_palindromes` function checks if the input string is a palindrome and returns it as a list if so. If not, it tries to cut off the largest possible palindrome at the end of the string and recursively calls itself with the remaining part. This process continues until a non-palindrome string is left or all characters are used. The `solve` function reads the number of test cases from input, applies the `min_palindromes` function to each case, and prints out the results in the required format.

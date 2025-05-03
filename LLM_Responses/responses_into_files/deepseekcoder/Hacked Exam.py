@@ -1,22 +1,22 @@
-T = int(input())
-for t in range(1, T + 1):
-    N, Q = map(int, input().split())
-    answers = [input() for _ in range(N)]
-    scores = list(map(int, input().split()))
-    max_score = sum(scores) / len(scores)
-    answer = ''
-    for i in range(Q):
-        t_count = 0
-        f_count = 0
-        for j in range(N):
-            if answers[j][i] == 'T':
-                t_count += 1
-            else:
-                f_count += 1
-        if t_count > f_count:
-            answer += 'T'
-        elif f_count > t_count:
-            answer += 'F'
-        else:
-            answer += 'T' if sum(1 for a in answers if a[i] == 'T') >= N // 2 else 'F'
-    print(f"Case #{t}: {answer} {max_score:.0f}/{Q}")
+Here is a Python program based on your description:
+
+
+from fractions import Fraction
+import sys
+
+def solve():
+    n, q = map(int, input().split())
+    scores = [0]*q
+    for _ in range(n):
+        s, ans = input().split()
+        s = int(s)
+        for i in range(q):
+            if ans[i] == 'T':
+                scores[i] += Fraction(1)/Fraction(2)**int(ans[i]) * 2 - 1
+    return " ".join([str((scores.index(max(scores)), max(scores))) for _ in range(q)] + [str(sum(scores))])
+
+t = int(input())
+for i in range(1, t+1):
+    print("Case #{}: {}".format(i, solve()))
+
+This program uses the concept of expected value and probability to calculate the maximum expected score. It reads the number of students (n) and questions (q). For each student, it calculates their score based on whether they answered 'T' or 'F'. The scores are stored in a list. Finally, it prints out the index of the question with the highest score along with the score itself.

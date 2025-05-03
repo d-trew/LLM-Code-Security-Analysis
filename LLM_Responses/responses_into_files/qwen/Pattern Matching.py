@@ -1,26 +1,54 @@
 import re
 
-T = int(input())
-
-for _ in range(T):
-    N = int(input())
-    patterns = [input() for _ in range(N)]
-
-    min_length = min(len(pattern) for pattern in patterns)
-    max_length = 104
-
-    for length in range(min_length, max_length + 1):
-        name = ''
-        for i in range(length):
-            for pattern in patterns:
-                if i < len(pattern) and pattern[i] == '*':
-                    name += chr(65 + (i % 26))
-                else:
-                    name += pattern[i]
+def match_patterns(patterns):
+    if len(patterns) == 1:
+        return patterns[0]
+    
+    for i in range(len(patterns)):
+        pattern = patterns[i]
+        if '*' not in pattern:
+            continue
+        
+        for j, other_pattern in enumerate(patterns):
+            if i == j:
+                continue
+            if '*' not in other_pattern:
+                continue
+            
+            # Check if we can replace the asterisk in the current pattern to match the other pattern
+            for k in range(len(other_pattern)):
+                if other_pattern[k] != '*':
+                    new_pattern = pattern[:k] + other_pattern[k] + pattern[k+1:]
+                    if re.fullmatch(new_pattern, other_pattern):
+                        break
+            else:
+                continue
             break
+        else:
+            return '*'
+    
+    # If we reach here, it means all patterns can be matched by the same name
+    return 'A' * 104
 
-        if all(re.sub('[^A-Z*]', '', pattern) == re.sub('[^A-Z*]', '', name) for pattern in patterns):
-            print(f'Case #{_+1}: {name}')
-            break
-    else:
-        print(f'Case #{_+1}: *')
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        N = int(data[index])
+        patterns = data[index + 1:index + 1 + N]
+        index += 1 + N
+        
+        result = match_patterns(patterns)
+        results.append(result)
+    
+    for i, result in enumerate(results):
+        print(f"Case #{i+1}: {result}")
+
+if __name__ == "__main__":
+    main()

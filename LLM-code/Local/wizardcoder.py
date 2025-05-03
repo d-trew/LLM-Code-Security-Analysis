@@ -7,13 +7,13 @@ from typing import List, Dict, Set
 
 # Configuration
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "starcoder2:7b-q4_0"
+MODEL_NAME = "wizardcoder:13b-python-q4_0"
 DATASET_PATH = os.path.join(os.getcwd(), "GCJ", "2016-2022_extracted_prompts_clean.json")
 OUTPUT_DIR = os.path.join(os.getcwd(), "LLM_Responses")
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, "starcoder2_responses.json")
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, "wizardcoder_responses.json")
 
 # Optimized settings
-REQUESTS_PER_MINUTE = 30
+REQUESTS_PER_MINUTE = 20  # Reduced for larger model
 MIN_INTERVAL = 60 / REQUESTS_PER_MINUTE
 MAX_RETRIES = 3
 
@@ -40,10 +40,9 @@ def load_data() -> tuple[List[Dict], Set[str]]:
     return prompts, processed
 
 def generate_code(prompt_text: str) -> str:
-    # StarCoder2-specific prompt formatting
-    prompt = f"""<fim_prefix>Write a Python program based on this description.
-<fim_suffix>
-<fim_middle>Return ONLY the Python code with no additional explanation or formatting.
+    # WizardCoder-specific prompt formatting
+    prompt = f"""Write a Python program based on this description.
+Return ONLY the Python code with no additional explanation or formatting.
 
 Description:
 {prompt_text}"""
@@ -54,9 +53,9 @@ Description:
         "options": {
             "temperature": 0.5,
             "num_ctx": 4096,
-            "num_gpu": 35,  # Offload layers to GPU
+            "num_gpu": 40,       # Increased layers for 13B model
             "repeat_penalty": 1.1,
-            "stop": ["<|endoftext|>"]  # StarCoder2's stop token
+            "stop": ["```", "\n\n\n"]  # WizardCoder's natural stopping points
         },
         "stream": False
     }
@@ -65,7 +64,7 @@ Description:
         response = requests.post(
             OLLAMA_API_URL,
             json=payload,
-            timeout=120
+            timeout=180  # Increased timeout for larger model
         )
         
         print(f"API Response Status: {response.status_code}")
@@ -83,11 +82,16 @@ Description:
             
         code = result["response"].strip()
         
-        # Enhanced cleaning for StarCoder2 outputs
+        # Clean WizardCoder-specific output
         if not code:
             raise ValueError("Empty code generated")
             
-        for marker in ["```python", "```", "<s>", "</s>", "<|endoftext|>"]:
+        # Extract code between ```python ``` markers if present
+        if "```python" in code:
+            code = code.split("```python")[1].split("```")[0]
+        
+        # Remove any remaining markdown or special tokens
+        for marker in ["```", "<|endoftext|>", "### Solution:"]:
             code = code.replace(marker, "")
         
         return code.strip()
@@ -114,7 +118,7 @@ def process_prompts():
     start_time = time.time()
     failures = []
     
-    print(f"\nStarting StarCoder2 processing of {total_prompts} prompts")
+    print(f"\nStarting WizardCoder processing of {total_prompts} prompts")
     print(f"Already processed: {len(processed)}")
     print(f"Remaining: {total_prompts - len(processed)}\n")
     
@@ -131,7 +135,7 @@ def process_prompts():
                 start = time.time()
                 code = generate_code(prompt['problem_statement'])
                 
-                if not code.strip():  # Check for empty responses
+                if not code.strip():
                     raise ValueError("Generated empty code")
                 
                 gen_time = time.time() - start
@@ -165,12 +169,6 @@ def process_prompts():
             print(f"❌ All attempts failed for {prompt['problem_name']}")
             continue
             
-        elapsed = time.time() - start_time
-        expected_time = i * MIN_INTERVAL
-        if elapsed < expected_time:
-            sleep_time = max(0, expected_time - elapsed)
-            print(f"Waiting {sleep_time:.1f}s for rate limiting")
-            time.sleep(sleep_time)
     
     success_count = len(results) - len(processed)
     print(f"\n{'='*50}")
@@ -195,9 +193,9 @@ if __name__ == "__main__":
         
         print("Checking model availability...")
         models = requests.get("http://localhost:11434/api/tags", timeout=5).json()
-        if not any(m["name"].startswith("starcoder2") for m in models.get("models", [])):
-            print("Error: StarCoder2 model not found. Please run:")
-            print("ollama pull starcoder2:7b-q4_0")
+        if not any(m["name"].startswith("wizardcoder") for m in models.get("models", [])):
+            print("Error: WizardCoder model not found. Please run:")
+            print("ollama pull wizardcoder:13b-python-q4_0")
             exit(1)
             
         print("Starting processing...")

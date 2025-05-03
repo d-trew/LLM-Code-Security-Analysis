@@ -1,35 +1,50 @@
-T = int(input())
-for _ in range(T):
-    R, C = map(int, input().split())
-    grid = [input() for _ in range(R)]
-    initial_to_child = {}
-    child_to_initials = {}
-    for i in range(R):
-        for j in range(C):
-            if grid[i][j] != '?':
-                initial = grid[i][j]
-                if initial not in initial_to_child:
-                    initial_to_child[initial] = len(child_to_initials)
-                    child_to_initials[len(child_to_initials)] = set()
-                child_to_initials[initial_to_child[initial]].add((i, j))
-    for i in range(len(child_to_initials)):
-        for (r1, c1), (r2, c2) in itertools.combinations(list(child_to_initials[i]), 2):
-            if r1 == r2 and abs(c1 - c2) > 0:
-                row = [(c1, i)] * (c2 - c1 + 1)
-                for r, (c, _) in enumerate(grid):
-                    if r not in [r1, r2]:
-                        grid[r] += 'a'
-                    else:
-                        for cc in range(c1, c2+1):
-                            if r == r1 and c == c1:
-                                grid[r] = list(grid[r])
-                                grid[r][cc - c1] = initial_to_child[chr(ord('A') + i)]
-                                grid[r] = ''.join(grid[r])
-                            elif r == r2 and c == c2:
-                                grid[r] = list(grid[r])
-                                grid[r][cc - c1] = initial_to_child[chr(ord('A') + i)]
-                                grid[r] = ''.join(grid[r])
-                break
-    print(f"Case #{'%d'%_}:")
-    for row in grid:
-        print(row)
+def solve_cake_problem(test_cases):
+    results = []
+    
+    for test_case in test_cases:
+        R, C = map(int, test_case[0].split())
+        cake = test_case[1:]
+        
+        # Create a dictionary to store the positions of each letter
+        letter_positions = {}
+        for r in range(R):
+            for c in range(C):
+                if cake[r][c] != '?':
+                    if cake[r][c] not in letter_positions:
+                        letter_positions[cake[r][c]] = []
+                    letter_positions[cake[r][c]].append((r, c))
+        
+        # Assign each letter to a rectangle
+        assigned_letters = {}
+        for letter, positions in letter_positions.items():
+            min_r = max_r = positions[0][0]
+            min_c = max_c = positions[0][1]
+            for r, c in positions:
+                if r < min_r: min_r = r
+                if r > max_r: max_r = r
+                if c < min_c: min_c = c
+                if c > max_c: max_c = c
+            assigned_letters[letter] = (min_r, max_r, min_c, max_c)
+        
+        # Create the result grid
+        result_grid = [[ '?' for _ in range(C)] for _ in range(R)]
+        for letter, (min_r, max_r, min_c, max_c) in assigned_letters.items():
+            for r in range(min_r, max_r + 1):
+                for c in range(min_c, max_c + 1):
+                    result_grid[r][c] = letter
+        
+        # Add the result to the results list
+        results.append(f"Case #{test_case[0].split()[2]}:")
+        for row in result_grid:
+            results.append(''.join(row))
+    
+    return results
+
+# Example usage:
+test_cases = [
+    ("3 3\nA?C\nB?D\nE?F",),
+    ("2 2\nX?\nY?",)
+]
+results = solve_cake_problem(test_cases)
+for result in results:
+    print(result)

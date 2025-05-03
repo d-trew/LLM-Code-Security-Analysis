@@ -1,18 +1,43 @@
-P = int(input())
-for _ in range(P):
-    P_i = list(map(int, input().split()))
-    C = P_i[1]
-    stacks = [list(map(lambda x: (int(x.split()[0]), int(x.split()[1])), input().split())) for _ in range(C)]
-    N = int(input())
-    case_id = 0
-    for _ in range(N):
-        N_i, C_i = map(int, input().split())
-        premade_stack_indexes = list(map(int, input().split()))
-        for i in premade_stack_indexes:
-            if len(stacks[i]) > 1 and stacks[i][-2][0] == stacks[i][-1][0]:
-                print("Case #{}: IMPOSSIBLE".format(case_id+1))
-                case_id += 1
-                break
-        else:
-            print("Case #{}: POSSIBLE".format(case_id+1))
-            case_id += 1
+def can_win_game(N, C, Pi):
+    stacks = [premade_stacks[i] for i in Pi]
+    for stack in stacks:
+        values = [card[0] for card in stack]
+        suits = [card[1] for card in stack]
+        if len(set(values)) != 1 or len(set(suits)) != 1:
+            return "IMPOSSIBLE"
+    return "POSSIBLE"
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    index = 0
+    P = int(data[index])
+    premade_stacks = []
+    for _ in range(P):
+        Ci = int(data[index + 1])
+        stack = []
+        index += 2
+        for _ in range(Ci):
+            Vij = int(data[index])
+            Sij = int(data[index + 1])
+            stack.append((Vij, Sij))
+            index += 2
+        premade_stacks.append(stack)
+    
+    T = int(data[index])
+    results = []
+    for i in range(T):
+        N = int(data[index + 1])
+        C = int(data[index + 2])
+        Pi = list(map(int, data[index + 3:index + 3 + N]))
+        index += 3 + N
+        result = can_win_game(N, C, Pi)
+        results.append(f"Case #{i+1}: {result}")
+    
+    for result in results:
+        print(result)
+
+if __name__ == "__main__":
+    main()

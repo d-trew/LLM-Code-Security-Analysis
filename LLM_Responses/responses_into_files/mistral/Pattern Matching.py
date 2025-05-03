@@ -1,26 +1,26 @@
 import re
 
-T = int(input())
+def find_match(patterns):
+    if not patterns:
+        return "*"
 
-for _ in range(T):
-    N = int(input())
-    patterns = [input() for _ in range(N)]
+    pattern = ""
+    for i, p in enumerate(patterns):
+        if len(p) > 104 or any(c != "*" and c.isalpha() for c in p):
+            return "*"
+        if not pattern:
+            pattern += p[1:]
+        elif p[:len(pattern)] != pattern[:-1]:
+            return "*"
+        pattern = p[:len(pattern)] + pattern[1:]
 
-    min_length = min(len(pattern) for pattern in patterns)
-    max_length = 104
+    return pattern.upper()
 
-    for length in range(min_length, max_length + 1):
-        name = ''
-        for i in range(length):
-            for pattern in patterns:
-                if i < len(pattern) and pattern[i] == '*':
-                    name += chr(65 + (i % 26))
-                else:
-                    name += pattern[i]
-            break
+def solve():
+    T = int(input())
+    for t in range(1, T+1):
+        N = int(input())
+        patterns = [input().upper() for _ in range(N)]
+        print(f"Case #{t}: {find_match(patterns)}")
 
-        if all(re.sub('[^A-Z*]', '', pattern) == re.sub('[^A-Z*]', '', name) for pattern in patterns):
-            print(f'Case #{_+1}: {name}')
-            break
-    else:
-        print(f'Case #{_+1}: *')
+solve()

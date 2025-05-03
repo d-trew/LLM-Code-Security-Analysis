@@ -1,15 +1,30 @@
-def pancake_flipping(S):
-    n = len(S)
+def min_flips(s):
     flips = 0
-    for i in range(n, 0, -1):
-        if S[i-1] == '-':
-            k = i
-            while S[k-1] == '-':
-                k -= 1
-            S = '-' * (i-k) + '+' * k + S[k+1:]
+    i = 0
+    while i < len(s):
+        if s[i] == '-':
             flips += 1
+            if i + 1 < len(s) and s[i+1] == '+':
+                i += 2
+            else:
+                i += 1
+        else:
+            i += 1
     return flips
 
-for i in range(int(input())):
-    S = input()
-    print(f"Case #{i+1}: {pancake_flipping(S)}")
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    results = []
+    for t in range(1, T+1):
+        s = data[t]
+        result = min_flips(s)
+        results.append(f"Case #{t}: {result}")
+    
+    print("\n".join(results))
+
+if __name__ == "__main__":
+    main()

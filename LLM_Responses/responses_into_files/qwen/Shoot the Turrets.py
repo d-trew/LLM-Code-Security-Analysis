@@ -1,32 +1,73 @@
-def solve(C, R, M, grid):
+def destroy_turrets(R, C, M, grid):
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    def in_bounds(x, y):
+        return 0 <= x < R and 0 <= y < C
+    
+    def can_destroy(sx, sy, tx, ty):
+        for dx, dy in directions:
+            nx, ny = sx + dx, sy + dy
+            while in_bounds(nx, ny) and grid[nx][ny] != '#':
+                if (nx, ny) == (tx, ty):
+                    return True
+                nx += dx
+                ny += dy
+        return False
+    
     soldiers = [(i, j) for i in range(R) for j in range(C) if grid[i][j] == 'S']
     turrets = [(i, j) for i in range(R) for j in range(C) if grid[i][j] == 'T']
+    
+    max_destroyed = 0
+    result = []
+    
+    def backtrack(destroyed, moves_left):
+        nonlocal max_destroyed, result
+        if destroyed > max_destroyed:
+            max_destroyed = destroyed
+            result = [(s[0], s[1], t[0], t[1]) for s, t in zip(soldiers[:destroyed], turrets[:destroyed])]
+        
+        if destroyed == len(turrets):
+            return
+        
+        for i in range(len(soldiers)):
+            sx, sy = soldiers[i]
+            for dx, dy in directions:
+                nx, ny = sx + dx, sy + dy
+                while in_bounds(nx, ny) and grid[nx][ny] != '#':
+                    if (nx, ny) == turrets[destroyed]:
+                        soldiers[i] = (nx, ny)
+                        backtrack(destroyed + 1, moves_left - 1)
+                        break
+                    nx += dx
+                    ny += dy
+    
+    backtrack(0, M * len(soldiers))
+    
+    return max_destroyed, result
 
-    def dfs(i, j, soldiers_left, turrets_left):
-        if (i, j) in soldiers_left:
-            soldiers_left.remove((i, j))
-        if (i, j) in turrets_left:
-            turrets_left.remove((i, j))
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        R = int(data[index])
+        C = int(data[index + 1])
+        M = int(data[index + 2])
+        grid = [data[index + 3 + i] for i in range(R)]
+        index += 3 + R
+        
+        destroyed, moves = destroy_turrets(R, C, M, grid)
+        
+        results.append(f"Case #{_+1}: {destroyed}")
+        if moves:
+            for s_i, t_i in moves:
+                results.append(f"{s_i} {t_i}")
+    
+    print("\n".join(results))
 
-        max_turrets_destroyed = 0
-        for si, sj in soldiers_left:
-            for ti, tj in turrets_left:
-                if abs(si - i) + abs(sj - j) <= M and all(abs(si - ki) + abs(sj - kj) > M or (ki, kj) not in turrets_left for ki, kj in turrets_left):
-                    destroyed = 1
-                    for di, dj in [(0, 1), (1, 0), (-1, 0), (0, -1)]:
-                        ni, nj = i + di, j + dj
-                        while 0 <= ni < R and 0 <= nj < C and grid[ni][nj] != '#':
-                            if grid[ni][nj] == 'T' and all(abs(si - ki) + abs(sj - kj) > M or (ki, kj) not in turrets_left for ki, kj in turrets_left):
-                                destroyed += 1
-                                break
-                            ni, nj = ni + di, nj + dj
-                    if destroyed:
-                        max_turrets_destroyed = max(max_turrets_destroyed, 1 + dfs(i, j, soldiers_left[:], turrets_left[destroyed:]))
-
-        return max_turrets_destroyed
-
-    for i in range(len(soldiers)):
-        for j in range(C):
-            if grid[i][j] == 'T':
-                grid[i][j] = '#'
-    return str(max([dfs(i, 0, soldiers[:], turrets[:]) for i in range(R)]))
+if __name__ == "__main__":
+    main()

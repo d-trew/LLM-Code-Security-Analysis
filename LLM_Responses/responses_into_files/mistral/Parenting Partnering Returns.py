@@ -1,23 +1,24 @@
 import sys
-
-def find_schedule(activities):
-    activities.sort()
-    cam_activities = []
-    jamie_activities = []
-
+from collections import defaultdict
+input = sys.stdin.readline
+T = int(input())
+for _ in range(T):
+    N = int(input())
+    activities = [list(map(int, input().split())) for _ in range(N)]
+    activities.sort(key=lambda x: (x[0], -x[1]))
+    schedule = ['.' * N]
     for start, end in activities:
-        if not cam_activities or cam_activities[-1][1] < start:
-            cam_activities.append((start, end))
+        if not schedule[-1][start]:
+            schedule[-1] = 'C' * (end - start) + schedule[-1]
+            continue
+        if start <= 0 or end >= 24 * 60:
+            schedule[-1] = '.' + schedule[-1]
         else:
-            jamie_activities.append((start, end))
-
-    return 'C' * len(cam_activities) + 'J' * len(jamie_activities)
-
-T = int(sys.stdin.readline().strip())
-for t in range(1, T+1):
-    N = int(sys.stdin.readline().strip())
-    activities = []
-    for i in range(N):
-        start, end = map(int, sys.stdin.readline().split())
-        activities.append((start, end))
-    print(f"Case #{t}: {find_schedule(activities) if all(not overlap(cam_activities, jamie_activities)) else 'IMPOSSIBLE'}")
+            for i in range(len(schedule) - 1, -1, -1):
+                if not schedule[i][start]:
+                    schedule[i] = 'J' * (end - start) + schedule[i]
+                    break
+            else:
+                schedule[-1] += '.'
+                break
+    print(f"Case #{{+1}}: {''.join(schedule)}")

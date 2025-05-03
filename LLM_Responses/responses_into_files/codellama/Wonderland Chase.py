@@ -1,27 +1,28 @@
+import sys
+input = sys.stdin.readline
+
 T = int(input())
-for _ in range(T):
+for t in range(T):
     J, C, A, Q = map(int, input().split())
-    graph = {}
-    for i in range(C):
-        U, V = map(int, input().split())
-        if U not in graph:
-            graph[U] = []
-        if V not in graph:
-            graph[V] = []
-        graph[U].append(V)
-        graph[V].append(U)
-    min_moves = 0
-    for _ in range(10**9):
-        moves = 0
-        a_pos, q_pos = A, Q
-        while True:
-            if a_pos == q_pos:
-                print(f"Case #{_+1}: CATCH")
-                exit()
-            moves += 2
-            q_move = min((x for x in graph[q_pos] if x != a_pos), default=None)
-            if q_move is None:
-                print(f"Case #{_+1}: SAFE")
-                exit()
-            a_pos, q_pos = q_move, q_pos
-    print(f"Case #{_+1}: {min_moves}")
+    graph = [[] for _ in range(J+1)]
+    for _ in range(C):
+        u, v = map(int, input().split())
+        graph[u].append(v)
+        graph[v].append(u)
+    if A == Q:
+        print("Case #%d: SAFE" % (t+1))
+    else:
+        dp = [[float('inf') for _ in range(J+1)] for _ in range(2)]
+        dp[0][A] = 0
+        for i in range(1, 10**9):
+            if dp[i%2][Q] < float('inf'):
+                break
+            for j in range(1, J+1):
+                if dp[(i-1)%2][j] == float('inf'):
+                    continue
+                for k in graph[j]:
+                    dp[i%2][k] = min(dp[i%2][k], dp[(i-1)%2][j] + 1)
+        if dp[i%2][Q] < float('inf'):
+            print("Case #%d: %d" % (t+1, i*2))
+        else:
+            print("Case #%d: SAFE" % (t+1))

@@ -1,15 +1,24 @@
-n = int(input())
-for i in range(n):
-    t = int(input())
-    p = int(input())
-    g = list(map(int, input().split()))
-    left = 0
-    res = 0
-    for people in g:
-        if people + left > p:
-            res += (people+p-1)//p
-            left = p - (people+p-1)%p
-        else:
-            res += 1
-            left -= people
-    print("Case #{}: {}".format(i+1, res))
+def max_groups(N, P, G):
+    # Sort group sizes in decreasing order
+    G.sort(reverse=True)
+    
+    leftovers = 0
+    fresh_groups = N
+    
+    for i in range(N):
+        total_pieces = G[i] + leftovers
+        
+        # Calculate number of packs needed and remaining pieces
+        packs, leftovers = divmod(total_pieces, P)
+        
+        if packs == 0:
+            fresh_groups -= 1
+            
+    return fresh_groups
+
+T = int(input())
+for t in range(1, T+1):
+    N, P = map(int, input().split())
+    G = list(map(int, input().split()))
+    
+    print("Case #{}: {}".format(t, max_groups(N, P, G)))

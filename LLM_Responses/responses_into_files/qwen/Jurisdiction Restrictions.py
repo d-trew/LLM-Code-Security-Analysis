@@ -1,40 +1,58 @@
-import heapq
-
-def police_station_assignment(R, C, S, stations):
-    # Create a grid of zeros representing the city
+def assign_blocks(R, C, S, stations):
     grid = [[0] * C for _ in range(R)]
+    assigned = [0] * S
 
-    # Assign blocks to stations
-    for ri, ci, di in stations:
-        for r in range(max(1, ri-di), min(R, ri+di+1)):
-            for c in range(max(1, ci-di), min(C, ci+di+1)):
-                if abs(r-ri) + abs(c-ci) <= di:
-                    grid[r][c] = 1
+    def is_patrollable(r, c, ri, ci, di):
+        return abs(r - ri) <= di and abs(c - ci) <= di
 
-    # Calculate the number of blocks assigned to each station
-    assignments = [0] * S
+    for i in range(S):
+        ri, ci, di = stations[i]
+        ri -= 1
+        ci -= 1
+        for r in range(R):
+            for c in range(C):
+                if is_patrollable(r, c, ri, ci, di):
+                    grid[r][c] = i + 1
+
     for r in range(R):
         for c in range(C):
-            if grid[r][c]:
-                ri, ci, _ = stations[grid[r][c]-1]
-                assignments[grid[r][c]-1] += 1
+            if grid[r][c] == 0:
+                continue
+            assigned[grid[r][c] - 1] += 1
 
-    # Calculate the minimum and maximum number of blocks assigned to each station
-    min_assignment = min(assignments)
-    max_assignment = max(assignments)
-
-    # Return the difference between the maximum and minimum number of blocks assigned
-    return max_assignment - min_assignment
+    min_blocks = min(assigned)
+    max_blocks = max(assigned)
+    return max_blocks - min_blocks
 
 def main():
-    T = int(input())
-    for t in range(1, T+1):
-        R, C, S = map(int, input().split())
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+
+    index = 0
+    T = int(data[index])
+    index += 1
+    results = []
+
+    for _ in range(T):
+        R = int(data[index])
+        C = int(data[index + 1])
+        S = int(data[index + 2])
+        index += 3
+
         stations = []
-        for _ in range(S):
-            ri, ci, di = map(int, input().split())
+        for i in range(S):
+            ri = int(data[index])
+            ci = int(data[index + 1])
+            di = int(data[index + 2])
+            index += 3
             stations.append((ri, ci, di))
-        print(f"Case #{t}: {police_station_assignment(R, C, S, stations)}")
+
+        result = assign_blocks(R, C, S, stations)
+        results.append(f"Case #{_ + 1}: {result}")
+
+    for result in results:
+        print(result)
 
 if __name__ == "__main__":
     main()

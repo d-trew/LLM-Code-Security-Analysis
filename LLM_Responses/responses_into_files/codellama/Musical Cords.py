@@ -1,17 +1,17 @@
 import math
-for _ in range(int(input())):
-    n = int(input())
-    r = float(input())
-    k = int(input())
-    Ls = [0] * n
-    for i in range(n):
-        di, Li = map(int, input().split())
-        Ls[i] = Li
-    cords = []
-    for i in range(n):
-        for j in range(i+1, n):
-            d = abs((j-i) * 360 / (n-1)) % 360
-            length = r + Ls[i] + Ls[j] - 2 * math.cos(math.radians(d)) * r
-            cords.append(length)
-    cords.sort(reverse=True)
-    print(f"Case # {_+1}: {' '.join(map(str, cords[:k]))}")
+def longest_cords(N, R, K):
+    # Initialize a list to store the lengths of all possible cords
+    cord_lengths = []
+    
+    # Calculate the length of each possible cord
+    for i in range(N):
+        for j in range(i+1, N):
+            # Calculate the distance between the two attachment points
+            distance = math.sqrt((R*math.cos(i*360/N))**2 + (R*math.sin(i*360/N))**2) - math.sqrt((R*math.cos(j*360/N))**2 + (R*math.sin(j*360/N))**2)
+            cord_lengths.append(distance)
+    
+    # Sort the list of lengths in non-increasing order
+    cord_lengths.sort(reverse=True)
+    
+    # Return the K longest cords
+    return cord_lengths[:K]

@@ -1,24 +1,17 @@
-def fractal_artwork(K, C):
-    artwork = [''] * K
-    for c in range(C):
-        new_artwork = ''
-        for tile in artwork:
-            if 'L' in tile:
-                new_artwork += (K*['L'] + tile)[1:]
-            else:
-                new_artwork += tile + K*'G'
-        artwork = new_artwork
-    return artwork
+import sys
+from collections import defaultdict
 
-def check_for_gold(K, C):
-    for c in range(C):
-        complexity = 0
-        while complexity < C:
-            if 'G' in fractal_artwork(K, complexity)[K//2]:
-                return [1]
-            complexity += 1
-    return ['IMPOSSIBLE']
+def solve():
+    for _ in range(int(sys.stdin.readline())):
+        k, c, s = map(int, sys.stdin.readline().split())
+        if s > k or s * (c - 1) >= k:
+            print("IMPOSSIBLE")
+        else:
+            tiles = [0] * k
+            for _ in range(c):
+                tiles = [tiles[i + j] + tiles[i] for i, j in enumerate([-1, 1])]
+            tiles[-s:] = [1] * s
+            tiles = list(set(tiles))
+            print("Case #{}: {}".format(sys.stdin.readline().strip(), sorted(tiles)))
 
-for t in range(int(input())):
-    K, C, S = map(int, input().split())
-    print('Case #{}: {}'.format(t+1, check_for_gold(K, C)))
+solve()

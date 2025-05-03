@@ -1,21 +1,24 @@
-T = int(input())
-for t in range(1, T + 1):
-    N = int(input())
-    P = []
-    for _ in range(N):
-        x, y = map(int, input().split())
-        P.append((x, y))
-    max_triangles = 0
-    triangles = set()
-    for i in range(N - 2):
-        for j in range(i + 1, N - 1):
-            for k in range(j + 1, N):
-                p1, q1 = P[i]
-                p2, q2 = P[j]
-                p3, q3 = P[k]
-                if (q2 - q1) * (p3 - p1) == (q3 - q1) * (p2 - p1):
-                    continue
-                triangles.add((i + 1, j + 1, k + 1))
-    print(f"Case #{t}: {len(triangles)}")
-    for triangle in sorted(list(triangles)):
-        print(*triangle, sep=' ')
+import sys
+
+def solve(n_test_cases):
+    for i in range(1, n_test_cases + 1):
+        n = int(input())
+        points = []
+        max_size = 0
+        for j in range(1, n + 1):
+            x, y = map(int, input().split())
+            points.append((x, y))
+        for k in range(1, n + 1):
+            for l in range(k + 1, n + 1):
+                for m in range(l + 1, n + 1):
+                    if is_triangle(points[k - 1], points[l - 1], points[m - 1]):
+                        max_size += 1
+        print("Case #" + str(i) + ": " + str(max_size))
+
+def is_triangle(p1, p2, p3):
+    return (p1[0] != p2[0] and p2[0] != p3[0] and p3[0] != p1[0]) and \
+           (p1[1] != p2[1] and p2[1] != p3[1] and p3[1] != p1[1])
+
+if __name__ == "__main__":
+    t = int(input())
+    solve(t)

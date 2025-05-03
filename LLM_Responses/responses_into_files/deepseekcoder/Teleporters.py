@@ -1,27 +1,41 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    Thundera = list(map(int, input().split()))
-    Care_a_Lot = list(map(int, input().split()))
-    teleporters = []
-    for _ in range(N-2):
-        teleporters.append(list(map(int, input().split())))
-    
-    min_teleportations = float('inf')
-    for i in range(2**N):
-        visited = [False] * (N+2)
-        current_location = Thundera
-        teleportation_count = 0
-        
-        for j in range(N-1):
-            if ((current_location[0] - teleporters[i%N][0]) + 
-                (current_location[1] - teleporters[i%N][1]) + 
-                (current_location[2] - teleporters[i%N][2])) == 0:
-                current_location = list(teleporters[i%N])
-            visited[i%N] = True
-            current_location = [x+y for x,y in zip(current_location,teleporters[(i+1)%N])]
-            if current_location == Care_a_Lot:
-                min_teleportations = min(min_teleportations, teleportation_count+1)
-                break
-        
-    print("Case #{}: {}".format(_, "IMPOSSIBLE" if min_teleportations==float('inf') else str(min_teleportations)))
+import heapq
+from collections import defaultdict
+
+def l1_distance(p1, p2):
+    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1]) + abs(p1[2] - p2[2])
+
+def shortest_path(graph, start, end):
+    queue = [(0, start)]
+    distances = {start: 0}
+    previous = {}
+    while queue:
+        (dist, current) = heapq.heappop(queue)
+        if dist != distances[current]: continue
+        for neighbor in graph[current]:
+            old_distance = distances.get(neighbor, None)
+            new_distance = distances[current] + l1_distance(current, neighbor)
+            if old_distance is None or new_distance < old_distance:
+                distances[neighbor] = new_distance
+                previous[neighbor] = current
+                heapq.heappush(queue, (new_distance, neighbor))
+    path = []
+    while end is not None:
+        path.append(end)
+        end = previous.get(end, None)
+    return distances, path[::-1] if start in distances else []
+
+def solve():
+    T = int(input())
+    for tc in range(T):
+        N = int(input())
+        points = [tuple(map(int, input().split())) for _ in range(N+2)]
+        graph = defaultdict(list)
+        for i in range(len(points)):
+            for j in range(i+1, len(points)):
+                if l1_distance(points[i], points[j]) <= 3:
+                    graph[points[i]].append(points[j])
+                    graph[points[j]].append(points[i])
+        distances, path = shortest_path(graph, points[0], points[-1])
+        print("Case #{}: {}".format(tc+1, 'IMPOSSIBLE' if not path else len(path)-1))
+
+solve()

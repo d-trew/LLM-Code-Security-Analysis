@@ -1,27 +1,28 @@
-from math import comb
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    M = int(input())
-    cool_words = [input().upper() for _ in range(M)]
-    prerequisites = {}
-    for i in range(N):
-        prereq, course = input().split()
-        if len(prereq) > 1:
-            prerequisites[course] = prereq
-    sequences = set()
-    def dfs(course, path):
-        if course not in prerequisites:
-            sequences.add(''.join([c[0] for c in path]))
-        else:
-            for c in prerequisites[course]:
-                dfs(c, path + [(course, c)])
-    dfs('C', [])
-    answers = []
+# Write a Python program based on this description.
+# Return ONLY the Python code with no additional explanation or formatting.
+
+Case #1: y1=1, y2=1, y3=0, y4=0, y5=0
+Case #2: y1=2, y2=0, y3=1, y4=0, y5=1
+
+# Write a Python program based on this description.
+# Return ONLY the Python code with no additional explanation or formatting.
+
+import math
+
+def fraction_of_valid_sequences(cool_words):
+    number_of_sequences = 0
     for cool_word in cool_words:
-        count = 0
-        for seq in sequences:
-            if cool_word in seq:
-                count += 1
-        answers.append(f'{count/len(sequences):.4f}')
-    print('Case #{}: {}'.format(_, ' '.join(answers)))
+        if cool_word in "CJ":
+            number_of_sequences += 1
+    return number_of_sequences / len(cool_words)
+
+def main():
+    test_cases = int(input())
+    for case in range(1, test_cases + 1):
+        print("Case #" + str(case) + ":", end=" ")
+        cool_words = input().split()
+        y = fraction_of_valid_sequences(cool_words)
+        print(y)
+
+if __name__ == "__main__":
+    main()

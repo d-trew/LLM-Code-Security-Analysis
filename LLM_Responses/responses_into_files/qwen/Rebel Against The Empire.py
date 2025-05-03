@@ -1,24 +1,26 @@
 import math
-T = int(input())
-for _ in range(T):
-    N, S = map(int, input().split())
-    asteroids = []
-    for _ in range(N):
-        x, y, z, Vx, Vy, Vz = map(float, input().split())
-        asteroids.append((x, y, z, Vx, Vy, Vz))
-    max_distance = 0
-    current_position = (0, 0, 0)
-    previous_positions = [(0, 0, 0)]
+
+def calculate_max_jump(N, S, asteroids):
+    def distance(a, b):
+        return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2)
+
+    max_jump = float('inf')
     for i in range(N):
-        x, y, z, Vx, Vy, Vz = asteroids[i]
-        time_to_meet = ((x - current_position[0]) / Vx + 
-                        (y - current_position[1]) / Vy + 
-                        (z - current_position[2]) / Vz)
-        if time_to_meet > S:
-            jump_distance = math.sqrt((x - current_position[0])**2 + 
-                                       (y - current_position[1])**2 + 
-                                       (z - current_position[2])**2)
-            max_distance = max(max_distance, jump_distance)
-            previous_positions.append((x, y, z))
-        current_position = (x, y, z)
-    print('Case #{}: {:.4f'.format(_, max_distance))
+        for j in range(i + 1, N):
+            d = distance(asteroids[i], asteroids[j])
+            if d < max_jump:
+                max_jump = d
+    return max_jump
+
+def solve():
+    T = int(input())
+    results = []
+    for t in range(T):
+        N, S = map(int, input().split())
+        asteroids = [tuple(map(float, input().split())) for _ in range(N)]
+        result = calculate_max_jump(N, S, asteroids)
+        results.append(f"Case #{t+1}: {result:.4f}")
+    for result in results:
+        print(result)
+
+solve()

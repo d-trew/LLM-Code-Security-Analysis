@@ -1,17 +1,18 @@
-def solve_case(N, R, P, S):
-    R = min(R, N)
-    P = min(P, N - R)
-    S = N - R - P
-    res = []
-    if R > 0:
-        res.append('R' * (2 * R))
-    if P > 0:
-        res.append('P' * (2 * P))
-    if S > 0:
-        res.append('S' * (2 * S))
-    return 'IMPOSSIBLE' if any(len(x) % 2 == 0 for x in res) else ''.join(sorted(res[0]))
+import sys
 
-T = int(input())
-for _ in range(T):
-    N, R, P, S = map(int, input().split())
-    print('Case #{}: {}'.format(_, solve_case(N, R, P, S)))
+# Read the input from stdin
+n_cases = int(input())
+for case in range(1, n_cases+1):
+    n, r, p, s = map(int, input().split())
+    # Check if it is possible to organize the lineup without ties
+    if r + p + s != 2*n or r < 0 or p < 0 or s < 0 or n < 1:
+        print("Case #{}: IMPOSSIBLE".format(case))
+    else:
+        # Create a list of all possible lineups
+        lineups = []
+        for i in range(n):
+            for j in range(i+1, n):
+                lineups.append("R"*r + "P"*p + "S"*s)
+        # Sort the list alphabetically
+        lineups.sort()
+        print("Case #{}: {}".format(case, lineups[0]))

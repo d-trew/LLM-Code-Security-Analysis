@@ -1,48 +1,43 @@
-T = int(input())
-for _ in range(T):
-    B, S, N = map(int, input().split())
-    enabled_slides = [False] * (S + 1)
-    circuits = []
-    for _ in range(N):
-        op, L, R, M = input().split()
-        L, R, M = map(int, (L, R, M))
-        if op == 'E':
-            for i in range(L - 1, R):
-                if i % M == 0:
-                    enabled_slides[i] = True
-        elif op == 'D':
-            for i in range(L - 1, R):
-                if i % M == 0 and enabled_slides[i]:
-                    enabled_slides[i] = False
-        else:
-            print('Invalid operation')
-            break
-    for i in range(1, B + 1):
-        if all(enabled_slides[S * (j - 1) + i % S] for j in range(1, len(circuits) + 2)):
-            circuits.append(i)
-    result = []
-    for _ in range(N):
-        y = 'X'
-        for i in range(S):
-            if enabled_slides[i]:
-                break
-        else:
-            continue
-        print(f'Case #{_+1}: {y}')
-        break
-    else:
-        for _ in range(N):
-            for i in range(S):
-                if not enabled_slides[i] and all(enabled_slides[S * (j - 1) + i % S] for j in range(1, len(circuits) + 2)):
-                    print(f'Case #{_+1}: {i+1}')
-                    break
-            else:
-                continue
-        else:
-            for _ in range(N):
-                y = 'X'
-                for i in range(S - 1, 0, -1):
-                    if not enabled_slides[i]:
-                        y = str(i + 1)
-                        break
-                print(f'Case #{_+1}: {y}')
+Here is the Python code for your problem. It uses a disjoint set data structure to keep track of the connected components in the graph of buildings. The `find` method finds the root of a building, and the `union` method merges two sets if they are not already connected. In each operation, it checks which slide can be enabled without making any cycle or creating more than one circuit for a single building.
+
+
+class DSU:
+    def __init__(self, N):
+        self.parent = list(range(N))
+        self.rank = [0] * N
+        self.size = [1] * N
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        xr = self.find(x)
+        yr = self.find(y)
+        if xr != yr:
+            if self.rank[xr] < self.rank[yr]:
+                xr, yr = yr, xr
+            if self.rank[xr] == self.rank[yr]:
+                self.rank[xr] += 1
+            self.parent[yr] = xr
+            self.size[xr] += self.size[yr]
+        return xr != yr
+
+    def get_sizes(self):
+        return [self.size[i] for i in range(len(self.size)) if self.find(i) == i]
+
+def solve():
+    T = int(input().strip())
+    for t in range(1, T+1):
+        B, S, N = map(int, input().split())
+        edges = [tuple(map(lambda x: int(x)-1, input().split())) for _ in range(S)]
+        ops = [tuple(input().split() + ['0', '0']) for _ in range(N)]
+        dsu = DSU(B)
+        res = []
+        for op, l, r, m in sorted((a[2], int(b), int(c), int(d)) for a, (b, c, d) in zip(['E']+['D']*(N-1), ops, edges)):
+            if op == 'E':
+                res.append('X' if not any(dsu.union(x%m, (x+1)%m) for x in range(l, r+1)) else '')
+            elif dsu.find(edges[r][0]) != dsu.find(edges[r][1]):
+                res[-1] = str(r+1) if not dsu.union(edges[r][0], edges[r][1]) else ''
+        print('Case #{}:'.format(t), ' '.join(res))

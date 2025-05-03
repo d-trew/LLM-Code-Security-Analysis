@@ -1,18 +1,28 @@
-P = int(input())
-for _ in range(P):
-    P_i = list(map(int, input().split()))
-    C = P_i[1]
-    stacks = [list(map(lambda x: (int(x.split()[0]), int(x.split()[1])), input().split())) for _ in range(C)]
-    N = int(input())
-    case_id = 0
+import sys
+input = sys.stdin.readline
+
+def can_win(n, cards):
+    card_dict = {}
+    for c in cards:
+        value, suit = c[0], c[1]
+        if value not in card_dict:
+            card_dict[value] = []
+        card_dict[value].append((suit, len(card_dict[value])))
+
+    moves = set()
+    for v in card_dict.keys():
+        suits = [c[0] for c in card_dict[v]]
+        if len(suits) > 1:
+            moves |= {s for s in suits if (v, s) not in moves}
+
+    return len(moves) >= n - 1 and all([len(card_dict[v]) <= 1 for v in card_dict.keys()])
+
+T = int(input())
+for _ in range(T):
+    N, C = map(int, input().split())
+    cards = []
     for _ in range(N):
-        N_i, C_i = map(int, input().split())
-        premade_stack_indexes = list(map(int, input().split()))
-        for i in premade_stack_indexes:
-            if len(stacks[i]) > 1 and stacks[i][-2][0] == stacks[i][-1][0]:
-                print("Case #{}: IMPOSSIBLE".format(case_id+1))
-                case_id += 1
-                break
-        else:
-            print("Case #{}: POSSIBLE".format(case_id+1))
-            case_id += 1
+        c_count, data = map(int, input().split())
+        cards.append([(c_count, s) for s in [input().split() for _ in range(c_count)]])
+
+    print('Case #{}: {}'.format(_ + 1, 'POSSIBLE' if can_win(N, cards) else 'IMPOSSIBLE'))

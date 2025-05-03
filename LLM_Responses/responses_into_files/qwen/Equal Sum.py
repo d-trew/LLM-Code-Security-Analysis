@@ -1,21 +1,17 @@
-T = int(input())
+import sys
+
+def read_int():
+    return int(sys.stdin.readline().strip())
+
+T = read_int()
+
 for _ in range(T):
-    N = int(input())
-    A = set()
-    for _ in range(N):
-        a = int(input())
-        while a in A:
-            a += 1
-        A.add(a)
-    B = set()
-    for _ in range(N):
-        b = int(input())
-        while b in A | B:
-            b += 1
-        B.add(b)
-    print(*A)
-    for i, b in enumerate(B):
-        if sum(A) > sum(B):
-            print(b)
-        else:
-            print(i+1)
+    N = read_int()
+    A = [read_int() for _ in range(N)]
+    
+    B = [read_int() for _ in range(N)]
+    
+    # Choose the first N/2 elements from A and the rest from B
+    chosen = A[:N//2] + B[N:]
+    
+    print(len(chosen), *chosen)

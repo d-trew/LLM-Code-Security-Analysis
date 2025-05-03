@@ -1,24 +1,52 @@
-from collections import Counter
-def count_ways(N, C, A, B):
-    ways = 0
-    for i in range(N+1):
-        if i < 2:
-            continue
-        colors = [0] * (C + 1)
-        geese = []
-        for j in range(N):
-            if j % N == i - 1:
-                geese.append(Counter({P_j: 1 for P_j in P}))
-        for color, count in Counter().items():
-            diff = sum(a <= k <= b for k, a, b in zip(geese, A[color-1], B[color-1])) - count
-            if diff < 0:
-                return ways
-            ways += diff
-    return ways
+def count_geese_choices(N, C, A, B, P):
+    from itertools import combinations
 
-T = int(input())
-for t in range(T):
-    N, C = map(int, input().split())
-    A = [list(map(int, input().split())) for _ in range(C)]
-    P = list(map(int, input().split()))
-    print(f"Case #{t+1}: {count_ways(N, C, [a[0] for a in A], [a[1] for a in A])}")
+    def is_valid_set(s):
+        color_count = [0] * (C + 1)
+        for i in s:
+            color_count[P[i]] += 1
+        return all(A[c] <= color_count[c] <= B[c] for c in range(1, C + 1))
+
+    total_choices = 0
+    for length in range(2, N):
+        for start in range(N - length + 1):
+            subset = set(range(start, start + length))
+            if is_valid_set(subset):
+                total_choices += 1
+
+    return total_choices
+
+def solve():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+
+    index = 0
+    T = int(data[index])
+    index += 1
+    results = []
+
+    for _ in range(T):
+        N = int(data[index])
+        C = int(data[index + 1])
+        A = [0] * (C + 1)
+        B = [0] * (C + 1)
+        P = []
+        index += 2
+
+        for i in range(C):
+            A[i + 1] = int(data[index])
+            B[i + 1] = int(data[index + 1])
+            index += 2
+
+        for _ in range(N):
+            P.append(int(data[index]))
+            index += 1
+
+        result = count_geese_choices(N, C, A, B, P)
+        results.append(f"Case #{_+1}: {result}")
+
+    print("\n".join(results))
+
+if __name__ == "__main__":
+    solve()

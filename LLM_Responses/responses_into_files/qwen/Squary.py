@@ -1,18 +1,31 @@
+def find_squary_elements(N, K, E):
+    sum_E = sum(E)
+    sum_E_square = sum(x**2 for x in E)
+    target = (sum_E + K)**2 - sum_E_square
+
+    if target == 0:
+        return "IMPOSSIBLE"
+    
+    added_elements = []
+    for _ in range(K):
+        if target % (K - len(added_elements)) == 0:
+            added_element = target // (K - len(added_elements))
+            added_elements.append(added_element)
+            sum_E += added_element
+            sum_E_square += added_element**2
+            target = (sum_E + K)**2 - sum_E_square
+    
+    if sum_E_square != (sum_E + K)**2:
+        return "IMPOSSIBLE"
+    
+    return ' '.join(map(str, added_elements))
+
 T = int(input())
-for _ in range(T):
+results = []
+for i in range(1, T+1):
     N, K = map(int, input().split())
-    A = list(map(int, input().split()))
-    sum_A = sum(A)
-    sum_squares_A = sum(i**2 for i in A)
-    if (sum_A ** 2 == sum_squares_A):
-        print("Case #{}: {}".format(_, "IMPOSSIBLE"))
-    else:
-        for x in range(-10**18, 10**18+1):
-            B = A + [x]
-            sum_B = sum(B)
-            sum_squares_B = sum(i**2 for i in B)
-            if (sum_B ** 2 == sum_squares_B):
-                print("Case #{}: {}".format(_, " ".join(map(str, B))))
-                break
-        else:
-            print("Case #{}: IMPOSSIBLE".format(_))
+    E = list(map(int, input().split()))
+    results.append(f"Case #{i}: {find_squary_elements(N, K, E)}")
+
+for result in results:
+    print(result)

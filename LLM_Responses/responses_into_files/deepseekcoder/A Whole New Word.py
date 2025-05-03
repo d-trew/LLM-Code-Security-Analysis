@@ -1,14 +1,22 @@
+def find_new_word(vincent_words):
+    # Create a set of all letters in the words Vincent has
+    vincent_letters = set(''.join(vincent_words))
+    
+    # Iterate over all possible 2-letter combinations
+    for i in range(65, 91):
+        for j in range(i+1, 91):
+            new_word = chr(i) + chr(j)
+            
+            # If the new word is not a subset of any Vincent's words and does not contain any letters that Vincent has
+            if all(not set(new_word).issubset(set(word)) for word in vincent_words) and not set([chr(i), chr(j)]).issubset(vincent_letters):
+                return new_word
+    
+    # If no valid new words are found, return '-'
+    return '-'
+
 T = int(input())
-for t in range(1, T+1):
+for case in range(1, T + 1):
     N, L = map(int, input().split())
-    words = [input() for _ in range(N)]
-    seen = set(word[:L] for word in words)
-    possible_words = []
-    for word in words:
-        for i in range(len(words) - len(word) + 1):
-            if ''.join([c[i] for c in word]) not in seen and len(word) == L:
-                possible_words.append(''.join([c[i] for c in word]))
-    if possible_words:
-        print(f"Case #{t}: {'- ' if not possible_words[0].isalpha() else possible_words[0]}")
-    else:
-        print(f"Case #{t}: -")
+    vincent_words = [input() for _ in range(N)]
+    
+    print('Case #{}: {}'.format(case, find_new_word(vincent_words)))

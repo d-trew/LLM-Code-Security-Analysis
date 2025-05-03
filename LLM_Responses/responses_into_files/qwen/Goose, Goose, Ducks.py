@@ -1,23 +1,54 @@
+from collections import defaultdict
+
+def min_ducks(T, test_cases):
+    results = []
+    
+    for i in range(T):
+        N, M, S = map(int, input().split())
+        duck_meetings = [tuple(map(int, input().split())) for _ in range(M)]
+        statements = [tuple(map(int, input().split())) for _ in range(S)]
+        
+        # Create a graph to represent the possible paths
+        graph = defaultdict(list)
+        for A, B, U, V, D in statements:
+            graph[A].append((B, U, V, D))
+            graph[B].append((A, U, V, D))
+        
+        # Perform BFS to find the minimum number of ducks
+        from collections import deque
+        
+        def bfs(start):
+            visited = set()
+            queue = deque([(start, 0)])
+            while queue:
+                current, time = queue.popleft()
+                if time >= D and (current, U, V) not in visited:
+                    visited.add((current, U, V))
+                    continue
+                for neighbor, U2, V2, D2 in graph[current]:
+                    if (neighbor, U2, V2) not in visited:
+                        queue.append((neighbor, time + 1))
+            return len(visited)
+        
+        min_ducks = float('inf')
+        for A in range(1, N+1):
+            min_ducks = min(min_ducks, bfs(A))
+        
+        results.append(f"Case #{i+1}: {min_ducks}")
+    
+    return results
+
+# Read input
 T = int(input())
-for t in range(1, T+1):
+test_cases = []
+for _ in range(T):
+    test_cases.append(int(input()))
     N, M, S = map(int, input().split())
-    meetings = []
-    for _ in range(M):
-        x, y, c = map(int, input().split())
-        meetings.append((x, y, c))
-    statements = []
-    for _ in range(S):
-        a, b, u, v, d = map(int, input().split())
-        statements.append(((a, b), (u, v), d))
-    min_ ducks = float('inf')
-    for i in range(2**N):
-        hypothesis = [0]*N
-        for j in range(N):
-            if (i >> j) & 1:
-                hypothesis[j] = 1
-            else:
-                hypothesis[j] = 0
-        if all(hypothesis[k] == 0 or all((a, b) != (c, d) and ((u, v), D) in meetings for (a, c), (b, d), U, V, D in statements):
-            duck_count = sum(hypothesis)
-            min_ ducks = min(min_ ducks, duck_count)
-    print(f"Case #{t}: {min_ ducks}")
+    duck_meetings = [tuple(map(int, input().split())) for _ in range(M)]
+    statements = [tuple(map(int, input().split())) for _ in range(S)]
+    test_cases.extend([N, M, S] + duck_meetings + statements)
+
+# Process the input and print results
+results = min_ducks(T, test_cases)
+for result in results:
+    print(result)

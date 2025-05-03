@@ -1,15 +1,15 @@
-T = int(input())
-for _ in range(T):
-    N, P = map(int, input().split())
-    pressures = [list(map(int, input().split())) for _ in range(N)]
-    prev_target = 0
-    button_presses = 0
-    for customer in pressures:
-        for product_pressure in customer:
-            if product_pressure != prev_target:
-                if product_pressure > prev_target:
-                    button_presses += product_pressure - prev_target
-                else:
-                    button_presses -= prev_target - product_pressure
-            prev_target = product_pressure
-    print(f"Case # {_ + 1}: {button_presses}")
+import math
+def solve(N, P):
+    target_pressures = []
+    for i in range(N):
+        target_pressures.append([])
+        for j in range(P):
+            target_pressures[i].append(int(input()))
+    min_button_presses = 0
+    for i in range(N):
+        current_target = 0
+        for j in range(P):
+            if current_target < target_pressures[i][j]:
+                min_button_presses += abs(current_target - target_pressures[i][j])
+                current_target = target_pressures[i][j]
+    return min_button_presses

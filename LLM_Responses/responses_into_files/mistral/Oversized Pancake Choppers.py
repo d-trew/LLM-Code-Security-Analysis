@@ -1,24 +1,27 @@
-import math
+import fractions
+input_data = open("input.txt", "r").readlines()
+T = int(input_data[0].strip())
 
-def pancake_cuts():
-    t = int(input())
-    for _ in range(t):
-        n, d = map(int, input().split())
-        angles = list(map(int, input().split()))
-        total_cuts = 0
-        slices = [angles[0]]
-        while len(slices) < d:
-            new_slices = []
-            for i, angle in enumerate(slices):
-                half_angle = angle / 2.0
-                if math.isclose(half_angle, int(half_angle)):
-                    half_angle = int(half_angle)
-                else:
-                    half_angle = int(math.floor(half_angle)) + 1
-                new_slices.append(half_angle)
-                new_slices.append(angle - half_angle)
-            slices = new_slices
-            total_cuts += len(new_slices) - len(slices)
-        print('Case #{}: {}'.format(_, total_cuts))
+for test in range(1, T+1):
+    N, D = map(int, input_data[test].split())
+    angles = list(map(float, input_data[test+1].strip('[]').split(',')))
+    slices = [fractions.Fraction(angle/360) for angle in angles]
+    cuts = 0
 
-pancake_cuts()
+    while True:
+        total_angle = sum(slices)
+        if len(slices) < D or total_angle > fractions.Fraction(1):
+            cuts += 1
+            slices.sort()
+            for i in range(len(slices)-1, -1, -1):
+                if slices[i] + slices[i-1] > slices[0]:
+                    slices[i], slices[i-1] = slices[i] - slices[i-1], slices[i-1]
+                    cuts += 1
+                    break
+        else:
+            break
+
+    print(f"Case #{test}: {cuts}")
+
+
+This code reads the input from a file named "input.txt", where each test case is represented as a list of numbers separated by commas and enclosed in square brackets. The program calculates the total number of cuts needed to satisfy the diners for each test case, assuming that every diner wants a slice with the same size as every other diner's slice. The code uses fractions to handle angles and ensures that each diner receives a single slice by sorting the slices in descending order and making radial cuts where necessary until all the diners can be served or there are no more slices left.

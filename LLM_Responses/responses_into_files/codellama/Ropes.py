@@ -1,17 +1,24 @@
-T, N, W = map(int, input().split())
-score1, score2 = 0, 0
-for _ in range(T):
-    used = set()
+import sys
+
+def solve(T, N, W):
+    # Initialize variables
+    score = 0
+    ropes = []
     for i in range(N):
-        A, B = map(int, input().split())
-        C, D = map(int, input().split())
-        if A not in used and B not in used:
-            used.add(A)
-            used.add(B)
-            score1 += len(used) - 2
-        used.add(C)
-        used.add(D)
-    result = int(input())
-    if result == 1:
-        score1 += 1
-print(score1)
+        ropes.append([])
+
+    # Play the game
+    for t in range(T):
+        for i in range(N):
+            A, B = map(int, input().split())
+            C, D = map(int, input().split())
+            if (A, B) not in ropes[i] and (C, D) not in ropes[i]:
+                score += 1
+                ropes[i].append((A, B))
+                ropes[i].append((C, D))
+
+    # Print the result
+    if score >= W:
+        print(1)
+    else:
+        print(0)

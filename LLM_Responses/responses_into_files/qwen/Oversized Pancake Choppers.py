@@ -1,24 +1,50 @@
-import math
+def min_cuts(slices, diners):
+    from collections import Counter
+    from math import gcd
+    
+    def reduce_angle(angle):
+        d = gcd(angle, 360 * 10**9)
+        return angle // d
+    
+    angles = [reduce_angle(slice) for slice in slices]
+    counter = Counter(angles)
+    
+    cuts_needed = 0
+    while len(counter) > diners:
+        most_common = counter.most_common(2)
+        if most_common[0][1] == most_common[1][1]:
+            angle, count = most_common[0]
+            new_angle = angle // 2
+            counter[new_angle] += count
+            cuts_needed += 1
+        else:
+            break
+    
+    return cuts_needed
 
-def pancake_cuts():
-    t = int(input())
-    for _ in range(t):
-        n, d = map(int, input().split())
-        angles = list(map(int, input().split()))
-        total_cuts = 0
-        slices = [angles[0]]
-        while len(slices) < d:
-            new_slices = []
-            for i, angle in enumerate(slices):
-                half_angle = angle / 2.0
-                if math.isclose(half_angle, int(half_angle)):
-                    half_angle = int(half_angle)
-                else:
-                    half_angle = int(math.floor(half_angle)) + 1
-                new_slices.append(half_angle)
-                new_slices.append(angle - half_angle)
-            slices = new_slices
-            total_cuts += len(new_slices) - len(slices)
-        print('Case #{}: {}'.format(_, total_cuts))
+def solve():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    index = 0
+    T = int(data[index])
+    index += 1
+    results = []
+    
+    for _ in range(T):
+        N = int(data[index])
+        index += 1
+        D = int(data[index])
+        index += 1
+        slices = list(map(int, data[index:index+N]))
+        index += N
+        
+        result = min_cuts(slices, D)
+        results.append(f"Case #{_ + 1}: {result}")
+    
+    for result in results:
+        print(result)
 
-pancake_cuts()
+if __name__ == "__main__":
+    solve()

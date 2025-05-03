@@ -1,23 +1,22 @@
-def solve(s):
-    res = []
+def balanced_string(s):
+    count = [0]*len(s)
     stack = []
-    for c in s:
-        if c == '0':
-            while len(stack) > int(c):
-                res.append(')')
-                stack.pop()
-            res.append('(')
-            stack.append(1)
+    result = ['']*len(s)
+    
+    for i, c in enumerate(s):
+        if c == '(':
+            stack.append(i)
         else:
-            while len(stack) < int(c):
-                res.append('(')
-                stack.append(1)
-            for _ in range(int(c)):
-                res.append(')')
-                stack.pop()
-    return ''.join(res)
+            j = stack.pop()
+            count[j] += 1
+            count[i] += 1
+            
+    for i, c in enumerate(count):
+        result[i] = str(c) if s[i] == '(' else ''
+        
+    return ''.join(result).replace('0', '')
 
-T = int(input())
-for i in range(T):
+t = int(input())
+for case_no in range(1, t + 1):
     s = input()
-    print(f"Case #{i+1}: {solve(s)}")
+    print("Case #{}: {}".format(case_no, balanced_string(s)))

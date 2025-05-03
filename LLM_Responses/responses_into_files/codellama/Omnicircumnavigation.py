@@ -1,25 +1,55 @@
 import math
 
-def is_omnicircumnavigation(N, X, Y, Z):
-    for i in range(N):
-        if i == N-1:
-            j = 0
-        else:
-            j = i+1
-        v1 = (X[i], Y[i], Z[i])
-        v2 = (X[j], Y[j], Z[j])
-        dot_product = sum(a*b for a, b in zip(v1, v2))
-        magnitude1 = math.sqrt(sum(x**2 for x in v1))
-        magnitude2 = math.sqrt(sum(x**2 for x in v2))
-        cosine_angle = dot_product / (magnitude1 * magnitude2)
-        if abs(cosine_angle) > 0.9999:
-            return "NO"
-    return "YES"
+def is_omnicircumnavigation(points):
+    # Calculate the distance between each pair of successive points
+    distances = [(math.sqrt((points[i+1][0]-points[i][0])**2 + (points[i+1][1]-points[i][1])**2 + (points[i+1][2]-points[i][2])**2), i) for i in range(len(points)-1)]
+    
+    # Sort the distances in ascending order
+    sorted_distances = sorted(distances, key=lambda x: x[0])
+    
+    # Initialize a variable to keep track of the total distance traveled
+    total_distance = 0
+    
+    # Iterate through the sorted distances
+    for i in range(len(sorted_distances)):
+        # Add the current distance to the total distance
+        total_distance += sorted_distances[i][0]
+        
+        # Check if the total distance is greater than 4 times the radius of the sphere
+        if total_distance > 4:
+            return False
+    
+    # If the total distance is less than or equal to 4 times the radius of the sphere, then the path is an omnicircumnavigation
+    return True
 
-T = int(input())
-for t in range(1, T+1):
-    N = int(input())
-    X = [list(map(float, input().split())) for _ in range(N)]
-    Y = [x[1] for x in X]
-    Z = [x[2] for x in X]
-    print("Case #{}: {}".format(t, is_omnicircumnavigation(N, X, Y, Z)))
+# Test case 1:
+print("Case #1:", end=" ")
+points = [(0.5, 0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, -0.5, 0.5)]
+if is_omnicircumnavigation(points):
+    print("YES")
+else:
+    print("NO")
+
+# Test case 2:
+print("Case #2:", end=" ")
+points = [(1, 0, 0), (1, 1, 0), (1, 1, 1), (0, 1, 1), (-1, 1, 1), (-1, 1, 0), (-1, 0, 0)]
+if is_omnicircumnavigation(points):
+    print("YES")
+else:
+    print("NO")
+
+# Test case 3:
+print("Case #3:", end=" ")
+points = [(1, 0, 0), (1, 1, 0), (1, 1, 1), (1, 1, -1), (1, 0, -1), (-1, 0, -1), (-1, -1, -1), (-1, -1, 0), (-1, -1, 1)]
+if is_omnicircumnavigation(points):
+    print("YES")
+else:
+    print("NO")
+
+# Test case 4:
+print("Case #4:", end=" ")
+points = [(1, 0, 0), (1, 1, 0), (1, 1, 1), (1, 1, -1), (1, 0, -1), (-1, 0, -1), (-1, -1, -1), (-1, -1, 0), (-1, -1, 1), (1, 0, 0)]
+if is_omnicircumnavigation(points):
+    print("YES")
+else:
+    print("NO")

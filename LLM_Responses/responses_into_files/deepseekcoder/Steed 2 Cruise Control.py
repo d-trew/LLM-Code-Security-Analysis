@@ -1,15 +1,20 @@
-T = int(input())
-for t in range(1, T+1):
-    D, N = map(int, input().split())
-    horses = []
-    for _ in range(N):
-        K, S = map(int, input().split())
-        horses.append((K, S))
-    max_speed = 0
-    for i in range(len(horses)):
-        for j in range(i+1, len(horses)):
-            if horses[i][1] > horses[j][1]:
-                max_speed = max(max_speed, horses[i][1])
-            else:
-                max_speed = max(max_speed, horses[j][1])
-    print(f"Case #{t}: {max_speed:.6f}")
+def solve():
+    T = int(input())
+    for t in range(T):
+        D, N = map(int, input().split())
+        horses = [list(map(int, input().split())) for _ in range(N)]
+        
+        # Sort the horses by their initial position (from west to east)
+        horses.sort()
+        
+        # Initialize the maximum speed as D (destination), which is the slowest possible speed
+        max_speed = D
+        
+        # Iterate over the horses in reverse order of their speeds
+        for horse in reversed(horses):
+            if horse[1] < max_speed:  # If this horse's speed is less than the current maximum speed
+                max_speed = (D - horse[0]) / (max_speed - horse[1])  # Calculate the new maximum speed
+        
+        print(f"Case #{t+1}: {max_speed}")
+
+solve()

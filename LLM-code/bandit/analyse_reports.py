@@ -4,7 +4,13 @@ import os
 # Directories containing Bandit reports
 bandit_report_dirs = [
     "LLM_Responses/bandit_reports/gemini",
-    "LLM_Responses/bandit_reports/LLAMA"
+    "LLM_Responses/bandit_reports/llama",
+    "LLM_Responses/bandit_reports/wizardcoder",
+    "LLM_Responses/bandit_reports/mistral",
+    "LLM_Responses/bandit_reports/qwen",
+    "LLM_Responses/bandit_reports/deepseek",
+    "LLM_Responses/bandit_reports/codellama"
+
 ]
 
 # Initialize counters

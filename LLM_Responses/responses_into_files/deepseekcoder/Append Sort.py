@@ -1,12 +1,14 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    X = list(map(int, input().split()))
-    x = [str(i) for i in X]
-    res = 0
-    for i in range(1, N):
-        while len(x[i-1]) < len(x[i]):
-            if not str(int(x[i][:-1]) + 1).endswith('9'):
-                break
-            res += 1
-    print(f"Case #{_+1}: {res}")
+def solve():
+    T = int(input())
+    for tc in range(1, T + 1):
+        N = int(input())
+        X = list(map(int, input().split()))
+        ops = 0
+        for i in range(N - 1):
+            if X[i] >= X[i+1]:
+                diff = X[i] - X[i+1] + 1
+                X[i+1] += diff
+                ops += diff
+        print("Case #{}: {}".format(tc, ops))
+
+solve()

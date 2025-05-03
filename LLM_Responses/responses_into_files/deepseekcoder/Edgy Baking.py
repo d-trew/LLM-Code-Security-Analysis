@@ -1,21 +1,35 @@
-def cookie_cutter(N, P):
-    cookies = []
-    for _ in range(N):
-        width, height = map(int, input().split())
-        cookies.append((width, height))
-    
-    dp = [[0, [0, 0]]] * (P + 1)
-    for w, h in cookies:
-        for i in range(P, w * 2 + h * 2 - 2, -1):
-            if i >= w * 2 + h * 2:
-                dp[i][0] = max(dp[i][0], dp[i - w - h][0] + w + h)
-            else:
-                dp[i][0] = max(dp[i][0], min(dp[i - w][1][0] + w, dp[i - h][1][0] + h))
-    
-    return str(int(max(i[0] for i in dp[:P])))
+import heapq
+import math
 
-
-T = int(input())
-for _ in range(T):
-    N, P = map(int, input().split())
-    print(f"Case #{_+1}: {cookie_cutter(N, P)}")
+def optimal_cut(N, P, cookies):
+    # Calculate the perimeter of each cookie and its area
+    perimeters = [2 * (wi + hi) for wi, hi in cookies]
+    areas = [wi * hi for wi, hi in cookies]
+    
+    # Initialize a heap to store the differences between actual and desired perimeter sums
+    diff_heap = []
+    
+    while True:
+        # Calculate the current total area of all cookies
+        total_area = sum(areas)
+        
+        # If the total area is greater than or equal to P, return the maximum possible perimeter sum
+        if total_area >= P:
+            max_perimeter = 2 * (P // N) + (total_area - P) / N
+            while diff_heap and diff_heap[0][0] > max_perimeter:
+                heapq.heappop(diff_heap)
+            return 2 * max_perimeter if diff_heap else max_perimeter
+        
+        # If the total area is less than P, remove the cookie with the largest perimeter and add its difference to the heap
+        max_idx = areas.index(max(areas))
+        max_perimeter = perimeters[max_idx]
+        heapq.heappush(diff_heap, (max_perimeter - 2 * math.sqrt(cookies[max_idx][0] * cookies[max_idx][1]), max_idx))
+        
+        # Update the perimeter and area of the removed cookie
+        del perimeters[max_idx], areas[max_idx]
+        
+        if not diff_heap:
+            return 2 * (P // N) + sum(perimeters) / N
+        
+        max_diff, max_idx = heapq.heappop(diff_heap)
+        perimeters[max_idx] += 2 * math.sqrt(cookies[max_idx][0] * cookies[max_idx][1])

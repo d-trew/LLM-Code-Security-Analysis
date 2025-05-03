@@ -1,16 +1,32 @@
-T = int(input())
-for i in range(1, T+1):
-    L, R = map(int, input().split())
-    l, r = 0, 0
-    customers = 0
-    while L > 0 and R > 0:
+def solve_pancakes(L, R):
+    n = 0
+    while L >= n + 1 or R >= n + 1:
         if L >= R:
-            L -= min(L, R)
-            r += 1
+            L -= (n + 1)
         else:
-            R -= min(L, R)
-            l += 1
-        if min(L, R) == 0:
-            break
-        customers += 1
-    print(f'Case #{i}: {customers} {L} {R}')
+            R -= (n + 1)
+        n += 1
+    return n, L, R
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        L = int(data[index])
+        R = int(data[index + 1])
+        index += 2
+        
+        n, l, r = solve_pancakes(L, R)
+        results.append(f"Case #{_ + 1}: {n} {l} {r}")
+    
+    for result in results:
+        print(result)
+
+if __name__ == "__main__":
+    main()

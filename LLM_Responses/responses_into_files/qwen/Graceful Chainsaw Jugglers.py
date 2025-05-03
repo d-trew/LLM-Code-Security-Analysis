@@ -1,5 +1,11 @@
+def max_jugglers(R, B):
+    return min(R + 1, B + 1)
+
 T = int(input())
-for _ in range(T):
+results = []
+for i in range(1, T + 1):
     R, B = map(int, input().split())
-    jugglers = min(R // 1 + (B - 1) // 1, R % 1 + (B - 1) % 1)
-    print(f"Case #{_+1}: {jugglers}")
+    results.append(f"Case #{i}: {max_jugglers(R, B)}")
+
+for result in results:
+    print(result)

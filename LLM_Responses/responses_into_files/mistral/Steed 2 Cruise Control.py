@@ -1,15 +1,26 @@
-T = int(input())
-for t in range(1, T+1):
-    D, N = map(int, input().split())
-    horses = []
-    for _ in range(N):
-        K, S = map(int, input().split())
-        horses.append((K, S))
+import sys
+import math
+input = sys.stdin.readlines
+
+def solve(data):
+    D, N = map(int, data[0].split())
+    horses = [list(map(int, line.split())) for line in data[1:]]
+    speeds = [float('inf')] + [horses[i][1] for i in range(N)]
+    distances = []
+    for horse in horses:
+        distances.append(D - horse[0])
+    distances.sort()
+
     max_speed = 0
-    for i in range(len(horses)):
-        for j in range(i+1, len(horses)):
-            if horses[i][1] > horses[j][1]:
-                max_speed = max(max_speed, horses[i][1])
-            else:
-                max_speed = max(max_speed, horses[j][1])
-    print(f"Case #{t}: {max_speed:.6f}")
+    for distance in distances:
+        for speed in speeds:
+            if distance > speed:
+                break
+        max_speed = min(max_speed, speed)
+
+    return f"Case #1: {max_speed}"
+
+if __name__ == "__main__":
+    T = int(input()[0])
+    for _ in range(T):
+        print(solve(list(map(str.strip, input()))))

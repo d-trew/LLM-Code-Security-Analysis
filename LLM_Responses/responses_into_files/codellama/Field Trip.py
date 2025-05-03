@@ -1,17 +1,11 @@
-T = int(input())
-for t in range(1, T + 1):
-    N = int(input())
-    people = []
-    for _ in range(N):
-        r, c = map(int, input().split())
-        people.append((r, c))
-    min_turns = float('inf')
-    for i in range(N):
-        turns = 0
-        teacher_r, teacher_c = people[i]
-        for j in range(i + 1, N):
-            if (teacher_r, teacher_c) != people[j]:
-                dr, dc = abs(people[j][0] - teacher_r), abs(people[j][1] - teacher_c)
-                turns += max(dr, dc)
-        min_turns = min(min_turns, turns)
-    print(f"Case #{t}: {min_turns}")
+for tc in range(int(input())):
+    n = int(input())
+    rc_list = []
+    for i in range(n):
+        ri, ci = map(int, input().split())
+        rc_list.append([ri, ci])
+    min_turns = 0
+    for i in range(n-1):
+        if rc_list[i][0] != rc_list[-1][0] or rc_list[i][1] != rc_list[-1][1]:
+            min_turns += 1
+    print("Case #" + str(tc+1) + ": " + str(min_turns))

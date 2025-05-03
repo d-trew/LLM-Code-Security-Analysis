@@ -1,15 +1,26 @@
-import random
-t, n, k = map(int, input().split())
-for _ in range(t):
-    balls = list(map(int, input().split()))
-    boxes = [i for i in range(1, n+1)]
-    color_box = {}
-    for i in range(k):
-        for j in range(n):
-            if random.random() < 0.5:
-                temp = boxes[boxes.index(balls[j])]
-                balls[j] = balls[balls.index(temp)]
-                boxes.remove(temp)
-        for j in range(len(boxes)):
-            color_box.setdefault((j+1)%3, []).append(boxes[j])
-    print(*balls)
+import sys
+
+def read_input():
+    return [int(x) for x in input().split()]
+
+def write_output(data):
+    print(*data, flush=True)
+
+def main():
+    T, N, K = read_input()
+    for _ in range(T):
+        balls = read_input()
+        colors = list(range(1, N + 1))
+        for _ in range(K):
+            write_output(colors)
+            result = read_input()
+            if result == balls:
+                break
+            # Update colors based on the current state of the balls
+            new_colors = [colors[i] for i in range(N) if result[i] != balls[i]]
+            colors = list(range(1, N + 1))
+        else:
+            print("Failed to sort", file=sys.stderr)
+
+if __name__ == "__main__":
+    main()

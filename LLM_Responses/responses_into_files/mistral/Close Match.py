@@ -1,14 +1,15 @@
-from itertools import product
+import re
+
+def min_diff(case):
+    c, j = case
+    diff = abs(int(c.replace("?", "0")) - int(j.replace("?", "0")))
+    best_c = max(0, min(9, (10 + diff - int(j.replace("?", "0"))) // 2))
+    best_j = max(0, min(9, (10 + diff - int(c.replace("?", "0"))) // 2))
+    c_fill = re.sub("?", str(best_c), c)
+    j_fill = re.sub("?", str(best_j), j)
+    return f"Case #{case.split()[0]}: {c_fill} {j_fill}"
 
 T = int(input())
-for t in range(1, T + 1):
-    C, J = input().split()
-    min_diff = float('inf')
-    result_C, result_J = None, None
-    for c, j in product(map(int, '0123456789'), repeat=len(C)):
-        if str(c) == C.replace('?','0') and str(j) == J.replace('?','0'):
-            diff = abs(int(str(c)) - int(str(j)))
-            if diff < min_diff:
-                min_diff = diff
-                result_C, result_J = str(c), str(j)
-    print(f"Case #{t}: {result_C} {result_J}")
+for _ in range(T):
+    case = input().split()
+    print(min_diff(case))

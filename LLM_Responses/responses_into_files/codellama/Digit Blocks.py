@@ -1,20 +1,36 @@
-import random
+import math
 
-T, N, B, P = map(int, input().split())
+# Read input
+T = int(input())
+N = int(input())
+B = int(input())
+P = int(input())
 
-score = 0
-for _ in range(T):
-    towers = [0] * N
-    for _ in range(N * B):
-        D = int(input())
-        i = min(range(1, N+1), key=lambda x: str(D) + str(towers[x-1]).zfill(B))
-        if len(str(towers[i-1])) > B:
-            print(-1)
-            exit()
-        towers[i-1] = 10 * towers[i-1] + D
-    score += sum(int(''.join(map(str, reversed(tower)))) for tower in reversed(towers))
+# Initialize variables
+scores = []
+total_score = 0
 
-if score >= P:
-    print(1)
+# Process each test case
+for i in range(T):
+    # Initialize towers
+    towers = [[] for _ in range(N)]
+    
+    # Read input and place blocks
+    for j in range(N*B):
+        d = int(input())
+        i = 1
+        while len(towers[i-1]) == B:
+            i += 1
+        towers[i-1].append(d)
+    
+    # Calculate score and add to total
+    for tower in towers:
+        score = sum([int(digit) for digit in str(tower)])
+        scores.append(score)
+        total_score += score
+    
+# Print result
+if total_score >= P:
+    print("1")
 else:
-    print(-1)
+    print("-1")

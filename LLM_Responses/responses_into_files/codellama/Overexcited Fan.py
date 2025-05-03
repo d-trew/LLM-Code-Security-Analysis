@@ -1,19 +1,30 @@
-T = int(input())
-for t in range(1, T+1):
-    x, y, m = [int(i) for i in input().split()] + list(input().strip())
-    px, py = 0, 0
-    for move in m:
-        if move == 'N':
-            py += 1
-        elif move == 'S':
-            py -= 1
-        elif move == 'E':
-            px += 1
-        elif move == 'W':
-            px -= 1
-    dx = abs(x - px)
-    dy = abs(y - py)
-    if min(dx, dy) <= 5:
-        print(f"Case #{t}: {min(dx, dy)}")
+import sys
+
+def get_picture(x, y, m):
+    if len(m) == 0:
+        return "IMPOSSIBLE"
+    
+    north = 0
+    east = 0
+    south = 0
+    west = 0
+    
+    for i in range(len(m)):
+        if m[i] == "N":
+            north += 1
+        elif m[i] == "E":
+            east += 1
+        elif m[i] == "S":
+            south += 1
+        elif m[i] == "W":
+            west += 1
+    
+    if x + east > 0 and y + north > 0:
+        return "POSSIBLE"
     else:
-        print("Case #{}: IMPOSSIBLE".format(t))
+        return "IMPOSSIBLE"
+
+T = int(input())
+for i in range(T):
+    x, y, m = input().split()
+    print("Case #" + str(i+1) + ": " + get_picture(x, y, m))

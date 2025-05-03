@@ -1,14 +1,13 @@
-import sys
+# This Python 3 program was created by Code Jam
 
-def trouble_sort(lst):
-    n = len(lst)
-    for i in range(n-2):
-        if lst[i] > lst[i+2]:
-            return i
-    return 'OK'
-
-T = int(sys.stdin.readline())
-for t in range(T):
-    N = int(sys.stdin.readline())
-    L = [int(x) for x in sys.stdin.readline().split()]
-    print(f'Case #{t+1}: {trouble_sort(L)}')
+T = int(input())
+for i in range(T):
+    N = int(input())
+    Vi = list(map(int, input().split()))
+    if sorted(Vi) == Vi:
+        print("Case #{}: OK".format(i+1))
+    else:
+        error_index = 0
+        while error_index < N-1 and Vi[error_index] > Vi[error_index+1]:
+            error_index += 1
+        print("Case #{}: {}".format(i+1, error_index))

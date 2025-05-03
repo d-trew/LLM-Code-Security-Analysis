@@ -1,19 +1,24 @@
-T = int(input())
-for t in range(1, T+1):
-    R, C = map(int, input().split())
-    print(f"Case #{t}:")
-    print("+" + "-"*C + "+")
-    for r in range(R):
-        if r == 0:
-            print("|", end="")
-            print(".|."*(C-1), end="")
-            print("|")
-        elif r == R-1:
-            print("|", end="")
-            print("+-"*C, end="")
-            print("+")
+def print_punched_card(r, c):
+    # Initialize an empty list to store the ASCII art of the punched card
+    punched_card = []
+    
+    for i in range(2 * r + 1):
+        if i % 2 == 0:
+            # Even rows are filled with "." and "-" characters
+            row = ["+"] + ["-"] * c + ["+"]
+            punched_card.append("".join(row))
         else:
-            print("|", end="")
-            print(".|."*(C-1), end="")
-            print("|")
-    print("+" + "-"*C + "+")
+            # Odd rows are filled with "|" character followed by "." and "|" characters
+            row = ["|"] + ["."] * c + ["|"]
+            punched_card.append("".join(row))
+    
+    return "\n".join(punched_card)
+
+# Read the number of test cases
+t = int(input())
+for i in range(1, t + 1):
+    # Read the size of the punched card
+    r, c = map(int, input().split())
+    
+    # Print the ASCII art of the punched card
+    print("Case #{}:\n{}".format(i, print_punched<｜begin▁of▁sentence｜>_card(r, c)))

@@ -1,26 +1,47 @@
-import fractions
-def solve_case(cards):
-    start = int(input())
-    operations = []
-    for _ in range(int(input())):
-        operation, operand = input().split()
-        operations.append((operation == '+', int(operand)))
-    max_result = float('-inf')
-    for order in range(len(list(map(lambda x: 1 if x[0] == '-' else -1, operations)))):
-        result = start
-        for op, operand in operations:
-            if op:
-                result += operand
-            else:
-                result /= operand
-        max_result = max(max_result, result)
-    gcd = lambda a, b: a if not b else gcd(b, a % b)
-    z = 1
-    for op, operand in operations:
-        if op:
-            z = abs(z * operand)
-        else:
-            z = abs(z * operand)
-    y = int(max_result * z)
-    z = int(gcd(z, y))
-    return f"Case #{int(input()) + 1}: {y//z} {z}"
+from fractions import Fraction
+from itertools import permutations
+
+def max_value(S, C, cards):
+    operations = {'+': lambda x, y: x + y,
+                  '-': lambda x, y: x - y,
+                  '*': lambda x, y: x * y,
+                  '/': lambda x, y: x / y}
+    
+    def evaluate(cards_order):
+        result = Fraction(S)
+        for op, val in cards_order:
+            result = operations[op](result, Fraction(val))
+        return result
+    
+    max_result = Fraction('-inf')
+    best_order = None
+    for order in permutations(cards):
+        current_result = evaluate(order)
+        if current_result > max_result:
+            max_result = current_result
+            best_order = order
+    
+    return max_result.numerator, max_result.denominator
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        S = int(data[index])
+        C = int(data[index + 1])
+        cards = [(data[index + 2 + i * 2], int(data[index + 3 + i * 2])) for i in range(C)]
+        index += 2 + C * 2
+        result = max_value(S, C, cards)
+        results.append(f"Case #{_ + 1}: {result[0]} {result[1]}")
+    
+    for result in results:
+        print(result)
+
+if __name__ == "__main__":
+    main()

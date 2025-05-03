@@ -1,25 +1,54 @@
-import math
+Here is the Python code for this problem based on the description:
 
-def is_omnicircumnavigation(N, X, Y, Z):
-    for i in range(N):
-        if i == N-1:
-            j = 0
-        else:
-            j = i+1
-        v1 = (X[i], Y[i], Z[i])
-        v2 = (X[j], Y[j], Z[j])
-        dot_product = sum(a*b for a, b in zip(v1, v2))
-        magnitude1 = math.sqrt(sum(x**2 for x in v1))
-        magnitude2 = math.sqrt(sum(x**2 for x in v2))
-        cosine_angle = dot_product / (magnitude1 * magnitude2)
-        if abs(cosine_angle) > 0.9999:
+
+import sys
+from math import sqrt
+
+def distance(p1, p2):
+    return sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2 + (p1[2]-p2[2])**2)
+
+def dot_product(v1, v2):
+    return sum((a*b) for a, b in zip(v1, v2))
+
+def cross_product(v1, v2):
+    x = v1[1]*v2[2] - v1[2]*v2[1]
+    y = v1[2]*v2[0] - v1[0]*v2[2]
+    z = v1[0]*v2[1] - v1[1]*v2[0]
+    return (x, y, z)
+
+def angle(p1, p2):
+    dz = dot_product(p1, p2)
+    dx = sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
+    return abs(dz/dx if dx else 0)
+
+def solve():
+    n = int(input())
+    points = [tuple(map(int, input().split())) for _ in range(n)]
+    
+    prev_point = points[0]
+    total = 0.0
+    for point in points[1:]:
+        total += distance(prev_point, point)
+        prev_point = point
+        
+    if angle(points[-1], points[0]) < sqrt(2)/2:
+        return "NO"
+    
+    for i in range(-1, len(points)-1):
+        p1, p2, p3 = points[i-1], points[i], points[(i+1)%len(points)]
+        
+        v1 = (p2[0]-p1[0], p2[1]-p1[1], p2[2]-p1[2])
+        v2 = (p3[0]-p2[0], p3[1]-p2[1], p3[2]-p2[2])
+        
+        dv = cross_product(v1, v2)
+        if dot_product(dv, points[(i+2)%len(points)]) < 0:
             return "NO"
-    return "YES"
-
-T = int(input())
-for t in range(1, T+1):
-    N = int(input())
-    X = [list(map(float, input().split())) for _ in range(N)]
-    Y = [x[1] for x in X]
-    Z = [x[2] for x in X]
-    print("Case #{}: {}".format(t, is_omnicircumnavigation(N, X, Y, Z)))
+    
+    if total > 4*sqrt(3):
+        return "YES"
+    else:
+        return "NO"
+        
+t = int(input())
+for i in range(1, t+1):
+    print("Case #%d:" %i, solve())

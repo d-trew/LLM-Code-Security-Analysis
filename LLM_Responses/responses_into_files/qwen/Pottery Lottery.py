@@ -1,11 +1,18 @@
-T = int(input())
+import sys
+
+def read_input():
+    return int(sys.stdin.readline().strip())
+
+def write_output(V, P):
+    print(f"{V} {P}", flush=True)
+
+T = read_input()
 for _ in range(T):
-    day = int(input())
+    day = read_input()
     if day == 100:
-        V, P = map(int, input().split())
-        print(V, P)
+        V = 20
+        P = 100
     else:
-        for _ in range(day-1):
-            input()
-        V, P = map(int, input().split())
-        print(V, P)
+        V = min(day // 10 + 1, 20)
+        P = 0
+    write_output(V, P)

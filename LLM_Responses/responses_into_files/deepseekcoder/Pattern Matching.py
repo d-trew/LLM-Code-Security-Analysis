@@ -1,26 +1,17 @@
-import re
+def solve(patterns):
+    common_chars = [None] * 26
+    for pattern in patterns:
+        for i, c in enumerate([ord(c) - ord('A') for c in pattern if c != '*']):
+            if not (0 <= c < 26): continue
+            if common_chars[c] is None:
+                common_chars[c] = [pattern[i]]
+            elif len(common_chars[c]) == i or common_chars[c][i] != pattern[i]:
+                return "*"
+    name = ''.join([chr(ord('A') + c) for c in range(26) if common_chars[c] is not None])
+    return name
 
 T = int(input())
-
-for _ in range(T):
+for t in range(1, T + 1):
     N = int(input())
-    patterns = [input() for _ in range(N)]
-
-    min_length = min(len(pattern) for pattern in patterns)
-    max_length = 104
-
-    for length in range(min_length, max_length + 1):
-        name = ''
-        for i in range(length):
-            for pattern in patterns:
-                if i < len(pattern) and pattern[i] == '*':
-                    name += chr(65 + (i % 26))
-                else:
-                    name += pattern[i]
-            break
-
-        if all(re.sub('[^A-Z*]', '', pattern) == re.sub('[^A-Z*]', '', name) for pattern in patterns):
-            print(f'Case #{_+1}: {name}')
-            break
-    else:
-        print(f'Case #{_+1}: *')
+    patterns = [input().strip() for _ in range(N)]
+    print("Case #{}: {}".format(t, solve(patterns)))

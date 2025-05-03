@@ -1,26 +1,34 @@
-from itertools import permutations
-for _ in range(int(input())):
-    n, m = map(int, input().split())
-    d = [int(x) for x in input().split()]
-    edges = []
-    for _ in range(m):
-        u, v = map(int, input().split())
-        edges.append((u-1, v-1))
-    min_latencies = 0
-    for p in permutations(range(n-1)):
-        latencies = [0] * m
-        for i, edge in enumerate(edges):
-            if d[edge[0]] < d[edge[1]]:
-                latencies[i] = -d[edge[0]]
-            elif d[edge[0]] > d[edge[1]]:
-                latencies[i] = -d[edge[1]]
-            else:
-                latencies[i] = 0
-        valid = True
-        for i, latency in enumerate(latencies):
-            if latency < 0 and p[i] != edge[0]:
-                valid = False
-                break
-        if valid:
-            min_latencies += 1
-    print(f"Case #{_+1}: {' '.join(map(str, latencies))}")
+from collections import defaultdict
+import sys
+input = sys.stdin.readline
+
+def solve():
+    T = int(input())
+    for t in range(1, T+1):
+        C, D = map(int, input().split())
+        X = list(map(int, input().split()))
+        edges = defaultdict(list)
+        for _ in range(D):
+            u, v = map(int, input().split())
+            edges[u].append(v)
+            edges[v].append(u)
+        
+        res = [0]*D
+        min_latency = 10**6 + 7
+        for i in range(2, C+1):
+            if X[i-1] < 0:  # computer i received the update before computer 1
+                continue
+            
+            # find all computers that are connected to computer i and have received the update after computer 1
+            for j in edges[i]:
+                if X[j-1] > 0:  
+                    res[X[j-1]-1] = max(res[X[j-1]-1], abs(X[i-1] - X[j-1]))
+        
+        print("Case #%d:" % t, end=" ")
+        for i in range(D):
+            if res[i] == 0:  # no latency value has been assigned to connection i yet
+                res[i] = min_latency  
+            print(res[i], end=" ")
+        print()
+
+solve()

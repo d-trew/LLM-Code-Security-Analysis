@@ -1,20 +1,34 @@
+def solve(matrix):
+    n = len(matrix)
+    trace = 0
+    row_counts = [0]*n
+    col_counts = [0]*n
+    
+    for i in range(n):
+        values = set()
+        for j in range(n):
+            if matrix[i][j] in values:
+                row_counts[i] = 1
+            else:
+                values.add(matrix[i][j])
+                
+            if i == j:
+                trace += matrix[i][j]
+    
+    for j in range(n):
+        values = set()
+        for i in range(n):
+            if matrix[i][j] in values:
+                col_counts[j] = 1
+            else:
+                values.add(matrix[i][j])
+    
+    return sum(row_counts), sum(col_counts), trace
+
 T = int(input())
-for _ in range(T):
+for tc in range(1, T+1):
     N = int(input())
-    matrix = []
-    for _ in range(N):
-        row = list(map(int, input().split()))
-        matrix.append(row)
+    matrix = [list(map(int, input().split())) for _ in range(N)]
     
-    trace = sum(matrix[i][i] for i in range(N))
-    repeated_rows = set()
-    repeated_cols = set()
-    for i in range(N):
-        row_set = set(matrix[i])
-        col_set = set(x[i] for x in matrix)
-        if len(row_set) != N:
-            repeated_rows.add(i+1)
-        if len(col_set) != N:
-            repeated_cols.add(i+1)
-    
-    print(f"Case #{_+1}: {trace} {(len(repeated_rows))} {(len(repeated_cols))}")
+    r, c, t = solve(matrix)
+    print(f"Case #{tc}: {t} {r} {c}")

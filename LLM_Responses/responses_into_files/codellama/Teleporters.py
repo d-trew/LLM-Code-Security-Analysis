@@ -1,27 +1,21 @@
+import math
+
+def teleport(x1, y1, z1, x2, y2, z2):
+    return abs(x1-x2) + abs(y1-y2) + abs(z1-z2)
+
 T = int(input())
-for _ in range(T):
+for t in range(1, T+1):
     N = int(input())
-    Thundera = list(map(int, input().split()))
-    Care_a_Lot = list(map(int, input().split()))
+    Thundera_x, Thundera_y, Thundera_z = map(int, input().split())
+    CareA Lot_x, CareA Lot_y, CareA Lot_z = map(int, input().split())
     teleporters = []
-    for _ in range(N-2):
-        teleporters.append(list(map(int, input().split())))
-    
-    min_teleportations = float('inf')
-    for i in range(2**N):
-        visited = [False] * (N+2)
-        current_location = Thundera
-        teleportation_count = 0
-        
-        for j in range(N-1):
-            if ((current_location[0] - teleporters[i%N][0]) + 
-                (current_location[1] - teleporters[i%N][1]) + 
-                (current_location[2] - teleporters[i%N][2])) == 0:
-                current_location = list(teleporters[i%N])
-            visited[i%N] = True
-            current_location = [x+y for x,y in zip(current_location,teleporters[(i+1)%N])]
-            if current_location == Care_a_Lot:
-                min_teleportations = min(min_teleportations, teleportation_count+1)
-                break
-        
-    print("Case #{}: {}".format(_, "IMPOSSIBLE" if min_teleportations==float('inf') else str(min_teleportations)))
+    for i in range(N):
+        x, y, z = map(int, input().split())
+        teleporters.append((x, y, z))
+    min_teleportations = math.inf
+    for i in range(len(teleporters)):
+        for j in range(i+1, len(teleporters)):
+            distance = teleport(Thundera_x, Thundera_y, Thundera_z, *teleporters[i]) + teleport(*teleporters[i], *teleporters[j]) + teleport(*teleporters[j], CareA Lot_x, CareA Lot_y, CareA Lot_z)
+            if distance < min_teleportations:
+                min_teleportations = distance
+    print("Case #" + str(t) + ": " + str(min_teleportations))

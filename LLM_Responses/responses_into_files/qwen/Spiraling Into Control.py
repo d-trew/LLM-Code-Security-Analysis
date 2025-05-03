@@ -1,24 +1,55 @@
-T = int(input())
-for t in range(1, T+1):
-    N, K = map(int, input().split())
-    if N % 2 == 0:
-        print(f"Case #{t}: IMPOSSIBLE")
-    else:
-        x, y = 1, 1
-        shortcuts = []
-        while K > 0 and y < N*N:
-            if (x+y) % N == 0 or (x+y+1) % N == 0:
-                y += 2
-                K -= 1
-            else:
-                if x + 1 < N * N // N:
-                    x += 1
-                else:
-                    x, y = x + N - 1, y + 1
-                shortcuts.append((x, y))
-        if K > 0:
-            print(f"Case #{t}: IMPOSSIBLE")
+def find_shortcuts(N, K):
+    if N * N - 1 <= K:
+        return "IMPOSSIBLE"
+    
+    center = N * N // 2 + 1
+    moves = [0] * (N * N)
+    x, y = 0, 0
+    dx, dy = 0, 1
+    
+    for i in range(1, N * N):
+        moves[i] = i
+        if i % 2 == 0:
+            dx, dy = -dy, dx
+        
+        while (x + dx < 0 or x + dx >= N) or (y + dy < 0 or y + dy >= N) or moves[moves[i]] != moves[i] + 1:
+            dx, dy = -dy, dx
+            if (x + dx < 0 or x + dx >= N) or (y + dy < 0 or y + dy >= N):
+                return "IMPOSSIBLE"
+        
+        x += dx
+        y += dy
+    
+    shortcuts = []
+    for i in range(1, K + 2):
+        if moves[i] != moves[i - 1] + 1:
+            shortcuts.append((moves[i - 1], moves[i]))
+    
+    return len(shortcuts), shortcuts
+
+def solve():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        N = int(data[index])
+        K = int(data[index + 1])
+        index += 2
+        
+        result = find_shortcuts(N, K)
+        if result == "IMPOSSIBLE":
+            results.append(f"Case #{_+1}: IMPOSSIBLE")
         else:
-            print(f"Case #{t}: {len(shortcuts)}")
-            for i in range(len(shortcuts)):
-                print(*shortcuts[i], sep=' ')
+            num_shortcuts, shortcuts = result
+            results.append(f"Case #{_+1}: {num_shortcuts}")
+            for a, b in shortcuts:
+                results.append(f"{a} {b}")
+    
+    print("\n".join(results))
+
+solve()

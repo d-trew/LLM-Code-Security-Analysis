@@ -1,16 +1,29 @@
-import heapq
+from collections import deque
+
+def max_customers_paid(N, D):
+    left = deque(D)
+    right = deque(D[::-1])
+    result = 0
+    
+    while left:
+        if not right or (left and left[0] >= right[0]):
+            if left[0] >= result:
+                result += 1
+            left.popleft()
+        else:
+            if right[0] >= result:
+                result += 1
+            right.popleft()
+    
+    return result
+
 T = int(input())
-for t in range(1, T + 1):
+results = []
+
+for i in range(1, T + 1):
     N = int(input())
     D = list(map(int, input().split()))
-    max_deliciousness = max(D)
-    min_deliciousness = min(D)
-    res = 0
-    for d in D:
-        if d >= max_deliciousness:
-            res += 1
-            max_deliciousness -= 1
-        elif d <= min_deliciousness:
-            res += 1
-            min_deliciousness += 1
-    print(f"Case #{t}: {res}")
+    results.append(max_customers_paid(N, D))
+
+for i, result in enumerate(results, start=1):
+    print(f"Case #{i}: {result}")

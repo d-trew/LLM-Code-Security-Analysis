@@ -1,36 +1,20 @@
-import heapq
-
-def jelly_saver(N, kids, sweets):
-    heap = []
-    for i in range(1, N+2):
-        for j in range(N+1):
-            if i == 1:
-                continue
-            dist = ((kids[j-1][0] - sweets[i-1][0]) ** 2 + (kids[j-1][1] - sweets[i-1][1]) ** 2) ** 0.5
-            heapq.heappush(heap, (dist, i))
-    for _ in range(N):
-        _, jelly = heapq.heappop(heap)
-        print(f"Case #{N+1}: POSSIBLE")
-        for i in range(1, N+1):
-            if i == 1:
-                print(f"{i} {jelly}")
-            else:
-                while True:
-                    dist, j = heapq.heappop(heap)
-                    if j != jelly:
-                        print(f"{i} {j}")
-                        break
-    return
-
-T = int(input())
-for t in range(T):
-    N = int(input())
-    kids = []
-    for _ in range(N):
-        x, y = map(int, input().split())
-        kids.append((x, y))
-    sweets = []
-    for _ in range(N+1):
-        x, y = map(int, input().split())
-        sweets.append((x, y))
-    jelly_saver(N, kids, sweets)
+import math
+def solve(N):
+    return "IMPOSSIBLE" if N%2==0 else "POSSIBLE"
+for t in range(int(input())):
+    n=int(input())
+    x=[list(map(int,input().split())) for _ in range(n+1)]
+    y=[list(map(int,input().split())) for _ in range(n+1)]
+    z=[list(map(int,input().split())) for _ in range(n+1)]
+    ans=solve(n)
+    if ans=="POSSIBLE":
+        print("Case #"+str(t+1)+": "+ans)
+        for i in range(1,n+1):
+            min_dist=float('inf')
+            closest_sweet=0
+            for j in range(1,n+1):
+                dist=math.sqrt((x[i][0]-z[j][0])**2+(y[i][1]-z[j][1])**2)
+                if dist<min_dist:
+                    min_dist=dist
+                    closest_sweet=j
+            print(str(i)+" "+str(closest_sweet))

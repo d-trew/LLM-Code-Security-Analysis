@@ -1,37 +1,62 @@
-import re
+import itertools
+from collections import defaultdict
 
-def solve_case(case):
-    board = [list(line) for line in case[:3]]
-    tile1 = [list(line) for line in case[3:6]]
-    tile2 = [list(line) for line in case[6:]]
+def rotate(tile):
+    return list(zip(*reversed(tile)))
 
-    def is_valid_red_pattern(pattern):
-        return all(all(c == '@' or c == '.' and (c == '@' or c in pattern[0][1:]) for c in row) for row in pattern)
+def flip_vertical(tile):
+    return [x[::-1] for x in tile]
 
-    valid_tiles = []
-    for i in range(2**64):
-        red_cells = [int(c) for line in [(j & 1 << k) for j, k in zip(*[[int(c) for c in line] for line in board])) for c in line if c == '@']
-        pattern = [[0 if c == '.' else 1 for c in line] for line in board]
-        is_solvable = True
-        for tile in [tile1, tile2]:
-            tile_pattern = [[(j & 1 << k) for j, k in zip(*[[int(c) for c in line] for line in tile])) for line in tile]
-            if not all(all(pattern[i][j] == tile_pattern[i][j] and pattern[i][j] != 0 or c != '@' for i, j in zip(*[[i, j] for i, j in enumerate(line)])) for line in board):
-                is_solvable = False
-                break
-        if is_solvable:
-            valid_tiles.append(red_cells)
+def flip_horizontal(tile):
+    return [[y[i][::-1] for y in tile] for i in range(len(tile))]
 
-    return 'POSSIBLE' if any(valid_tiles) else 'IMPOSSIBLE'
+def solve(boards):
+    tiles = set()
+    for board in boards:
+        tiles.add(''.join(board))
+    n_tiles = len(tiles)
+    grid = [[0]*16 for _ in range(8)]
+    red_cells = set()
+    for tile in tiles:
+        if len(tile) not in {9, 16}:
+            continue
+        for i, j in product(range(8), repeat=2):
+            sub_grid = [tile[i*3:(i+1)*3][j*3:(j+1)*3] for _ in range(3)]
+            if all([all(sub == sub_[::-1] or all(sub == rotate(sub_)[::-1]) or any([all(sub == flip_vertical(sub_)) or all(sub == flip_horizontal(sub_))])) for sub, sub_ in itertools.combinations(sub_grid, 2)]:
+                grid[i][j] = tile
+                for r in red_cells:
+                    if any([r[0] == i*3+k or r[1] == j*3+k for k in range(3)]) or any([r[0] == (i+1)*3+k or r[1] == j*3+k for k in range(3)]):
+                        break
+                else:
+                    red_cells.update((i*3+k, j*3+k) for k in range(3))
+    if len(red_cells) < n_tiles:
+        return False
+    grid[0] = ['.' + '.'.join(grid[0]) for _ in grid[0]]
+    for i in range(1, 8):
+        grid[i] = ['.' + '.'.join(grid[i]) for _ in grid[i]]
+    return grid
 
-T = int(input())
-for t in range(1, T + 1):
-    case = [list(line) for line in [input().strip() for _ in range(4)]]
-    print(f"Case #{t}: {solve_case(case)}")
-    if solve_case(case) == 'POSSIBLE':
-        board = [['.' for _ in range(8)] for _ in range(8)]
-        red_cells = valid_tiles[0]
-        for i, j in zip(*[[i, j] for i, j in enumerate(board)]):
-            if red_cells[i*8 + j]:
-                board[i][j] = '@'
-        for line in [str(''.join(['.' if c == '.' else '@' if i < 3 and j < 3 else ' ' for c in line])) for line in board]:
-            print(line)
+def main():
+    T = int(input().strip())
+    for _ in range(T):
+        boards = []
+        for _ in range(2):
+            line = input().split()
+            boards.append([line])
+        boards.append([])
+        result = solve(boards[:-1])
+        if not result:
+            print(f'Case #{_ + 1}: IMPOSSIBLE')
+        else:
+            print(f'Case #{_ + 1}: POSSIBLE')
+            for row in result:
+                print(' '.join(row))
+
+main()
+
+
+This code reads the number of test cases, then iterates through each case. For each case, it splits the input into boards (left, right and an empty line), and calls the `solve()` function to find a solution. If there is no solution, it prints "IMPOSSIBLE". Otherwise, it prints "POSSIBLE" followed by the solution in the required format.
+
+The `solve()` function iterates through each possible tile (a contiguous group of 9 or 16 cells), checks if it's rotation, vertical or horizontal flip is also a valid tile, and checks if any of the red cells are covered by the tile. If none of the red cells are covered, the tile is added to the grid. Once all tiles have been checked, it checks that there are enough tiles to cover all the red cells, and returns the solution if possible, or False otherwise.
+
+The `rotate()`, `flip_vertical()` and `flip_horizontal()` functions are used to check rotations and flips of the tiles.

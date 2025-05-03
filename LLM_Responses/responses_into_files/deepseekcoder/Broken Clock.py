@@ -1,18 +1,20 @@
-import math
-def clock_angle_to_time(hours_hand_angle, minutes_hand_angle, seconds_hand_angle):
-    hours_hand_rotation = (hours_hand_angle / 360) * 12
-    minutes_hand_rotation = (minutes_hand_angle / 360) * 60
-    seconds_hand_rotation = (seconds_hand_angle / 360) * 6
-
-    total_minutes = math.floor(hours_hand_rotation * 60 + minutes_hand_rotation)
-    remaining_seconds = int((total_minutes + seconds_hand_rotation) % 60)
-
-    hours = math.floor(total_minutes / 60)
-    nanoseconds = (hours_hand_rotation * 10**9 + minutes_hand_rotation * 10**8 + seconds_hand_rotation * 10**7) % 10**9
-
-    return f"Case #1: {hours} {remaining_seconds} {nanoseconds}"
+def find_time(A, B, C):
+    # Calculate total degrees of rotation for each hand
+    A = (360 - A) % 360 * 12 / 360 * 1e9
+    B = (360 - B) % 360 * 12 / 360 * 1e9
+    C = (360 - C) % 360 * 12 / 360 * 1e9
+    
+    # Calculate time in nanoseconds
+    total_time = A + B + C
+    
+    h, r = divmod(total_time, 3600*1e9)
+    m, r = divmod(r, 60*1e9)
+    s, n = divmod(r, 1e9)
+    
+    return int(h), int(m), int(s), int(n)
 
 T = int(input())
-for _ in range(T):
-    hours_hand_angle, minutes_hand_angle, seconds_hand_angle = map(int, input().split())
-    print(clock_angle_to_time(hours_hand_angle, minutes_hand_angle, seconds_hand_angle))
+for i in range(1, T+1):
+    A, B, C = map(int, input().split())
+    h, m, s, n = find_time(A, B, C)
+    print("Case #{}: {} {} {} {}".format(i, h, m, s, n))

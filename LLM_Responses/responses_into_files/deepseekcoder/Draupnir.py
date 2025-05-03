@@ -1,28 +1,21 @@
-T = int(input())
-W = int(input())
+from collections import deque
+import sys
+input = sys.stdin.readline
 
-for _ in range(T):
-    R1 = 0
-    R2 = 0
-    R3 = 0
-    R4 = 0
-    R5 = 0
-    R6 = 0
-    
-    for _ in range(W):
-        query = int(input())
-        
-        if query % 263 == 0:
-            R1 += query // 1
-        elif query % 131 == 0:
-            R2 += query // 2
-        elif query % 87 == 0:
-            R3 += query // 3
-        elif query % 43 == 0:
-            R4 += query // 4
-        elif query % 29 == 0:
-            R5 += query // 5
-        else:
-            R6 += query // 6
-        
-    print(R1, R2, R3, R4, R5, R6)
+def count_rings():
+    T, W = map(int, input().split())
+    dp = [0] * (W+1)
+    for _ in range(T):
+        X, M = map(int, input().split())
+        queue = deque([[X, 0]])
+        while queue:
+            x, w = queue.popleft()
+            if dp[w] < x:
+                dp[w] = x
+            if w+1 <= W and (not queue or queue[-1][1] != w+1):
+                queue.append([x, w+1])
+        while M > 0:
+            _, m_w = map(int, input().split())
+            print(dp[m_w % (W+1)])
+            M -= 1
+    return dp

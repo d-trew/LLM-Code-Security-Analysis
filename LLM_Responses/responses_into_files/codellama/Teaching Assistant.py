@@ -1,10 +1,15 @@
-t = int(input())
-for i in range(t):
-    s = input()
-    score = 0
-    for j in range(len(s)):
-        if (j // 2) % 2 == 0:
-            score += 10 if s[j] == 'C' else 5
-        else:
-            score += 10 if s[j] == 'J' else 5
-    print('Case #{}: {}'.format(i+1, score))
+import sys
+input = sys.stdin.readline
+
+T = int(input())
+for t in range(1, T+1):
+    S = input()
+    C = 0
+    J = 0
+    for i in range(len(S)):
+        if S[i] == 'C':
+            C += 1
+        elif S[i] == 'J':
+            J += 1
+    max_points = max(C, J) * 5
+    print("Case #" + str(t) + ": " + str(max_points))

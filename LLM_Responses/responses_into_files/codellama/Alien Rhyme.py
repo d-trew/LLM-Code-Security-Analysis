@@ -1,15 +1,26 @@
-import itertools
+import sys
 
-def find_largest_rhyming_subset(words):
-    max_size = 0
-    for p in range(1, len(words) + 1):
-        for accentuations in itertools.product('abcdefghijklmnopqrstuvwxyz', repeat=len(words)):
-            if all(words[i][word.find(accents[i]):] == words[j][word.find(accents[j]):] for i in range(p) for j in range(i+1, p)):
-                max_size = max(max_size, p)
-    return max_size
+def largest_subset(words):
+    accented_words = []
+    for word in words:
+        if len(word) > 1 and word[0] == 'J':
+            accented_words.append(word)
+    if not accented_words:
+        return 0
+    pairs = []
+    for i, word in enumerate(accented_words):
+        for j, other_word in enumerate(accented_words):
+            if i != j and word[-1] == other_word[-1]:
+                pairs.append((word, other_word))
+    return len(pairs) + 1
 
-T = int(input())
-for t in range(1, T + 1):
-    N = int(input())
-    words = [input().upper() for _ in range(N)]
-    print(f"Case #{t}: {find_largest_rhyming_subset(words)}")
+if __name__ == '__main__':
+    test_cases = int(input())
+    for case in range(1, test_cases+1):
+        words = []
+        n = int(input())
+        for _ in range(n):
+            word = input()
+            if len(word) > 1 and word[0] == 'J':
+                words.append(word)
+        print('Case #{}'.format(case), largest_subset(words))

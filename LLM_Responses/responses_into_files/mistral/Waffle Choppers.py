@@ -1,27 +1,27 @@
-T = int(input())
-for _ in range(T):
-    R, C, H, V = [int(x) for x in input().split()]
-    waffle = [input() for _ in range(R)]
-    chocolate_count = sum(1 for row in waffle for cell in row if cell == '@')
-    pieces = {}
-    for i in range(H + 1):
-        for j in range(V + 1):
-            piece = ''
-            for k in range(R):
-                for l in range(C):
-                    if k < R - 1 and (i == H or k >= i):
-                        piece += waffle[k][l]
-                    else:
-                        break
-            for l in range(C):
-                if l < C - 1 and (j == V or l >= j):
-                    piece += waffle[R - 1][l]
-                else:
-                    break
-            pieces.setdefault(tuple(map(len, piece.split('.'))), []).append(piece)
-    for x in pieces.values():
-        if len(set(x)) > 1:
-            print('Case #{}: IMPOSSIBLE'.format(_ + 1))
-            break
+import sys
+input = sys.stdin.readlines
+
+def can_split(r, c, h, v):
+    grid = [list(map(lambda x: '@' if x == '1' else '. ', line.strip())) for line in input(f"{r+c}\n").split("\n")]
+    pieces = [[0] * (v + 1) for _ in range(h + 1)]
+
+    for i, row in enumerate(grid):
+        for j, cell in enumerate(row):
+            pieces[i][cell == '@'] += 1
+
+    for i in range(1, h):
+        if sum(pieces[i]) != sum(pieces[0]) or sum(pieces[-1]) != sum(pieces[0]):
+            return False
+
+    for j in range(1, v):
+        if sum([pieces[i][j] for i in range(r)]) != sum([pieces[i][0] for i in range(r)]):
+            return False
+
+    return True
+
+for _ in range(int(input().strip())):
+    r, c, h, v = map(int, input().split())
+    if can_split(r, c, h, v):
+        print(f"Case #{_+1}: POSSIBLE")
     else:
-        print('Case #{}: POSSIBLE'.format(_ + 1))
+        print(f"Case #{_+1}: IMPOSSIBLE")

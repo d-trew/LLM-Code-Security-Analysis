@@ -1,24 +1,34 @@
-from collections import Counter
-def count_ways(N, C, A, B):
-    ways = 0
-    for i in range(N+1):
-        if i < 2:
-            continue
-        colors = [0] * (C + 1)
-        geese = []
-        for j in range(N):
-            if j % N == i - 1:
-                geese.append(Counter({P_j: 1 for P_j in P}))
-        for color, count in Counter().items():
-            diff = sum(a <= k <= b for k, a, b in zip(geese, A[color-1], B[color-1])) - count
-            if diff < 0:
-                return ways
-            ways += diff
-    return ways
+import sys
 
-T = int(input())
-for t in range(T):
-    N, C = map(int, input().split())
-    A = [list(map(int, input().split())) for _ in range(C)]
-    P = list(map(int, input().split()))
-    print(f"Case #{t+1}: {count_ways(N, C, [a[0] for a in A], [a[1] for a in A])}")
+def solve(N, C, A, B, P):
+    # Initialize a dictionary to store the number of players for each color
+    color_count = {i: 0 for i in range(1, C+1)}
+    # Update the dictionary with the number of players wearing each color
+    for player in P:
+        color_count[player] += 1
+    
+    # Initialize a list to store the valid combinations
+    valid_combinations = []
+    # Iterate over all possible combinations of geese
+    for i in range(N-1, -1, -1):
+        # Check if the current combination is valid
+        valid = True
+        for j in range(1, C+1):
+            # If the number of players wearing color j is not between A_j and B_j, invalidate the combination
+            if color_count[j] < A[j-1] or color_count[j] > B[j-1]:
+                valid = False
+                break
+        # If the current combination is valid, add it to the list of valid combinations
+        if valid:
+            valid_combinations.append(i)
+    
+    return len(valid_combinations)
+
+if __name__ == "__main__":
+    T = int(input())
+    for case in range(1, T+1):
+        N, C = map(int, input().split())
+        A = list(map(int, input().split()))
+        B = list(map(int, input().split()))
+        P = list(map(int, input().split()))
+        print("Case #" + str(case) + ": " + str(solve(N, C, A, B, P)))

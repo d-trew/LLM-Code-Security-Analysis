@@ -1,16 +1,17 @@
-T = int(input())
-for _ in range(T):
-    y = int(input())
-    s = str(y)
-    for i in range(len(s)):
-        for j in range(i+1, len(s)+1):
-            k = int(s[i:j])
-            if k > y and is_roaring(k):
-                print(f"Case #{_+1}: {k}")
-                break
-def is_roaring(n):
-    s = str(n)
-    for i in range(1, len(s)):
-        if s[:i] == str(i) and all(int(s[i+j]) == i+j for j in range(len(s)-i)):
-            return True
-    return False
+def next_roaring(y):
+    y += 1
+    while True:
+        str_y = str(y)
+        is_roaring = all([str(i+1) in str_y for i in range(len(str_y)-1)])
+        if is_roaring and len(set(str_y)) == len(str_y):
+            return y
+        y += 1
+
+def main():
+    T = int(input())
+    for case in range(1, T+1):
+        Y = int(input())
+        print('Case #{}: {}'.format(case, next_roaring(Y)))
+
+if __name__ == "__main__":
+    main()

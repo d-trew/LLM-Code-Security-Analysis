@@ -1,33 +1,35 @@
-from itertools import permutations
+import sys
 
-def edit_distance(s1, s2):
-    m, n = len(s1), len(s2)
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    for i in range(m + 1):
-        dp[i][0] = i
-    for j in range(n + 1):
-        dp[0][j] = j
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if s1[i - 1] == s2[j - 1]:
-                dp[i][j] = dp[i - 1][j - 1]
+def get_edit_distance(str1, str2):
+    d = [[0 for _ in range(len(str2) + 1)] for _ in range(len(str1) + 1)]
+    for i in range(1, len(str1) + 1):
+        for j in range(1, len(str2) + 1):
+            if str1[i - 1] == str2[j - 1]:
+                d[i][j] = d[i - 1][j - 1]
             else:
-                dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
-    return dp[m][n]
+                d[i][j] = min(d[i - 1][j - 1] + 1, d[i - 1][j] + 1, d[i][j - 1] + 1)
+    return d[-1][-1]
 
-def find_compromise_name(c, j):
-    min_distance = float('inf')
-    best_name = ''
-    for p in permutations(set(c)):
-        name = ''.join(p)
-        distance_c = edit_distance(c, name)
-        distance_j = edit_distance(j, name)
-        if distance_c + distance_j < min_distance:
-            min_distance = distance_c + distance_j
-            best_name = name
-    return best_name
+def find_compromise(str1, str2):
+    compromise = ""
+    for i in range(len(str1)):
+        if str1[i] == str2[i]:
+            compromise += str1[i]
+        else:
+            compromise += str2[i]
+    return compromise
 
-t = int(input())
-for i in range(t):
-    c, j = input().split()
-    print(f'Case #{i+1}: {find_compromise_name(c, j)}')
+def main():
+    t = int(input())
+    for _ in range(t):
+        c, j = input().split()
+        cd = get_edit_distance(c, j)
+        jd = get_edit_distance(j, c)
+        if abs(cd - jd) < 2:
+            compromise = find_compromise(c, j)
+            print("Case #{}: {}".format(_ + 1, compromise))
+        else:
+            print("Case #{}: {}".format(_ + 1, c if cd < jd else j))
+
+if __name__ == "__main__":
+    main()

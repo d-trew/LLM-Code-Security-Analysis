@@ -1,23 +1,24 @@
+from itertools import permutations
+
+def min_diff(digits):
+    # Generate all possible permutations of the digits
+    perms = [''.join(p) for p in permutations(digits)]
+    
+    min_difference = float('inf')
+    for perm in perms:
+        # Split the permutation into two numbers without leading zeros
+        num1, num2 = int(perm[:-1]), int(perm[-1])
+        
+        # Skip if any of the numbers are 0 or negative
+        if num1 <= 0 or num2 <= 0:
+            continue
+            
+        # Update min_difference if necessary
+        min_difference = min(min_difference, abs(num1 - num2))
+    
+    return min_difference
+
 T = int(input())
-for _ in range(T):
-    D = list(map(int, input()))
-    D.sort()
-    res = float('inf')
-    for i in range(len(D)):
-        for j in range(i+1, len(D)):
-            a, b = 0, 0
-            k, l = 0, i
-            while k < l:
-                if D[k] > 0:
-                    a = a * 10 + D[k]
-                    k += 1
-                else:
-                    k += 1
-            while l < len(D):
-                if D[l] > 0:
-                    b = b * 10 + D[l]
-                    l += 1
-                else:
-                    l += 1
-            res = min(res, abs(a - b))
-    print("Case #{}: {}".format(_, res))
+for t in range(1, T+1):
+    digits = input()
+    print('Case #{}: {}'.format(t, min_diff(digits)))

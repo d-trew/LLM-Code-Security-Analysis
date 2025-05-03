@@ -1,18 +1,34 @@
-P = int(input())
-for _ in range(P):
-    P_i = list(map(int, input().split()))
-    C = P_i[1]
-    stacks = [list(map(lambda x: (int(x.split()[0]), int(x.split()[1])), input().split())) for _ in range(C)]
-    N = int(input())
-    case_id = 0
-    for _ in range(N):
-        N_i, C_i = map(int, input().split())
-        premade_stack_indexes = list(map(int, input().split()))
-        for i in premade_stack_indexes:
-            if len(stacks[i]) > 1 and stacks[i][-2][0] == stacks[i][-1][0]:
-                print("Case #{}: IMPOSSIBLE".format(case_id+1))
-                case_id += 1
-                break
-        else:
-            print("Case #{}: POSSIBLE".format(case_id+1))
-            case_id += 1
+import sys
+input = sys.stdin.readline
+
+def solve(N, C):
+    # Initialize a dictionary to store the cards in each stack
+    cards = {}
+    for i in range(N):
+        cards[i] = []
+    
+    # Add the premade stacks to the dictionary
+    for i in range(len(C)):
+        cards[i] = C[i]
+    
+    # Check if it is possible to win the game
+    for i in range(N):
+        for j in range(len(cards[i])):
+            value, suit = cards[i][j]
+            if value + 1 == cards[i][j+1][0] and suit == cards[i][j+1][1]:
+                # If there is a sequence of cards with the same value/suit combination, return True
+                return True
+    # If no sequence of cards with the same value/suit combination is found, return False
+    return False
+    
+# Read the input
+N = int(input())
+C = []
+for i in range(N):
+    C.append([int(x) for x in input().split()])
+
+# Check if it is possible to win the game
+if solve(N, C):
+    print("POSSIBLE")
+else:
+    print("IMPOSSIBLE")

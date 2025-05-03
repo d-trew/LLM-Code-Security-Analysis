@@ -1,22 +1,23 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    P = input()
-    case_num = _ + 1
+def find_path(n, p):
     path = []
-    x, y = 0, N-1
-    while (x, y) != (N-1, 0):
-        if P[y*2+1] == 'E' and x < N-1:
-            path.append('E')
-            x += 1
-        elif P[y*2] == 'S' and y > 0:
+    i = 0
+    while i < len(p):
+        if p[i] == 'E':
             path.append('S')
-            y -= 1
-        else:
-            if y > 0 and (P[(y-1)*2] != 'S' or P[y*2+1] != 'E'):
+            i += 1
+        else:  # p[i] == 'S'
+            j = i + 1
+            while j < len(p) and p[j] == 'S':
                 path.append('S')
-                y -= 1
-            elif x < N-1 and (P[y*2+1] != 'E' or P[(x+1)*2] != 'S'):
-                path.append('E')
-                x += 1
-    print(f"Case #{case_num}: {''.join(path)}")
+                j += 1
+            if j == len(p):
+                break
+            path.append('E')
+            i = j + 1
+    return "Case #{}: {}".format(n, "".join(path))
+
+t = int(input().strip())
+for i in range(1, t+1):
+    n = int(input().strip())
+    p = input().strip()
+    print(find_path(i, p))

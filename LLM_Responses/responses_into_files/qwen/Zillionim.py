@@ -1,13 +1,28 @@
-import random
+import sys
+from random import randint
 
-t = int(input().split()[0])
-w = int(input().split()[1])
-
-for _ in range(t):
-    game = list(range(1, 1022))
-    while True:
-        p = int(input())
-        if p == -2 or p == -3:
+def main():
+    input = sys.stdin.read
+    data = input().split()
+    
+    index = 0
+    T = int(data[index])
+    W = int(data[index + 1])
+    index += 2
+    
+    for _ in range(T):
+        P = int(data[index])
+        index += 1
+        
+        if P == -1:
+            sys.exit(1)
+        
+        if P == -3:
             break
-        q = random.randint(max(1, p-1010+1), min(p, len(game)-p-1010+1))
-        print(q)
+        
+        Q = randint(P, min(P + 9, 50))
+        print(Q)
+        sys.stdout.flush()
+
+if __name__ == "__main__":
+    main()

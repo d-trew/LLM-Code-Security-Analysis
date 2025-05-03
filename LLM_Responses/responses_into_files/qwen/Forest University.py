@@ -1,27 +1,48 @@
-from math import comb
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    M = int(input())
-    cool_words = [input().upper() for _ in range(M)]
-    prerequisites = {}
-    for i in range(N):
-        prereq, course = input().split()
-        if len(prereq) > 1:
-            prerequisites[course] = prereq
-    sequences = set()
-    def dfs(course, path):
-        if course not in prerequisites:
-            sequences.add(''.join([c[0] for c in path]))
-        else:
-            for c in prerequisites[course]:
-                dfs(c, path + [(course, c)])
-    dfs('C', [])
-    answers = []
+from itertools import permutations
+
+def count_substrings(s, sub):
+    return s.count(sub)
+
+def solve(N, M, prerequisites, cool_words):
+    courses = list(range(1, N + 1))
+    basic_courses = [i for i in range(1, N + 1) if i not in prerequisites.values()]
+    advanced_courses = [i for i in range(1, N + 1) if i in prerequisites.values()]
+    
+    valid_sequences = []
+    for perm in permutations(courses):
+        valid = True
+        for course in advanced_courses:
+            prereq = prerequisites[course]
+            if perm.index(course) < perm.index(prereq):
+                valid = False
+                break
+        if valid:
+            valid_sequences.append(perm)
+    
+    results = []
     for cool_word in cool_words:
         count = 0
-        for seq in sequences:
-            if cool_word in seq:
+        for seq in valid_sequences:
+            if any(count_substrings(''.join(map(str, seq)), cool_word[:i+1]) > 0 for i in range(len(cool_word))):
                 count += 1
-        answers.append(f'{count/len(sequences):.4f}')
-    print('Case #{}: {}'.format(_, ' '.join(answers)))
+        results.append(round(count / len(valid_sequences), 2))
+    
+    return results
+
+# Read input
+T = int(input())
+results = []
+for t in range(1, T + 1):
+    N, M = map(int, input().split())
+    prerequisites = {}
+    for _ in range(N - 1):
+        a, b = map(int, input().split())
+        prerequisites[b] = a
+    cool_words = [input() for _ in range(M)]
+    
+    result = solve(N, M, prerequisites, cool_words)
+    results.append(f"Case #{t}: {''.join(map(str, result))}")
+
+# Print output
+for res in results:
+    print(res)

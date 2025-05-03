@@ -1,26 +1,56 @@
-import fractions
-def solve_case(cards):
-    start = int(input())
-    operations = []
-    for _ in range(int(input())):
-        operation, operand = input().split()
-        operations.append((operation == '+', int(operand)))
-    max_result = float('-inf')
-    for order in range(len(list(map(lambda x: 1 if x[0] == '-' else -1, operations)))):
-        result = start
-        for op, operand in operations:
-            if op:
-                result += operand
-            else:
-                result /= operand
-        max_result = max(max_result, result)
-    gcd = lambda a, b: a if not b else gcd(b, a % b)
-    z = 1
-    for op, operand in operations:
-        if op:
-            z = abs(z * operand)
-        else:
-            z = abs(z * operand)
-    y = int(max_result * z)
-    z = int(gcd(z, y))
-    return f"Case #{int(input()) + 1}: {y//z} {z}"
+import sys
+
+def solve(cards):
+    """
+    Given a list of cards, return the maximum possible final value as an irreducible fraction with a positive denominator.
+    """
+    # Initialize the starting value and the number of cards
+    start_value = 0
+    num_cards = len(cards)
+
+    # Initialize the denominator and the numerator for the final result
+    denom = 1
+    num = 0
+
+    # Iterate through each card in the list
+    for i in range(num_cards):
+        op, operand = cards[i]
+
+        # Apply the operation to the starting value
+        if op == '+':
+            start_value += operand
+        elif op == '-':
+            start_value -= operand
+        elif op == '*':
+            start_value *= operand
+        else:  # op == '/'
+            start_value //= operand
+
+    # Return the final result as an irreducible fraction with a positive denominator
+    return gcd(start_value, denom), start_value // gcd(start_value, denom)
+
+def gcd(a, b):
+    """
+    Calculate the greatest common divisor of two numbers.
+    """
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+# Read input
+num_cases = int(input())
+cases = []
+for i in range(num_cases):
+    start_value, num_cards = map(int, input().split())
+    cards = []
+    for _ in range(num_cards):
+        op, operand = input().split()
+        operand = int(operand)
+        cards.append((op, operand))
+    cases.append((start_value, num_cards, cards))
+
+# Print output
+for case in cases:
+    start_value, num_cards, cards = case
+    result = solve(cards)
+    print("Case #{}: {}/{}".format(i + 1, result[0], result[1]))

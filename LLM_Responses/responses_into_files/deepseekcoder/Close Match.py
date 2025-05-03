@@ -1,14 +1,23 @@
-from itertools import product
+def solve(c, j):
+    c = list(c)
+    j = list(j)
+    
+    for i in range(len(c)):
+        if c[i] == '?' and j[i] != '?':
+            c[i] = str((int(j[i]) + 10 - int(c[i-1])) % 10)
+        elif j[i] == '?' and c[i] != '?':
+            j[i] = str((int(c[i]) + 10 - int(j[i-1])) % 10)
+    
+    for i in range(len(c)-1, -1, -1):
+        if c[i] == '?' and j[i] != '?':
+            c[i] = str((int(j[i]) + 10 - int(c[(i+1)%len(c)])) % 10)
+        elif j[i] == '?' and c[i] != '?':
+            j[i] = str((int(c[i]) + 10 - int(j[(i+1)%len(j)])) % 10)
+    
+    return "".join(c), "".join(j)
 
 T = int(input())
-for t in range(1, T + 1):
+for t in range(T):
     C, J = input().split()
-    min_diff = float('inf')
-    result_C, result_J = None, None
-    for c, j in product(map(int, '0123456789'), repeat=len(C)):
-        if str(c) == C.replace('?','0') and str(j) == J.replace('?','0'):
-            diff = abs(int(str(c)) - int(str(j)))
-            if diff < min_diff:
-                min_diff = diff
-                result_C, result_J = str(c), str(j)
-    print(f"Case #{t}: {result_C} {result_J}")
+    c, j = solve(C, J)
+    print("Case #{}: {}, {}".format(t+1, c, j))

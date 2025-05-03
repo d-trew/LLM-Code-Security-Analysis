@@ -1,24 +1,46 @@
-T = int(input())
-for t in range(1, T+1):
-    B, M = map(int, input().split())
-    if M % (B-1) != 0:
-        print(f"Case #{t}: IMPOSSIBLE")
-    else:
-        slides = [[0]*B for _ in range(B)]
-        for _ in range(M//((B-1))):
-            start, end = map(int, input().split())
-            if start == B:
-                break
-            if start < end:
-                slides[start][end] = 1
+def build_slides(B, M):
+    if B == 2:
+        if M == 1:
+            return "POSSIBLE\n0\n"
+        else:
+            return "IMPOSSIBLE\n"
+    
+    if M < (B - 1) or M > ((B * (B - 1)) // 2):
+        return "IMPOSSIBLE\n"
+    
+    result = ["POSSIBLE"]
+    for i in range(1, B + 1):
+        row = []
+        for j in range(1, B + 1):
+            if i == j:
+                row.append('0')
+            elif i < j and (M > (B - 2) or M == ((i * (i - 1)) // 2)):
+                row.append('1')
+                M -= 1
             else:
-                slides[end][start] = 1
-        print(f"Case #{t}: POSSIBLE")
-        for i in range(B-1):
-            for j in range(i+1, B):
-                if (M//((B-1))) % 2 == 0:
-                    slides[i+1][j] = 1
-                else:
-                    slides[i][j] = 1
-        for row in slides:
-            print(' '.join(str(cell) for cell in row))
+                row.append('0')
+        result.append(''.join(row))
+    
+    return '\n'.join(result)
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        B = int(data[index])
+        M = int(data[index + 1])
+        index += 2
+        result = build_slides(B, M)
+        results.append(result)
+    
+    for i, res in enumerate(results):
+        print(f"Case #{i+1}: {res}")
+
+if __name__ == "__main__":
+    main()

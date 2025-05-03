@@ -1,29 +1,35 @@
-from collections import deque
-
-def gooli_parade(B, S):
-    graph = [[] for _ in range(B+1)]
-    for i in range(S):
-        u, v = map(int, input().split())
-        graph[u].append(v)
+def find_parade_route(T):
+    results = []
     
-    visited = [[False] * (B + 1) for _ in range(2 ** B)]
-    queue = deque([(1, 0)])
-    visited[0][1] = True
-    
-    while queue:
-        state, building = queue.popleft()
-        if building == B:
-            return state
+    for t in range(1, T + 1):
+        B, S = map(int, input().split())
+        graph = [[] for _ in range(B)]
         
-        for next_building in graph[building]:
-            new_state = state ^ (1 << next_building)
-            if not visited[new_state][next_building]:
-                visited[new_state][next_building] = True
-                queue.append((new_state, next_building))
+        for _ in range(S):
+            U_i, V_i = map(int, input().split())
+            graph[U_i - 1].append(V_i - 1)
+        
+        def dfs(node, path):
+            if len(path) > 10**6:
+                return False
+            if node == 0 and len(path) != B * 2 + 1:
+                return False
+            if node == 0 and len(path) == B * 2 + 1:
+                results.append((t, path))
+                return True
+            visited[node] = True
+            for neighbor in graph[node]:
+                if not visited[neighbor]:
+                    dfs(neighbor, path + [neighbor])
+            visited[node] = False
+        
+        visited = [False] * B
+        dfs(0, [0])
     
-    return 'IMPOSSIBLE'
+    for case, route in results:
+        print(f"Case #{case}: {len(route)}")
+        print(" ".join(map(str, route)))
 
+# Example usage:
 T = int(input())
-for i in range(T):
-    B, S = map(int, input().split())
-    print(f"Case #{i+1}: {gooli_parade(B, S)}")
+find_parade_route(T)

@@ -1,34 +1,22 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    Q = int(input()) * T
-    order = [-1] * N
-    queries = []
-    for _ in range(Q):
-        i, j, k = map(int, input().split())
-        queries.append((i, j, k))
-    query_count = 0
-    left = 0
-    right = N - 1
-    while query_count < Q:
-        if left + 1 <= right - 1:
-            mid = (left + right) // 2
-            order[mid] = query_count
-            query_count += 1
-            queries[query_count-1] = (min(order), mid, max(order))
-            for i in range(3):
-                if queries[query_count][i] == min(order):
-                    left = mid
-                elif queries[query_count][i] == mid:
-                    continue
-                else:
-                    right = mid
-        else:
-            order[left] = query_count
-            query_count += 1
-            for i in range(3):
-                if queries[query_count-1][i] == left:
-                    left += 1
-                elif queries[query_count-1][i] == right:
-                    right -= 1
-    print(' '.join(map(str, order)))
+def find_median_order(T, N, Q):
+    for _ in range(T):
+        elements = list(range(1, N + 1))
+        while len(elements) > 1:
+            if len(elements) == 3:
+                i, j, k = elements
+                l = int(input(f"{i} {j} {k}\n"))
+                if l not in [i, j, k]:
+                    return -1
+                elements.remove(l)
+            else:
+                mid = len(elements) // 2
+                i, j, k = elements[mid - 1], elements[mid], elements[mid + 1]
+                l = int(input(f"{i} {j} {k}\n"))
+                if l not in [i, j, k]:
+                    return -1
+                elements.remove(l)
+        print(elements[0])
+
+# Read input
+T, N, Q = map(int, input().split())
+find_median_order(T, N, Q)

@@ -1,31 +1,34 @@
+# Test cases
 T = int(input())
-for _ in range(T):
+for t in range(T):
     R, C = map(int, input().split())
-    son_location = None
+    matrix = []
     for i in range(R):
-        row = input()
-        if 'N' in row:
-            son_location = (i, row.index('N'))
-        if 'M' in row:
-            Marlin_location = (i, row.index('M'))
-    if not son_location:
-        print("Case #{}: IMPOSSIBLE".format(_ + 1))
-        continue
-    directions = []
-    while True:
-        x, y = Marlin_location
-        dx, dy = 0, 0
-        if 'N' in row[x+1]: 
-            dx += 1
-        elif 'S' in row[x-1]:
-            dx -= 1
-        if 'E' in row[y+1]:
-            dy += 1
-        elif 'W' in row[y-1]:
-            dy -= 1
-        directions.append('N' if dx > 0 else 'S' if dx < 0 else '')
-        directions.append('E' if dy > 0 else 'W' if dy < 0 else '')
-        Marlin_location = (x + dx, y + dy)
-        if Marlin_location == son_location:
-            break
-    print("Case #{}: {}".format(_ + 1, len(directions)))
+        matrix.append([])
+        for j in range(C):
+            matrix[i].append(input()[j])
+    # Find Marlin and his son's positions
+    marlin_row, marlin_col = -1, -1
+    son_row, son_col = -1, -1
+    for i in range(R):
+        for j in range(C):
+            if matrix[i][j] == 'M':
+                marlin_row, marlin_col = i, j
+            elif matrix[i][j] == 'N':
+                son_row, son_col = i, j
+    # Find the shortest path from Marlin to his son
+    visited = set()
+    queue = [(marlin_row, marlin_col)]
+    while queue:
+        row, col = queue.pop(0)
+        for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            new_row, new_col = row + dr, col + dc
+            if 0 <= new_row < R and 0 <= new_col < C and matrix[new_row][new_col] not in ['#', 'M'] and (new_row, new_col) not in visited:
+                queue.append((new_row, new_col))
+                if new_row == son_row and new_col == son_col:
+                    break
+        else:
+            continue
+        break
+    # Print the shortest path
+    print('Case #{}: {}'.format(t+1, len(queue)))

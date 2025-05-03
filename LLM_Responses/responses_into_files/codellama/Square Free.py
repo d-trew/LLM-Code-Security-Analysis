@@ -1,26 +1,37 @@
+import sys
+input = sys.stdin.readline
+
+def solve(R, C, S):
+    # Initialize the matrix with the correct number of forward slash diagonals
+    matrix = [[0 for _ in range(C)] for _ in range(R)]
+    for i in range(R):
+        for j in range(C):
+            if S[i] > 0:
+                matrix[i][j] = '/'
+                S[i] -= 1
+            elif S[i] < 0:
+                matrix[i][j] = '\\'
+                S[i] += 1
+    # Check if the matrix is square free
+    for i in range(R):
+        for j in range(C):
+            if matrix[i][j] == '/':
+                if i + 1 < R and matrix[i+1][j] == '\\' or j + 1 < C and matrix[i][j+1] == '/':
+                    return "IMPOSSIBLE"
+            elif matrix[i][j] == '\\':
+                if i - 1 >= 0 and matrix[i-1][j] == '/' or j - 1 >= 0 and matrix[i][j-1] == '\\':
+                    return "IMPOSSIBLE"
+    # Print the matrix
+    for i in range(R):
+        print("".join(matrix[i]))
+    return "POSSIBLE"
+
+# Read input
 T = int(input())
-for _ in range(T):
+for case in range(1, T+1):
     R, C = map(int, input().split())
-    rows = list(map(int, input().split()))
-    cols = list(map(int, input().split()))
-    if sum(rows) != sum(cols):
-        print("IMPOSSIBLE")
+    S = list(map(int, input().split()))
+    if solve(R, C, S) == "IMPOSSIBLE":
+        print("Case #%d: IMPOSSIBLE" % case)
     else:
-        matrix = [['/' for _ in range(C)] for _ in range(R)]
-        row_idx = 0
-        col_idx = 0
-        forward_diags = 0
-        backslash_diags = 0
-        for r in rows:
-            for _ in range(r):
-                if forward_diags < sum(cols) // 2:
-                    matrix[row_idx][col_idx] = '/'
-                    forward_diags += 1
-                else:
-                    matrix[row_idx][col_idx] = '\\'
-                    backslash_diags += 1
-                col_idx = (col_idx + 1) % C
-            row_idx += 1
-        print("POSSIBLE")
-        for row in matrix:
-            print(''.join(row))
+        print("Case #%d: POSSIBLE" % case)

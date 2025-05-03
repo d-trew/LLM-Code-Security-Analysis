@@ -1,27 +1,39 @@
-from math import inf
-def solve():
-    T = int(input())
-    for _ in range(T):
-        N, W, H = map(int, input().split())
-        P, Q, R, S = map(int, input().split())
-        A = [0] * N
-        B = [0] * N
-        for i in range(N):
-            X, Y, a, b = map(float, input().split())
-            A[i] = int(a)
-            B[i] *int(b)
-        a, b = inf, 0
-        for i in range(N):
-            area_left = max(0, (X + P - W) * Q - ((X + P) * Y + Q * H))
-            area_right = max(0, (R - X) * S - ((R * Y + S * H)))
-            a_left, b_left = 0, 0
-            for j in range(i):
-                a_left += max(0, (X + P - W) * Q - ((X + P) * Y + Q * H)) / (A[j] + B[j])
-                b_left += max(0, (R - X) * S - ((R * Y + S * H)))
-            a_right = 0
-            for j in range(i, N):
-                a_right -= max(0, (X + P - W) * Q - ((X + P) * Y + Q * H)) / (A[j] + B[j])
-                b_right += max(0, (R - X) * S - ((R * Y + S * H)))
-            if abs(a_left + a_right - b_left - b_right) < abs(a - b):
-                a, b = a_left + a_right, b_left + b_right
-        print(f"Case # {_ + 1}: {a} / {b}")
+Here's the Python code for this problem based on your description:
+
+
+def solve(N, W, H, P, Q, R, S, patches):
+    # Calculate area of each patch and total enjoyment from all patches
+    areas = []
+    enjoyments_A = []
+    enjoyments_B = []
+    for Xi, Yi, Ai, Bi in patches:
+        x1 = Xi
+        y1 = Yi
+        x2 = Xi + P
+        y2 = Yi + Q
+        x3 = Xi + R
+        y3 = Yi + S
+        area = 0.5 * abs((x2 - x1)*(y3 - y1) - (x3 - x1)*(y2 - y1))  # Calculate triangle area using cross product
+        enjoyment_A = Ai * area / ((P + R) * (Q + S))   # Enjoyment from eating a part of the patch
+        enjoyment_B = Bi * area / ((P + R) * (Q + S))   # Enjoyment from your twin eating a part of the patch
+        areas.append(area)
+        enjoyments_A.append((x1, x2, enjoyment_A))
+        enjoyments_B.append((x1, x2, enjoyment_B))
+    enjoyments_A.sort()  # Sort by starting point
+    enjoyments_B.sort()
+    
+    # Calculate cumulative sum of enjoyments from left to right
+    cumsum_A = [0] * (N + 1)
+    cumsum_B = [0] * (N + 1)
+    for i in range(N):
+        cumsum_A[i+1] = cumsum<｜begin▁of▁sentence｜>_A[i] + enjoyments_A[i][2]
+        cumsum_B[i+1] = cumsum<｜begin▁of▁sentence｜>_B[i] + enjoyments_B[i][2]
+    
+    # Calculate minimum difference in total enjoyments
+    min_diff = float('inf')
+    for i in range(N):
+        diff = abs(cumsum_A[i+1] - cumsum_B[-i-2])  # Sum of enjoyments on left side and right side after cut
+        if diff < min_diff:
+            min_diff = diff
+            
+    return min_diff

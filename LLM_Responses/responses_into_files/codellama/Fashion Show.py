@@ -1,52 +1,49 @@
-from collections import deque
-
-def solve_case(n, m, preplaced_models):
-    max_style = 0
-    best_solution = []
-    
-    for _ in range(4**m):
-        current_models = [0] * (n * n)
-        for model in preplaced_models:
-            current_models[model[1]*n+model[0]] = model[2]
-        
-        visited = set()
-        queue = deque([(0, 0, 0)])
-        while queue:
-            x, y, style = queue.popleft()
-            if (x, y) not in visited:
-                visited.add((x, y))
-                current_style = style
-                if current_models[x*n+y] == '+':
-                    current_style += 1
-                elif current_models[x*n+y] == 'x':
-                    current_style += 1
-                elif current_models[x*n+y] == 'o':
-                    current_style += 2
-                
-                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                    nx, ny = x+dx, y+dy
-                    if 0 <= nx < n and 0 <= ny < n and (nx, ny) not in visited:
-                        queue.append((nx, ny, current_style))
-                
-                if len(visited) == n * n:
-                    max_style = max(max_style, current_style)
-                    best_solution = [(i*n+j, 'o' if current_models[i*n+j] == '+' else ('x' if current_models[i*n+j] == 'x' else '.'), i+1, j+1) for i in range(n) for j in range(n) if (i, j) not in visited and current_models[i*n+j] != 'o']
-    
-    return max_style, len(best_solution)
-
+# Test cases
 T = int(input())
-for t in range(1, T+1):
-    n, m = map(int, input().split())
-    preplaced_models = []
-    for _ in range(m):
-        x, y, model_type = input().split()
-        x, y = int(x), int(y)
-        if model_type == '+':
-            model_type = 'o'
-        elif model_type == 'x':
-            model_type = 'o'
-        preplaced_models.append((y, x, model_type[0]))
-    style, added_models = solve_case(n, m, preplaced_models)
-    print(f"Case #{t}: {style} {len(added_models)}")
-    for model in added_models:
-        print(*model)
+for t in range(T):
+    N, M = map(int, input().split())
+    grid = [['.' for _ in range(N)] for _ in range(N)]
+    pre_placed = []
+    for i in range(M):
+        type, row, col = input().split()
+        if type == '+':
+            grid[int(row) - 1][int(col) - 1] = '+'
+        elif type == 'x':
+            grid[int(row) - 1][int(col) - 1] = 'x'
+        else:
+            grid[int(row) - 1][int(col) - 1] = 'o'
+        pre_placed.append((type, int(row), int(col)))
+    # Find maximum number of style points
+    max_points = 0
+    for i in range(N):
+        for j in range(N):
+            if grid[i][j] == '.':
+                continue
+            point = 1
+            if i > 0 and grid[i - 1][j] != '.':
+                point += 2
+            if j > 0 and grid[i][j - 1] != '.':
+                point += 2
+            if abs(i - j) > 0 and (grid[i - 1][j - 1] != '.' or grid[i + 1][j - 1] != '.' or grid[i - 1][j + 1] != '.' or grid[i + 1][j + 1] != '.'):
+                point += 2
+            max_points = max(max_points, point)
+    # Find maximum number of models
+    max_models = 0
+    for i in range(N):
+        for j in range(N):
+            if grid[i][j] == '.':
+                continue
+            count = 1
+            if i > 0 and grid[i - 1][j] != '.':
+                count += 1
+            if j > 0 and grid[i][j - 1] != '.':
+                count += 1
+            if abs(i - j) > 0 and (grid[i - 1][j - 1] != '.' or grid[i + 1][j - 1] != '.' or grid[i - 1][j + 1] != '.' or grid[i + 1][j + 1] != '.'):
+                count += 1
+            max_models = max(max_models, count)
+    # Output
+    print("Case #" + str(t + 1) + ": " + str(max_points) + " " + str(max_models))
+    for type, row, col in pre_placed:
+        if grid[row - 1][col - 1] == '.':
+            continue
+        print(type + " " + str(row) + " " + str(col))

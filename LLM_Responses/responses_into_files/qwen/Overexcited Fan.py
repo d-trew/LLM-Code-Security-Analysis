@@ -1,8 +1,6 @@
-T = int(input())
-for t in range(1, T+1):
-    x, y, m = [int(i) for i in input().split()] + list(input().strip())
+def min_time_to_get_picture(X, Y, M):
     px, py = 0, 0
-    for move in m:
+    for move in M:
         if move == 'N':
             py += 1
         elif move == 'S':
@@ -11,9 +9,20 @@ for t in range(1, T+1):
             px += 1
         elif move == 'W':
             px -= 1
-    dx = abs(x - px)
-    dy = abs(y - py)
-    if min(dx, dy) <= 5:
-        print(f"Case #{t}: {min(dx, dy)}")
-    else:
-        print("Case #{}: IMPOSSIBLE".format(t))
+        if abs(px) <= X and abs(py) <= Y:
+            return M.index(move) + 1
+    return "IMPOSSIBLE"
+
+def solve():
+    T = int(input())
+    results = []
+    for _ in range(T):
+        X, Y, M = input().split()
+        X, Y = int(X), int(Y)
+        result = min_time_to_get_picture(X, Y, M)
+        results.append(result)
+    for i, result in enumerate(results, 1):
+        print(f"Case #{i}: {result}")
+
+if __name__ == "__main__":
+    solve()

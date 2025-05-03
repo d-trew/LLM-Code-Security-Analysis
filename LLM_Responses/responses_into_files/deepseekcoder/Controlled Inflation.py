@@ -1,15 +1,21 @@
+def min_button_presses(customers):
+    n = len(customers)
+    products = [sorted([i for i in customer]) for customer in customers]
+    presses = 0
+    current_pressure = 0
+    
+    for product in products:
+        for target_pressure in product:
+            if target_pressure > current_pressure:
+                presses += target_pressure - current_pressure
+                current_pressure = target_pressure
+            else:
+                presses += current_pressure - target_pressure + 1
+                current_pressure = target_pressure + 1
+    return presses
+
 T = int(input())
-for _ in range(T):
+for t in range(1, T+1):
     N, P = map(int, input().split())
-    pressures = [list(map(int, input().split())) for _ in range(N)]
-    prev_target = 0
-    button_presses = 0
-    for customer in pressures:
-        for product_pressure in customer:
-            if product_pressure != prev_target:
-                if product_pressure > prev_target:
-                    button_presses += product_pressure - prev_target
-                else:
-                    button_presses -= prev_target - product_pressure
-            prev_target = product_pressure
-    print(f"Case # {_ + 1}: {button_presses}")
+    customers = [list(map(int, input().split())) for _ in range(N)]
+    print('Case #{}: {}'.format(t, min_button_presses(customers)))

@@ -1,26 +1,32 @@
-import fractions
-def solve_case(cards):
-    start = int(input())
-    operations = []
-    for _ in range(int(input())):
-        operation, operand = input().split()
-        operations.append((operation == '+', int(operand)))
-    max_result = float('-inf')
-    for order in range(len(list(map(lambda x: 1 if x[0] == '-' else -1, operations)))):
-        result = start
-        for op, operand in operations:
-            if op:
-                result += operand
-            else:
-                result /= operand
-        max_result = max(max_result, result)
-    gcd = lambda a, b: a if not b else gcd(b, a % b)
-    z = 1
-    for op, operand in operations:
-        if op:
-            z = abs(z * operand)
-        else:
-            z = abs(z * operand)
-    y = int(max_result * z)
-    z = int(gcd(z, y))
-    return f"Case #{int(input()) + 1}: {y//z} {z}"
+from fractions import Fraction
+import sys
+
+def solve():
+    C = int(input().split()[1])
+    cards = [tuple(map(str, input().split())) for _ in range(C)]
+    
+    dp = [[Fraction(0) for _ in range(2*len(cards)+1)] for _ in range(len(cards)+1)]
+    dp[0][0] = Fraction(input())
+    
+    for i in range(C):
+        op, v = cards[i]
+        v = int(v)
+        
+        for j in reversed(range(2*len(cards))):
+            for k in reversed(range(j+1)):
+                if dp[i][k]:
+                    if op == '+':
+                        dp[i+1][j] = max(dp[i+1][j], dp[i][k] + v)
+                    elif op == '-':
+                        dp[i+1][j] = max(dp[i+1][j], dp[i][k] - v)
+                    elif op == '*':
+                        dp[i+1][j+1] = max(dp[i+1][j+1], dp[i][k] * v)
+                    else: # '/'
+                        if v != 0:
+                            dp[i+1][j+2] = max(dp[i+1][j+2], dp[i][k] / v)
+    
+    return str(max((x for x in dp[-1] if x.denominator == 1 and x != 0), key=lambda f: abs(f)))
+
+T = int(input())
+for t in range(1, T+1):
+    print('Case #{}: {}'.format(t, solve()))

@@ -1,12 +1,19 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    X = list(map(int, input().split()))
-    x = [str(i) for i in X]
-    res = 0
+def min_operations_to_sort(N, X):
+    operations = 0
     for i in range(1, N):
-        while len(x[i-1]) < len(x[i]):
-            if not str(int(x[i][:-1]) + 1).endswith('9'):
-                break
-            res += 1
-    print(f"Case #{_+1}: {res}")
+        if X[i] <= X[i - 1]:
+            diff = X[i - 1] - X[i] + 1
+            operations += diff
+            X[i] = X[i - 1] + 1
+    return operations
+
+def solve():
+    T = int(input())
+    for t in range(1, T + 1):
+        N = int(input())
+        X = list(map(int, input().split()))
+        result = min_operations_to_sort(N, X)
+        print(f"Case #{t}: {result}")
+
+if __name__ == "__main__":
+    solve()

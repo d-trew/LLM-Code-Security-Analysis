@@ -1,15 +1,35 @@
-import random
-t, n, k = map(int, input().split())
-for _ in range(t):
-    balls = list(map(int, input().split()))
-    boxes = [i for i in range(1, n+1)]
-    color_box = {}
-    for i in range(k):
-        for j in range(n):
-            if random.random() < 0.5:
-                temp = boxes[boxes.index(balls[j])]
-                balls[j] = balls[balls.index(temp)]
-                boxes.remove(temp)
-        for j in range(len(boxes)):
-            color_box.setdefault((j+1)%3, []).append(boxes[j])
-    print(*balls)
+import sys
+
+T, N, K = map(int, sys.stdin.readline().split())
+
+# Read the initial array of integers from stdin
+arr = list(map(int, sys.stdin.readline().split()))
+
+# Create a dictionary to store the frequency of each integer in the array
+freq = {}
+for i in arr:
+    if i not in freq:
+        freq[i] = 1
+    else:
+        freq[i] += 1
+
+# Create an array to store the sorted integers
+sorted_arr = []
+
+# While there are still integers in the array that have not been sorted
+while len(sorted_arr) < N:
+
+    # Find the integer with the highest frequency and add it to the sorted array
+    max_freq = 0
+    for i in freq:
+        if freq[i] > max_freq:
+            max_freq = freq[i]
+            max_val = i
+
+    sorted_arr.append(max_val)
+
+    # Decrement the frequency of the integer that was added to the sorted array
+    freq[max_val] -= 1
+
+# Print the final sorted array
+print(' '.join(map(str, sorted_arr)))

@@ -1,19 +1,37 @@
-t, n, c = map(int, input().split())
-ink_spent = [0] * t
-pens_left = list(range(1, n+1))
-while True:
-    print(' '.join(map(str, pens_left)))
-    ink_spent += list(map(int, input().split()))
-    if all(i >= 5 for i in sum(zip(*[list(range(i, i+n)) for i in range(n)]), fillvalue=0)):
-        break
-print(0*t)
-pens_taken = []
-for i in range(t):
-    pens_taken.append(' '.join(map(str, sorted(pens_left))))
-    if i < t-1:
-        print(0*t)
-        for _ in range(t):
-            print(0)
+import sys
 
+def readline_int_list():
+    return list(map(int, input().split()))
 
-Note: This code assumes that the input is a single line containing three integers `T`, `N`, and `C`. The output consists of multiple lines, each containing either one integer or two integers.
+t, n, c = readline_int_list()
+
+for _ in range(t):
+    print(0)
+    sys.stdout.flush()
+    a1 = readline_int_list()[0]
+    
+    if a1 == 0:
+        continue
+    
+    print(n)
+    sys.stdout.flush()
+    a2 = readline_int_list()[0]
+    
+    if a2 == 0:
+        continue
+    
+    print((a1 + 1) % n, (a2 + 1) % n)
+    sys.stdout.flush()
+
+print(*([0] * t))
+sys.stdout.flush()
+
+pens = []
+for _ in range(t):
+    p1, p2 = readline_int_list()
+    pens.append((p1, p2))
+
+succeeded = sum(1 for p1, p2 in pens if p1 != 0 and p2 != 0)
+print(succeeded >= c)
+
+sys.exit()

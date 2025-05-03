@@ -1,24 +1,43 @@
-def fractal_artwork(K, C):
-    artwork = [''] * K
-    for c in range(C):
-        new_artwork = ''
-        for tile in artwork:
-            if 'L' in tile:
-                new_artwork += (K*['L'] + tile)[1:]
-            else:
-                new_artwork += tile + K*'G'
-        artwork = new_artwork
-    return artwork
+def solve_fractal_artwork(K, C, S):
+    if K == 1:
+        return [1]
+    
+    if K <= S:
+        return list(range(1, K + 1))
+    
+    if (K - 1) * (2 ** (C - 1)) < S:
+        return "IMPOSSIBLE"
+    
+    tiles_to_clean = []
+    for i in range(S):
+        tile_position = (i + 1) * ((K - 1) // (2 ** (C - 1)))
+        tiles_to_clean.append(tile_position)
+    
+    return tiles_to_clean
 
-def check_for_gold(K, C):
-    for c in range(C):
-        complexity = 0
-        while complexity < C:
-            if 'G' in fractal_artwork(K, complexity)[K//2]:
-                return [1]
-            complexity += 1
-    return ['IMPOSSIBLE']
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        K = int(data[index])
+        C = int(data[index + 1])
+        S = int(data[index + 2])
+        index += 3
+        
+        result = solve_fractal_artwork(K, C, S)
+        if isinstance(result, str):
+            results.append(f"Case #{_ + 1}: {result}")
+        else:
+            results.append(f"Case #{_ + 1}: {' '.join(map(str, result))}")
+    
+    for result in results:
+        print(result)
 
-for t in range(int(input())):
-    K, C, S = map(int, input().split())
-    print('Case #{}: {}'.format(t+1, check_for_gold(K, C)))
+if __name__ == "__main__":
+    main()

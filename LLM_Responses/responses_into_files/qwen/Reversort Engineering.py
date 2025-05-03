@@ -1,16 +1,27 @@
+def reversort_engineering(N, C):
+    if N * (N - 1) // 2 < C or C % 2 != N % 2:
+        return "IMPOSSIBLE"
+    
+    if N == 1:
+        return "1"
+    
+    result = list(range(1, N + 1))
+    cost = 0
+    
+    for i in range(N - 1):
+        j = C - (N - i - 1)
+        result[:j] = reversed(result[:j])
+        cost += j
+        if cost == C:
+            break
+    
+    return " ".join(map(str, result))
+
 T = int(input())
-for _ in range(T):
+results = []
+for t in range(1, T + 1):
     N, C = map(int, input().split())
-    if C < N:
-        print('IMPOSSIBLE')
-    else:
-        res = []
-        for i in range(1, N+1):
-            res.append(N-i+1)
-        while len(res) > 0 and sum(range(1, len(res)+1)) <= C:
-            j = len(res)
-            res = res[:j//2][::-1] + res[j//2:]
-        if sum(range(1, len(res)+1)) == C:
-            print('Case #{}: {}'.format(_, ' '.join(map(str, res))))
-        else:
-            print('IMPOSSIBLE')
+    results.append(f"Case #{t}: {reversort_engineering(N, C)}")
+
+for result in results:
+    print(result)

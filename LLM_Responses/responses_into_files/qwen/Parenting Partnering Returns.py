@@ -1,23 +1,33 @@
-import sys
-
-def find_schedule(activities):
-    activities.sort()
-    cam_activities = []
-    jamie_activities = []
-
-    for start, end in activities:
-        if not cam_activities or cam_activities[-1][1] < start:
-            cam_activities.append((start, end))
+def assign_activities(T, cases):
+    results = []
+    
+    for i in range(T):
+        N = cases[i][0]
+        activities = sorted(cases[i][1:], key=lambda x: (x[0], -x[1]))
+        
+        Cameron = [False] * 24 * 60
+        Jamie = [False] * 24 * 60
+        
+        for start, end in activities:
+            if not any(Cameron[s:e] or Jamie[s:e] for s in range(start) for e in range(end)):
+                Cameron[start:end] = True
+            else:
+                Jamie[start:end] = True
+        
+        if all(Cameron[start:end] or Jamie[start:end] for start, end in activities):
+            results.append(f"Case #{i+1}: {''.join('C' if Cameron[s] else 'J' for s, e in activities)}")
         else:
-            jamie_activities.append((start, end))
+            results.append(f"Case #{i+1}: IMPOSSIBLE")
+    
+    return results
 
-    return 'C' * len(cam_activities) + 'J' * len(jamie_activities)
+# Example usage
+T = 4
+cases = [
+    (3, [(1800, 2000), (1900, 2100), (2200, 2300)]),
+    (3, [(60, 120), (90, 150), (120, 180)]),
+    (3, [(100, 200), (150, 250), (200, 300)]),
+    (4, [(60, 120), (180, 240), (300, 360), (420, 480)])
+]
 
-T = int(sys.stdin.readline().strip())
-for t in range(1, T+1):
-    N = int(sys.stdin.readline().strip())
-    activities = []
-    for i in range(N):
-        start, end = map(int, sys.stdin.readline().split())
-        activities.append((start, end))
-    print(f"Case #{t}: {find_schedule(activities) if all(not overlap(cam_activities, jamie_activities)) else 'IMPOSSIBLE'}")
+print(assign_activities(T, cases))

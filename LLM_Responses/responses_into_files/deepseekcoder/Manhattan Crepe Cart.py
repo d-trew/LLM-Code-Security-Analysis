@@ -1,29 +1,23 @@
-import heapq
-def find_cart():
+def solve():
     T = int(input())
-    for _ in range(T):
+    for t in range(1, T+1):
         P, Q = map(int, input().split())
-        directions = {}
+        count = [[0]*(Q+2) for _ in range(Q+2)]
+        direction = {'N': (0, 1), 'S': (0, -1), 'E': (1, 0), 'W': (-1, 0)}
         for _ in range(P):
-            x, y, direction = input().split()
-            x, y = int(x), int(y)
-            if direction == 'N':
-                directions[(x, y + 1)] = directions.get((x, y + 1), 0) + 1
-            elif direction == 'S':
-                directions[(x, y - 1)] = directions.get((x, y - 1), 0) + 1
-            elif direction == 'E':
-                directions[(x + 1, y)] = directions.get((x + 1, y), 0) + 1
-            elif direction == 'W':
-                directions[(x - 1, y)] = directions.get((x - 1, y), 0) + 1
-        min_heap = []
-        for location, count in directions.items():
-            if location[0] < Q and location[1] < Q:
-                heapq.heappush(min_heap, (-count, *location))
-        cart_location = None
+            Xi, Yi, Di = input().split()
+            Xi, Yi = int(Xi)+1, int(Yi)+1
+            dx, dy = direction[Di]
+            x, y = Xi + dx, Yi + dy
+            while 1 <= x <= Q + 1 and 1 <= y <= Q + 1:
+                count[x][y] += 1
+                x += dx
+                y += dy
         max_count = 0
-        while min_heap:
-            count, x, y = heapq.heappop(min_heap)
-            if count > max_count:
-                max_count = count
-                cart_location = (x, y)
-        print(f'Case #{_ + 1}: {cart_location[0]} {cart_location[1]}')
+        for i in range(Q+2):
+            for j in range(i, Q+2):
+                if (max_count < min(i-1, j-1)):
+                    max_count = count[i][j]
+                    x, y = i - 1, j - 1
+        print('Case #{}: {} {}'.format(t, x, y))
+solve()

@@ -1,17 +1,25 @@
-T = int(input())
-for _ in range(T):
-    N, A, B = map(int, input().split())
-    U = list(map(int, input().split()))
-    stack = [(0, [])]
-    result = None
-    while stack:
-        i, path = stack.pop()
-        if sum(U[j] for j in range(N) if j >= i) == 0:
-            result = i
-            break
-        for j in range(i-1, -1, -1):
-            if U[j] > 0:
-                new_i = max(0, j-A)
-                new_path = path + [(j, B-j)]
-                stack.append((new_i, new_path))
-    print(f"Case #{_+1}: {result if result is not None else 'IMPOSSIBLE'}")
+import sys
+input = sys.stdin.readlines
+
+def solve():
+    for _ in range(int(input()[0])):
+        n, a, b = map(int, input().split())
+        u = list(map(int, input().split()))
+        if sum(u) > (n+1)*b - a:
+            print("IMPOSSIBLE")
+        else:
+            m = max(set(u)) + 1
+            used = [0]*m
+            for i in range(m):
+                used[i] = min((used[i]+u[i]), n)
+            for i in range(m-a, 0, -a):
+                if i < b:
+                    used[i] += used[i+a]
+            for i, v in enumerate(used[:n]):
+                if v < u[i]:
+                    print("IMPOSSIBLE")
+                    break
+            else:
+                print("Case #{}: {}".format(_+1, m))
+
+solve()

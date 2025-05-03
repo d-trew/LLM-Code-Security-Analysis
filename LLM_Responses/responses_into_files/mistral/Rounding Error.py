@@ -1,11 +1,18 @@
-T = int(input())
-for _ in range(T):
-    N, L = map(int, input().split())
-    C = list(map(int, input().split()))
-    total = sum(C)
-    remaining = N - total
-    max_sum = 0
-    for i in range(101):
-        if (i + 1) * remaining <= 100:
-            max_sum = max(max_sum, i * L + sum(min(i+1, c) for c in C))
-    print(f"Case #{_+1}: {max_sum}")
+import sys
+from collections import defaultdict
+input = sys.stdin.readlines
+
+def max_sum(n, l, c):
+    freq = defaultdict(int)
+    total = sum(c)
+    for i in c:
+        freq[i] += 1
+
+    max_val = max(freq.values())
+    return (total // max_val + 1) * max_val if total % max_val == 0 else (total // max_val + 2) * max_val
+
+T = int(input().strip())
+for t in range(1, T+1):
+    n, l = map(int, input().split())
+    c = list(map(int, input().split()))
+    print(f"Case #{t}: {max_sum(n, l, c)}")

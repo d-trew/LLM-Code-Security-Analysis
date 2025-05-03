@@ -1,18 +1,31 @@
-import numpy as np
-from scipy.special import expit
+import sys
+import math
 
-T = int(input())
-p = float(input())
-
-for _ in range(T):
-    skill_levels = np.random.uniform(-3.0, 3.0, size=100)
-    question_difficulties = np.random.uniform(-3.0, 3.0, size=10000)
-    answers = np.array([[int(expit(s-q)) for q in question_difficulties] for s in skill_levels])
+# Read input
+T = int(input().strip())
+P = int(input().strip())
+for case in range(T):
+    # Read test case
+    test_case = []
+    for _ in range(100):
+        test_case.append([int(x) for x in input().strip()])
     
-    cheating_player = np.random.choice(100)
-    cheating_results = (np.random.rand(10000) < 0.5).astype(int)
-    answers[cheating_player-1, :] = (answers[cheating_player-1, :] + cheating_results).astype(int)
+    # Initialize variables
+    cheater = None
+    cheater_skill = 0
+    cheater_difficulty = 0
     
-    correct_answers = np.sum(answers, axis=0)
-    cheater_index = np.argmax(np.mean((correct_answers[:, None] == answers) & (answers != 2), axis=(0, 1)))
-    print(f"Case #{_+1}: {cheater_index+1}")
+    # Loop through each player and question
+    for i in range(1, 101):
+        for j in range(1, 10001):
+            # Calculate probability of correct answer
+            prob = math.exp(-(test_case[i-1][j-1] - test_case[100][j-1])) / (1 + math.exp(-(test_case[i-1][j-1] - test_case[100][j-1])))
+            
+            # Check if player is cheater
+            if random.random() < 0.5:
+                cheater = i
+                cheater_skill = sum(test_case[i-1]) / 10000
+                cheater_difficulty = sum(test_case[100][j-1]) / 10000
+    
+    # Output answer
+    print("Case #{}: {}".format(case+1, cheater))

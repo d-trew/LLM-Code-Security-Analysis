@@ -1,34 +1,41 @@
-def prime_factors(n):
-    i = 2
-    factors = []
-    while i * i <= n:
-        if n % i:
-            i += 1
-        else:
-            n //= i
-            factors.append(i)
-    if n > 1:
-        factors.append(n)
-    return factors
+def decrypt_pangram(N, ciphertext):
+    from sympy import primerange
 
-def decrypt(ciphertext, N):
-    plaintext = [''] * len(ciphertext)
-    for i in range(len(ciphertext)):
-        prime_factors_list = [N]
-        for j in range(i):
-            prime_factors_list.append(ciphertext[j])
-        product = 1
-        for num in prime_factors_list:
-            product *= num
-        prime_index = (product - 2) % 26
-        if prime_index < 10:
-            plaintext[i] = chr(ord('A') + prime_index)
-        else:
-            plaintext[i] = chr(ord('a') + prime_index - 10)
+    primes = list(primerange(2, N + 1))
+    prime_dict = {chr(i + ord('A')): primes[i - ord('A')] for i in range(26)}
+
+    plaintext = []
+    current_product = 1
+    for value in ciphertext:
+        current_product *= value
+        for letter, prime in prime_dict.items():
+            if current_product % prime == 0:
+                plaintext.append(letter)
+                current_product //= prime
+                break
+
     return ''.join(plaintext)
 
-T = int(input())
-for t in range(T):
-    N, L = map(int, input().split())
-    ciphertext = list(map(int, input().split()))
-    print(f"Case #{t+1}: {decrypt(ciphertext, N)}")
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+
+    T = int(data[0])
+    index = 1
+    results = []
+
+    for _ in range(T):
+        N = int(data[index])
+        L = int(data[index + 1])
+        ciphertext = list(map(int, data[index + 2:index + 2 + L]))
+        index += 2 + L
+
+        plaintext = decrypt_pangram(N, ciphertext)
+        results.append(f"Case #{_ + 1}: {plaintext}")
+
+    for result in results:
+        print(result)
+
+if __name__ == "__main__":
+    main()

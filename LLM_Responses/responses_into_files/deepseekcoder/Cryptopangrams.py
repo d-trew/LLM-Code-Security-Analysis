@@ -1,34 +1,30 @@
-def prime_factors(n):
-    i = 2
-    factors = []
-    while i * i <= n:
-        if n % i:
-            i += 1
-        else:
-            n //= i
-            factors.append(i)
-    if n > 1:
-        factors.append(n)
-    return factors
+def is_prime(n):
+    if n == 2 or n == 3: return True
+    if n < 2 or n%2 == 0: return False
+    for i in range(3,int(n**0.5)+1,2): 
+        if n%i == 0: 
+            return False    
+    return True
 
-def decrypt(ciphertext, N):
-    plaintext = [''] * len(ciphertext)
-    for i in range(len(ciphertext)):
-        prime_factors_list = [N]
-        for j in range(i):
-            prime_factors_list.append(ciphertext[j])
-        product = 1
-        for num in prime_factors_list:
-            product *= num
-        prime_index = (product - 2) % 26
-        if prime_index < 10:
-            plaintext[i] = chr(ord('A') + prime_index)
-        else:
-            plaintext[i] = chr(ord('a') + prime_index - 10)
-    return ''.join(plaintext)
+def decrypt_pangram(ciphertext, primes):
+    plain = ""
+    for i in range(len(ciphertext)-1):
+        product = ciphertext[i] * ciphertext[i+1]
+        for char, prime in zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", primes):
+            if product == prime: 
+                plain += char
+                break
+    return plain
 
-T = int(input())
-for t in range(T):
-    N, L = map(int, input().split())
-    ciphertext = list(map(int, input().split()))
-    print(f"Case #{t+1}: {decrypt(ciphertext, N)}")
+def solve():
+    T = int(input())
+    for tc in range(1, T+1):
+        N, L = map(int, input().split())
+        ciphertext = list(map(int, input().split()))
+        
+        primes = [n for n in range(N) if is_prime(n)][25:]  # get the first 26 odd prime numbers
+        plaintext = decrypt_pangram(ciphertext, primes)
+        
+        print("Case #{}: {}".format(tc, plaintext))
+
+solve()

@@ -1,22 +1,33 @@
-T = int(input())
-for _ in range(T):
-    C1, M1, Y1, K1 = map(int, input().split())
-    C2, M2, Y2, K2 = map(int, input().split())
-    C3, M3, Y3, K3 = map(int, input().split())
-    for c in range(C1+1):
-        for m in range(M1+1):
-            for y in range(Y1+1):
-                for k in range(K1+1):
-                    if c + m + y + k == 10**6 and min(c, m, y, k) <= min(C1, M1, Y1, K1) and \
-                       min(c, m, y, k) <= min(C2, M2, Y2, K2) and min(c, m, y, k) <= min(C3, M3, Y3, K3):
-                        print(f"Case #{_+1}: {c} {m} {y} {k}")
-                        break
-                else:
-                    continue
-                break
-            else:
-                continue
-        else:
-            continue
-    else:
-        print("IMPOSSIBLE")
+def find_color(C, M, Y, K):
+    for c in range(10**6 + 1):
+        for m in range(10**6 - c + 1):
+            for y in range(10**6 - c - m + 1):
+                k = 10**6 - c - m - y
+                if all(c <= Ci and m <= Mi and y <= Yi and k <= Ki for Ci, Mi, Yi, Ki in zip(C, M, Y, K)):
+                    return f"{c} {m} {y} {k}"
+    return "IMPOSSIBLE"
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        C = list(map(int, data[index:index+4]))
+        M = list(map(int, data[index+4:index+8]))
+        Y = list(map(int, data[index+8:index+12]))
+        K = list(map(int, data[index+12:index+16]))
+        
+        index += 16
+        result = find_color(C, M, Y, K)
+        results.append(result)
+    
+    for i, result in enumerate(results):
+        print(f"Case #{i + 1}: {result}")
+
+if __name__ == "__main__":
+    main()

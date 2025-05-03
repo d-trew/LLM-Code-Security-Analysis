@@ -1,15 +1,19 @@
-n = int(input())
-for i in range(n):
-    t = int(input())
-    p = int(input())
-    g = list(map(int, input().split()))
-    left = 0
-    res = 0
-    for people in g:
-        if people + left > p:
-            res += (people+p-1)//p
-            left = p - (people+p-1)%p
-        else:
-            res += 1
-            left -= people
-    print("Case #{}: {}".format(i+1, res))
+import math
+
+T = int(input())
+for i in range(T):
+    N, P = map(int, input().split())
+    G = list(map(int, input().split()))
+    total_groups = len(set(G))
+    if total_groups == 1:
+        print("Case #{}: {}".format(i+1, total_groups))
+        continue
+    group_sizes = sorted(list(set(G)), reverse=True)
+    max_groups = math.ceil(N / P)
+    best_order = []
+    for j in range(max_groups):
+        for k in range(len(group_sizes)):
+            if group_sizes[k] > 0:
+                best_order.append(group_sizes[k])
+                group_sizes[k] -= 1
+    print("Case #{}: {}".format(i+1, len(best_order)))

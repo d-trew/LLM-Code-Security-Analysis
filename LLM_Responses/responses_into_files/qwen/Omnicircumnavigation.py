@@ -1,25 +1,35 @@
-import math
+from typing import List
 
-def is_omnicircumnavigation(N, X, Y, Z):
-    for i in range(N):
-        if i == N-1:
-            j = 0
-        else:
-            j = i+1
-        v1 = (X[i], Y[i], Z[i])
-        v2 = (X[j], Y[j], Z[j])
-        dot_product = sum(a*b for a, b in zip(v1, v2))
-        magnitude1 = math.sqrt(sum(x**2 for x in v1))
-        magnitude2 = math.sqrt(sum(x**2 for x in v2))
-        cosine_angle = dot_product / (magnitude1 * magnitude2)
-        if abs(cosine_angle) > 0.9999:
-            return "NO"
+def is_omnicircumnavigation(points: List[List[int]]) -> str:
+    n = len(points)
+    for i in range(n):
+        for j in range(i + 1, n):
+            if (points[j][0] * points[i][0] + points[j][1] * points[i][1] + points[j][2] * points[i][2]) == 1:
+                return "NO"
     return "YES"
 
-T = int(input())
-for t in range(1, T+1):
-    N = int(input())
-    X = [list(map(float, input().split())) for _ in range(N)]
-    Y = [x[1] for x in X]
-    Z = [x[2] for x in X]
-    print("Case #{}: {}".format(t, is_omnicircumnavigation(N, X, Y, Z)))
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        N = int(data[index])
+        index += 1
+        points = []
+        for _ in range(N):
+            X, Y, Z = map(int, data[index:index + 3])
+            index += 3
+            points.append([X / (X**2 + Y**2 + Z**2)**0.5, Y / (X**2 + Y**2 + Z**2)**0.5, Z / (X**2 + Y**2 + Z**2)**0.5])
+        
+        results.append(is_omnicircumnavigation(points))
+    
+    for i, result in enumerate(results):
+        print(f"Case #{i+1}: {result}")
+
+if __name__ == "__main__":
+    main()

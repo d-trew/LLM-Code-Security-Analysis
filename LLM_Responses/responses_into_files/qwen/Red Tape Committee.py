@@ -1,12 +1,21 @@
+from itertools import combinations
+
+def max_tie_probability(N, K, probabilities):
+    max_prob = 0
+    for committee in combinations(probabilities, K):
+        yes_prob = sum(committee)
+        no_prob = 1 - yes_prob
+        tie_prob = yes_prob * no_prob + no_prob * yes_prob
+        if tie_prob > max_prob:
+            max_prob = tie_prob
+    return max_prob
+
 T = int(input())
-for _ in range(T):
+results = []
+for i in range(1, T + 1):
     N, K = map(int, input().split())
-    Ps = list(map(float, input().split()))
-    Ps.sort(reverse=True)
-    total_prob = 0
-    for i in range(K // 2):
-        if Ps[i] > Ps[K - i - 1]:
-            total_prob += (Ps[i] + Ps[K - i - 1]) / 2
-        else:
-            total_prob += min(Ps[i], Ps[K - i - 1])
-    print(f"Case #{_+1}: {total_prob:.6f}")
+    probabilities = list(map(float, input().split()))
+    results.append((i, max_tie_probability(N, K, probabilities)))
+
+for case_num, prob in results:
+    print(f"Case #{case_num}: {prob:.6f}")

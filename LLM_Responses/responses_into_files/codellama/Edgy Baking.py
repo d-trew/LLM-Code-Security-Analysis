@@ -1,21 +1,36 @@
-def cookie_cutter(N, P):
-    cookies = []
-    for _ in range(N):
-        width, height = map(int, input().split())
-        cookies.append((width, height))
-    
-    dp = [[0, [0, 0]]] * (P + 1)
-    for w, h in cookies:
-        for i in range(P, w * 2 + h * 2 - 2, -1):
-            if i >= w * 2 + h * 2:
-                dp[i][0] = max(dp[i][0], dp[i - w - h][0] + w + h)
-            else:
-                dp[i][0] = max(dp[i][0], min(dp[i - w][1][0] + w, dp[i - h][1][0] + h))
-    
-    return str(int(max(i[0] for i in dp[:P])))
+import math
+def closest_to(perimeters, P):
+    total = 0
+    for perimeter in perimeters:
+        total += perimeter
+    if total > P:
+        return -1
+    elif total == P:
+        return total
+    else:
+        min_diff = math.inf
+        closest = None
+        for i in range(len(perimeters)):
+            for j in range(i+1, len(perimeters)):
+                new_total = total - perimeters[i] - perimeters[j] + 2 * (perimeters[i] + perimeters[j])
+                if new_total <= P:
+                    diff = abs(new_total - P)
+                    if diff < min_diff:
+                        closest = [i, j]
+                        min_diff = diff
+        if closest is None:
+            return -1
+        else:
+            perimeters[closest[0]] /= 2
+            perimeters[closest[1]] /= 2
+            return total
 
-
-T = int(input())
-for _ in range(T):
-    N, P = map(int, input().split())
-    print(f"Case #{_+1}: {cookie_cutter(N, P)}")
+if __name__ == "__main__":
+    T = int(input())
+    for t in range(T):
+        N, P = map(int, input().split())
+        cookies = []
+        for _ in range(N):
+            w, h = map(int, input().split())
+            cookies.append((w,h))
+        print("Case #" + str(t+1) + ": " + str(closest_to(cookies, P)))

@@ -1,10 +1,41 @@
-t = int(input())
-for i in range(t):
-    s = input()
-    score = 0
-    for j in range(len(s)):
-        if (j // 2) % 2 == 0:
-            score += 10 if s[j] == 'C' else 5
-        else:
-            score += 10 if s[j] == 'J' else 5
-    print('Case #{}: {}'.format(i+1, score))
+def max_points(mood_string):
+    n = len(mood_string)
+    points = 0
+    request_queue = []
+    
+    for i in range(n):
+        mood = mood_string[i]
+        
+        if request_queue:
+            last_request = request_queue[-1]
+            if last_request == mood:
+                points += 5
+            else:
+                points += 5
+            request_queue.pop()
+            
+        if mood == 'C':
+            request_queue.append('C')
+        elif mood == 'J':
+            request_queue.append('J')
+    
+    return points
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    results = []
+    
+    for i in range(1, T + 1):
+        mood_string = data[i]
+        result = max_points(mood_string)
+        results.append(f"Case #{i}: {result}")
+    
+    for result in results:
+        print(result)
+
+if __name__ == "__main__":
+    main()

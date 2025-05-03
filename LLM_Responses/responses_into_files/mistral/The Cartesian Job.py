@@ -1,18 +1,33 @@
-import math
-for _ in range(int(input())): 
-    n = int(input())
-    events = []
-    for i in range(n):
-        x0, y0, x1, y1 = map(int, input().split())
-        r = (x1-x0)**2 + (y1-y0)**2
-        events.append((r, 0 if y1 < 0 or y1 > 1000 else -1))
-    events.sort()
-    res = 1
-    t = 0
-    for event in events:
-        r, flag = event
-        t += math.sqrt(r)
-        if flag == -1: 
-            res *= (t % 2) / t
-        t %= 1
-    print(f"Case #{_+1}: {res:.6f}")
+import fractions
+from collections import defaultdict
+
+def calculate_probability(lasers):
+    points = defaultdict(list)
+    for x, y, x', y' in lasers:
+        points[x, y].append((x', y'))
+
+    segment_length = 1000
+    interval_count = 0
+    for point in points:
+        start, end = sorted(point)
+        if start[1] < 0 or end[1] > segment_length:
+            continue
+        for i, (p1, p2) in enumerate(zip(points[(start[0], start[1])], points[end])):
+            if not p2:
+                continue
+            overlap = max(min(p1[0][1] - end[1], p2[0][1] - start[1]), 0)
+            if overlap > 0:
+                interval_count += overlap / segment_length
+    return fractions.Fraction(interval_count, len(lasers))
+
+def main():
+    t = int(input())
+    for _ in range(t):
+        n = int(input())
+        lasers = []
+        for _ in range(n):
+            x, y, x', y' = map(int, input().split())
+            lasers.append((x, y, x', y'))
+        print(f"Case #{_ + 1}: {calculate_probability(lasers).limit_denominator()}")
+
+main()

@@ -1,53 +1,51 @@
-T = int(input())
-for _ in range(T):
-    R, C, D = [int(x) for x in input().split()]
-    map_data = [list(input()) for _ in range(R)]
-    start_pos = None
-    finish_pos = None
-    for i in range(R):
-        for j in range(C):
-            if map_data[i][j] == 'S':
-                start_pos = (i, j)
-            elif map_data[i][j] == 'F':
-                finish_pos = (i, j)
+from collections import deque
+import sys
+input = sys.stdin.readline
 
-    def bfs(map_data, start_pos, finish_pos):
-        R, C = len(map_data), len(map_data[0])
-        queue = [(start_pos, 0)]
-        visited = set([start_pos])
-        while queue:
-            pos, dist = queue.pop(0)
-            if pos == finish_pos:
-                return dist
-            for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                new_x, new_y = pos[0] + x, pos[1] + y
-                if 0 <= new_x < R and 0 <= new_y < C and map_data[new_x][new_y] != '#' and (new_x, new_y) not in visited:
-                    queue.append(((new_x, new_y), dist + 1))
-                    visited.add((new_x, new_y))
+dx = [-1, 0, 1, 0]
+dy = [0, -1, 0, 1]
+dirs = ['u', 'l', 'd', 'r']
 
-    def dfs(map_data, start_pos, finish_pos):
-        R, C = len(map_data), len(map_data[0])
-        queue = [(start_pos, 0)]
-        visited = set([start_pos])
-        while queue:
-            pos, dist = queue.pop(0)
-            if pos == finish_pos:
-                return dist
-            for x, y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                new_x, new_y = pos[0] + x, pos[1] + y
-                if 0 <= new_x < R and 0 <= new_y < C and map_data[new_x][new_y] != '#' and (new_x, new_y) not in visited:
-                    queue.append(((new_x, new_y), dist + 1))
-                    visited.add((new_x, new_y))
+def bfs(start):
+    q = deque()
+    visited = [[[False]*c for _ in range(r)] for __ in range(2)]
+    x, y, z, d = start
+    q.append((x, y, z, d))
+    visited[z][y][x] = True
+    
+    while q:
+        x, y, z, d = q.popleft()
+        
+        if (x, y) == finish:
+            return d, [''.join(path[1:]) for path in dirs[:d+1]]
+            
+        for i in range(4):
+            nx, ny = x + dx[i], y + dy[i]
+            if 0 <= nx < c and 0 <= ny < r and not visited[z][ny][nx]:
+                if maze[ny][nx] == '.':
+                    q.append((nx, ny, z, d+1))
+                    visited[z][ny][nx] = True
+                elif maze[ny][nx] == '#' and z == 0:
+                    q.append((nx, ny, 1, d+1))
+                    visited[1][ny][nx] = True
+    return -1, []
 
-    def check(map_data, D):
-        R, C = len(map_data), len(map_data[0])
-        for i in range(R):
-            for j in range(C):
-                if map_data[i][j] == '#':
-                    temp_map = [list(x) for x in map_data]
-                    temp_map[i][j] = '.'
-                    if bfs(temp_map, start_pos, finish_pos) == D:
-                        return 'POSSIBLE'
-        return 'IMPOSSIBLE'
-
-    print(f'Case #{"{}":>1}: {check(map_data, D)}')
+t = int(input())
+for tc in range(1, t+1):
+    r, c, d = map(int, input().split())
+    maze = [list(input().strip()) for _ in range(r)]
+    
+    for i in range(r):
+        for j in range(c):
+            if maze[i][j] == 'S':
+                start = (j, i, 0, 0)
+            elif maze[i][j] == 'F':
+                finish = (j, i)
+    
+    length, paths = bfs(start)
+    if length != -1 and length <= d:
+        print(f'Case #{tc}: POSSIBLE')
+        for path in paths[:d]:
+            print(path)
+    else:
+        print(f'Case #{tc}: IMPOSSIBLE')

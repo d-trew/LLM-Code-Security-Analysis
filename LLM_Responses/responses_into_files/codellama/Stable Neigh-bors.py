@@ -1,18 +1,30 @@
-from itertools import permutations
+import sys
 
-def is_valid(stalls):
-    for i in range(len(stalls) - 1):
-        if set(stalls[i:i+2]).intersection({'R', 'O', 'Y', 'G', 'B', 'V'}):
-            return False
-    return True
+def solve(N, R, O, Y, G, B, V):
+    # Check if the input is valid
+    if N != R + O + Y + G + B + V:
+        return "IMPOSSIBLE"
+    if any(i > 0 for i in [R, O, Y, G, B, V]):
+        return "IMPOSSIBLE"
 
-for t in range(int(input())):
-    N = int(input())
-    R, O, Y, G, B, V = map(int, input().split())
-    stalls = ['R' * R + 'O' * O + 'Y' * Y + 'G' * G + 'B' * B + 'V' * V][0]
-    for p in permutations(stalls):
-        if is_valid(p):
-            print(f"Case #{t+1}: {''.join(p)}")
-            break
-    else:
-        print(f"Case #{t+1}: IMPOSSIBLE")
+    # Generate all possible arrangements of the unicorns
+    arr = ["R", "O", "Y", "G", "B", "V"]
+    stalls = ["".join(i) for i in zip(*[iter(arr)]*N)]
+
+    # Check if each arrangement satisfies the rules
+    for s in stalls:
+        valid = True
+        for i in range(N-1):
+            if (s[i] in ["R", "O"] and s[i+1] in ["Y", "G", "B", "V"]) or \
+               (s[i] in ["Y", "G", "B", "V"] and s[i+1] in ["R", "O"]):
+                valid = False
+                break
+        if valid:
+            return s
+    return "IMPOSSIBLE"
+
+if __name__ == "__main__":
+    T = int(input())
+    for t in range(1, T+1):
+        N, R, O, Y, G, B, V = map(int, input().split())
+        print("Case #{}".format(t), solve(N, R, O, Y, G, B, V))

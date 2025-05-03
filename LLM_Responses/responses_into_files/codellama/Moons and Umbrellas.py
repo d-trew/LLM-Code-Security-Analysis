@@ -1,10 +1,15 @@
-t = int(input())
-for _ in range(t):
-    x, y, s = [int(i) if i.isdigit() else i for i in input().split()]
-    res = float('inf')
-    for i in range(len(s)):
-        for j in range(i+1, len(s)+1):
-            cnt_cj = s[:i].count('CJ') + s[i:j].count('CJ')
-            cnt_jc = s[:i].count('JC') + s[i:j].count('JC')
-            res = min(res, x*cnt_cj + y*cnt_jc)
-    print(f"Case # {_+1}: {res}")
+#!/bin/python3
+import sys
+input = sys.stdin.readline
+T = int(input())
+for t in range(1, T+1):
+    X, Y, S = input().split()
+    count_CJ = 0
+    count_JC = 0
+    for i in range(len(S)):
+        if S[i] == 'C':
+            if S[i+1] == 'J':
+                count_CJ += 1
+        elif S[i] == 'J' and S[i+1] == 'C':
+            count_JC += 1
+    print("Case #" + str(t) + ": " + str(count_CJ * X + count_JC * Y))

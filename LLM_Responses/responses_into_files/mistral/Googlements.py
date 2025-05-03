@@ -1,20 +1,23 @@
-def googlement_count(G):
-    L = len(G)
-    count_dict = {0: [1]}
-    for i in range(10):
-        if i > L:
-            break
-        new_count_dict = {}
-        for googlement, counts in count_dict.items():
-            for j in range(L+1):
-                if str(i) * (j + 1) == G[:j+1]:
-                    new_counts = list(counts)
-                    new_counts.append(int(''.join(map(str, counts))))
-                    new_count_dict.setdefault(0, []).append(new_counts)
-        count_dict = new_count_dict
-    return len(count_dict[0])
+from itertools import combinations
+
+def count_decays(g):
+    counts = [0] * (len(g) + 1)
+    for digit in g:
+        counts[int(digit)] += 1
+    return ''.join(str(c) for c in counts)
+
+def solve(G):
+    decays = set()
+    for length in range(1, len(G) + 1):
+        for decay in combinations([count_decays(g) for g in decays], length):
+            new_decay = ''.join(sorted(decay))
+            if new_decay == count_decays(G):
+                decays.add(G)
+    return len(decays) if G in decays else float('inf')
 
 T = int(input())
-for i in range(T):
-    G = input()
-    print(f"Case #{i+1}: {googlement_count(G)}")
+for _ in range(T):
+    print(f'Case #{_+1}: {solve(input())}')
+
+
+This code reads the number of test cases, T, and then iterates over each test case. For each test case, it calculates all possible decays for googlements of length 1 to the given length using combinations from previously calculated decays. If a new decay matches the given googlement, it is added to the set of decays. At the end, if the given googlement is in the set of decays, it returns the number of unique decays; otherwise, it returns 'inf'.

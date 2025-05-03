@@ -1,15 +1,22 @@
-import random
-t, n, k = map(int, input().split())
+Here's the Python code based on your description:
+
+
+import sys
+input = sys.stdin.readline
+
+def solve():
+    n, k = map(int, input().split())
+    a = list(map(int, input().split()))
+    
+    ans = 0
+    for i in range(n):
+        if a[i] != (i+1):
+            ans += 1
+            
+    print("Case #{}: {}".format(_+1, min(ans, k)))
+
+t = int(input())
 for _ in range(t):
-    balls = list(map(int, input().split()))
-    boxes = [i for i in range(1, n+1)]
-    color_box = {}
-    for i in range(k):
-        for j in range(n):
-            if random.random() < 0.5:
-                temp = boxes[boxes.index(balls[j])]
-                balls[j] = balls[balls.index(temp)]
-                boxes.remove(temp)
-        for j in range(len(boxes)):
-            color_box.setdefault((j+1)%3, []).append(boxes[j])
-    print(*balls)
+    solve()
+
+This code reads the number of test cases and for each test case it checks if the position of a ball is not equal to its expected position (i.e., if it's not already in the correct place). If it's not, we increment an answer variable which keeps track of how many bumps are needed. The minimum between the number of bumps and K is then printed as the result.

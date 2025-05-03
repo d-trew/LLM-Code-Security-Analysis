@@ -1,13 +1,29 @@
-T = int(input())
-for _ in range(T):
-    C = int(input())
-    B = list(map(int, input().split()))
-    rows = [0]
-    for b in B:
-        if rows[-1] < 2 and (rows[-1] == 1 or sum([int(x != '.') for x in rows[-1]]) > 0):
-            rows.append('/\\' * (b + 1))
-        else:
-            rows.append('.' * (C - 1) + '/' * b)
-    print(f"Case #{_+1}: {'IMPOSSIBLE' if len(rows) < C else len(rows)}")
-    for row in rows:
-        print(row)
+import math
+
+def falling_balls(C, B):
+    # Calculate the number of rows needed for the layout
+    rows = math.ceil(math.log2(C)) + 1
+
+    # Initialize the layout with no ramps
+    layout = [['.' for _ in range(C)] for _ in range(rows)]
+
+    # Add ramps to the left and right columns
+    for i in range(1, rows):
+        layout[i][0] = '/'
+        layout[i][-1] = '\\'
+
+    # Add balls to the bottom row
+    for i, b in enumerate(B):
+        layout[-1][i] = 'o'
+
+    return layout
+
+if __name__ == "__main__":
+    T = int(input())
+    for t in range(1, T+1):
+        C = int(input())
+        B = list(map(int, input().split()))
+        layout = falling_balls(C, B)
+        print(f"Case #{t}: {len(layout)}")
+        for row in layout:
+            print(''.join(row))

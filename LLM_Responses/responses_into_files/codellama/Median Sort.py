@@ -1,34 +1,35 @@
+import sys
+
+# Read input from stdin
 T = int(input())
-for _ in range(T):
-    N = int(input())
-    Q = int(input()) * T
-    order = [-1] * N
-    queries = []
-    for _ in range(Q):
+for t in range(T):
+    N, Q = map(int, input().split())
+    # Initialize a list to store the indices of the elements in sorted order
+    sorted_indices = []
+    for q in range(Q):
         i, j, k = map(int, input().split())
-        queries.append((i, j, k))
-    query_count = 0
-    left = 0
-    right = N - 1
-    while query_count < Q:
-        if left + 1 <= right - 1:
-            mid = (left + right) // 2
-            order[mid] = query_count
-            query_count += 1
-            queries[query_count-1] = (min(order), mid, max(order))
-            for i in range(3):
-                if queries[query_count][i] == min(order):
-                    left = mid
-                elif queries[query_count][i] == mid:
-                    continue
-                else:
-                    right = mid
+        # Find the median of the set {x_i, x_j, x_k}
+        if (i == j) or (j == k) or (i == k):
+            # If any two elements are equal, the other element is the median
+            median = i
         else:
-            order[left] = query_count
-            query_count += 1
-            for i in range(3):
-                if queries[query_count-1][i] == left:
-                    left += 1
-                elif queries[query_count-1][i] == right:
-                    right -= 1
-    print(' '.join(map(str, order)))
+            # Otherwise, find the element that is neither the minimum nor the maximum among the three
+            if x_i < x_j and x_i < x_k:
+                median = i
+            elif x_j < x_i and x_j < x_k:
+                median = j
+            else:
+                median = k
+        # Print the index of the median element
+        print(median)
+        # Read the answer from stdin
+        answer = int(input())
+        if answer == -1:
+            break
+        # If the answer is correct, add the indices of the elements in sorted order to the list
+        elif answer == 1:
+            sorted_indices.extend([i, j, k])
+    # Sort the list of indices in ascending order
+    sorted_indices.sort()
+    # Print the indices of the elements in sorted order
+    print(*sorted_indices)

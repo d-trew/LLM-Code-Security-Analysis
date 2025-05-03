@@ -1,19 +1,43 @@
+import sys
+from collections import defaultdict
+input = sys.stdin.readline
+MOD = 10**9 + 7
+
+def solve(N, M, L, A):
+    dp_min = [0] * (1 << L)
+    dp_max = [0] * (1 << L)
+    
+    for i in range(L-1, -1, -1):
+        n = 1 << i
+        m = 2 * n
+        
+        cards = defaultdict(int)
+        for j in range(m):
+            cards[A[j]] += 1
+            
+        dp_min_next = [0] * (1 << L)
+        dp_max_next = [0] * (1 << L)
+        
+        for mask in range(1, m):
+            if bin(mask).count('1') == n:
+                min_val = 1e9
+                max_val = 0
+                
+                for sub_mask in range(mask):
+                    if ((sub_mask & mask) == 0 and (sub_mask | mask) == m-1):
+                        min_val = min(min_val, dp_min[sub_mask] + cards[max(A[j] for j in range(m) if ((sub_mask >> j) & 1))])
+                        max_val = max(max_val, dp_max[sub_mask] + cards[max(A[j] for j in range(m) if ((sub_mask >> j) & 1))])
+                
+                dp_min_next[mask] = min_val % MOD
+                dp_max_next[mask] = max_val % MOD
+        
+        dp_min, dp_max = dp_min_next, dp_max_next
+    
+    return sum(dp_min) * 2 % MOD if L % 2 == 0 else (sum(dp_min) + sum(dp_max)) % MOD
+
 T = int(input())
-for i in range(1, T + 1):
+for t in range(1, T+1):
     N, M, L = map(int, input().split())
     A = list(map(int, input().split()))
-    MOD = 10**9 + 7
-    total_score = 0
-    for _ in range(M ** N):
-        n = len(A)
-        for j in range(L):
-            mid = (n // 2) + ((n % 2) != 0)
-            if A[mid - 1] < A[mid]:
-                left_half = A[:mid]
-                right_half = A[mid:]
-            else:
-                left_half = A[mid:]
-                right_half = A[:mid]
-            n //= 2
-        total_score += (A[-1] % M) + 1
-    print(f"Case #{i}: {total_score % MOD}")
+    
+    print("Case #{}: {}".format(t, solve(N, M, L, A)))

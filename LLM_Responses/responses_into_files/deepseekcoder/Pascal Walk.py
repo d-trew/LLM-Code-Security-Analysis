@@ -1,23 +1,19 @@
 def pascal_walk(n):
-    triangle = [[1], [1, 1]]
-    s = 0
-    while len(triangle) <= n:
-        row = [1]
-        for i in range(len(triangle[-1]) - 1):
-            row.append(triangle[-1][i] + triangle[-1][i+1])
-        row.append(1)
-        triangle.append(row)
-        s += len(triangle) - 1
-    total = sum(int(x) for row in triangle for x in row)
-    if total < n:
-        return "Case #1: 1 1"
-    else:
-        for i, (row, pos) in enumerate(zip(triangle, range(1, s+1))):
-            if total - sum(triangle[pos-1]) == int(row[0]):
-                return f"Case #{pos}: {pos} {len(triangle[pos-1])}"
-        return "Case #1: 1 1"
+    walk = [(1, 1)] # start from the first position in Pascal's triangle
+    current_sum = 1
+    while len(walk) < n and current_sum < n:
+        r, k = walk[-1]
+        if k == 1 or (r == k): # if we are at the beginning of a row or the last element in the row
+            walk.append((r+1, 1)) # move to the next row's first position
+        else:
+            walk.append((r, k-1)) # otherwise, move left
+        current_sum += r
+    return walk[:n]
 
-T = int(input())
-for _ in range(T):
-    n = int(input())
-    print(pascal_walk(n))
+t = int(input().strip())
+for i in range(1, t+1):
+    n = int(input().strip())
+    walk = pascal_walk(500 if 500 < n else n)
+    print("Case #{}:".format(i))
+    for r, k in walk:
+        print(r, k)

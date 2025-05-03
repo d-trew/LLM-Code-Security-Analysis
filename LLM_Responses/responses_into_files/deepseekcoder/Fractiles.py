@@ -1,24 +1,11 @@
-def fractal_artwork(K, C):
-    artwork = [''] * K
-    for c in range(C):
-        new_artwork = ''
-        for tile in artwork:
-            if 'L' in tile:
-                new_artwork += (K*['L'] + tile)[1:]
-            else:
-                new_artwork += tile + K*'G'
-        artwork = new_artwork
-    return artwork
+def solve(K, C, S):
+    if K * (C - 1) < S:
+        return "IMPOSSIBLE"
+    else:
+        return [i for i in range(2, S + 1)] + [1]
 
-def check_for_gold(K, C):
-    for c in range(C):
-        complexity = 0
-        while complexity < C:
-            if 'G' in fractal_artwork(K, complexity)[K//2]:
-                return [1]
-            complexity += 1
-    return ['IMPOSSIBLE']
-
-for t in range(int(input())):
+T = int(input())
+for tc in range(1, T + 1):
     K, C, S = map(int, input().split())
-    print('Case #{}: {}'.format(t+1, check_for_gold(K, C)))
+    result = solve(K, C, S)
+    print("Case #{}: {}".format(tc, " ".join(map(str, result)) if type(result) == list else result))

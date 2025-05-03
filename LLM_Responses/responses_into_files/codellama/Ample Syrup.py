@@ -1,14 +1,18 @@
-T = int(input())
-for _ in range(T):
-    N, K = map(int, input().split())
-    pancakes = []
-    for _ in range(N):
-        R, H = map(int, input().split())
-        pancakes.append((R, H))
-    pancakes.sort(key=lambda x: x[0], reverse=True)
-    max_area = 0
-    for i in range(K):
-        R, H = pancakes[i]
-        area = (2 * 3.14159 * R) + (2 * 3.14159 * R * H)
-        max_area += area
-    print(f"Case # {_+1}: {max_area:.6f}")
+import math
+
+def solution(N, K):
+    # Calculate the total exposed surface area of each pancake
+    areas = []
+    for i in range(N):
+        radius = float(input().split()[0])
+        height = float(input().split()[1])
+        areas.append(math.pi * radius**2 + 2 * math.pi * radius * height)
+    
+    # Sort the pancakes by descending area
+    sorted_areas = sorted(areas, reverse=True)
+    
+    # Choose the top K pancakes and calculate their total exposed surface area
+    chosen_areas = sorted_areas[:K]
+    total_area = sum(chosen_areas)
+    
+    return total_area

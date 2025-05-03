@@ -1,21 +1,55 @@
-T = int(input())
-for t in range(1, T+1):
-    R, C = map(int, input().split())
-    G = [list(input()) for _ in range(R)]
-    As = [(i, j) for i in range(R) for j in range(C) if G[i][j] == 'A']
-    Bs = [(i, j) for i in range(R) for j in range(C) if G[i][j] == 'B']
-    print(f'Case #{t}:', end=' ')
-    if not solve(G, As, Bs):
-        print('IMPOSSIBLE')
-    else:
-        print('POSSIBLE')
-        for row in G:
-            line = ''
-            for cell in row:
-                if (cell == 'A' and any(neighbor == 'A' or neighbor == '.' for neighbor in [(i, j) if abs(i-j) == 1] + [(i-1, j) if i > 0] + [(i+1, j) if i < R-1] + [(i, j-1) if j > 0] + [(i, j+1) if j < C-1])):
-                    line += '/'
-                elif (cell == 'B' and any(neighbor == 'B' or neighbor == '.' for neighbor in [(i, j) if abs(i-j) == 1] + [(i-1, j) if i > 0] + [(i+1, j) if i < R-1] + [(i, j-1) if j > 0] + [(i, j+1) if j < C-1])):
-                    line += '\\'
-                else:
-                    line += cell
-            print(line)
+def build_diagonal_connections(matrix):
+    R = len(matrix)
+    C = len(matrix[0])
+    
+    for i in range(R - 1):
+        for j in range(C - 1):
+            if matrix[i][j] == 'A' and matrix[i + 1][j + 1] == 'B':
+                return 'IMPOSSIBLE'
+            elif matrix[i][j] == 'B' and matrix[i + 1][j + 1] == 'A':
+                return 'IMPOSSIBLE'
+    
+    for i in range(R - 1):
+        for j in range(C - 1):
+            if matrix[i][j] == 'A' and matrix[i + 1][j + 1] == 'A':
+                if matrix[i + 1][j] != 'A' or matrix[i][j + 1] != 'A':
+                    return 'IMPOSSIBLE'
+    
+    for i in range(R - 1):
+        for j in range(C - 1):
+            if matrix[i][j] == 'B' and matrix[i + 1][j + 1] == 'B':
+                if matrix[i + 1][j] != 'B' or matrix[i][j + 1] != 'B':
+                    return 'IMPOSSIBLE'
+    
+    for i in range(R - 1):
+        for j in range(C - 1):
+            if matrix[i][j] == 'A' and matrix[i + 1][j + 1] == '.':
+                matrix[i + 1][j + 1] = '/'
+            elif matrix[i][j] == 'B' and matrix[i + 1][j + 1] == '.':
+                matrix[i + 1][j + 1] = '\\'
+    
+    return '\n'.join([''.join(row) for row in matrix])
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        R, C = map(int, data[index:index + 2])
+        index += 2
+        matrix = [list(data[index + i * C:index + (i + 1) * C]) for i in range(R)]
+        index += R
+        
+        result = build_diagonal_connections(matrix)
+        results.append(result)
+    
+    for i, result in enumerate(results):
+        print(f"Case #{i + 1}: {result}")
+
+if __name__ == "__main__":
+    main()

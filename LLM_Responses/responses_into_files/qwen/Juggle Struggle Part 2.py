@@ -1,33 +1,48 @@
-def check_magnificent(T):
+def check_magnificent(arr):
+    N = len(arr)
+    failed_pairs = []
+    
+    for i in range(N):
+        x1, y1, x2, y2 = arr[i]
+        for j in range(i + 1, N):
+            x3, y3, x4, y4 = arr[j]
+            det = (x1 - x2) * (y3 - y4) - (x3 - x4) * (y1 - y2)
+            if det == 0:
+                continue
+            t = ((x1 - x3) * (y3 - y4) - (x3 - x4) * (y1 - y3)) / det
+            u = -((x1 - x2) * (y1 - y3) - (x3 - x4) * (y1 - y2)) / det
+            if 0 <= t <= 1 and 0 <= u <= 1:
+                continue
+            failed_pairs.append(i + 1)
+            break
+    
+    if not failed_pairs:
+        return "MAGNIFICENT"
+    else:
+        return " ".join(map(str, sorted(set(failed_pairs))))
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
     for _ in range(T):
-        N = int(input())
-        pairs = []
-        magnificent = True
+        N = int(data[index])
+        index += 1
+        arr = []
         for _ in range(N):
-            x1, y1, x2, y2 = map(int, input().split())
-            pairs.append(((x1, y1), (x2, y2)))
-        for i in range(N):
-            for j in range(i+1, N):
-                if not intersect(pairs[i][0], pairs[j][0]):
-                    magnificent = False
-                    break
-        if magnificent:
-            print(f"Case # {_+1}: MAGNIFICENT")
-        else:
-            print(f"Case # {_+1}: {' '.join(map(str, range(1, N+1)))}")
+            x1, y1, x2, y2 = map(int, data[index:index+4])
+            arr.append((x1, y1, x2, y2))
+            index += 4
+        
+        results.append(check_magnificent(arr))
+    
+    for result in results:
+        print(result)
 
-def intersect(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
-    if x1 == x2:
-        return False
-    a = (y2 - y1) / (x2 - x1)
-    b = y1 - a * x1
-    for point in [(x1, y1), (x2, y2)]:
-        x, y = point
-        if a * x + b != y:
-            return False
-    return True
-
-T = int(input())
-check_magnificent(T)
+if __name__ == "__main__":
+    main()

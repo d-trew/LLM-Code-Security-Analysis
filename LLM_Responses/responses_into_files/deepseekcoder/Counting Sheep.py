@@ -1,9 +1,17 @@
-n = int(input())
-seen = set()
-i = 0
-while len(seen) < 10:
-    i += 1
-    num = str(i * n)
-    for digit in num:
-        seen.add(digit)
-print(f"Case #1: {int(n * (len(seen) + 9))}")
+def count_sheep(N):
+    if N == 0:
+        return "INSOMNIA"
+    
+    digits = set()
+    i = 1
+    while len(digits) < 10:
+        number = i * N
+        digits.update(str(number))
+        i += 1
+        
+    return (i-1) * N
+
+T = int(input())
+for t in range(1, T+1):
+    N = int(input())
+    print("Case #{}: {}".format(t, count_sheep(N)))

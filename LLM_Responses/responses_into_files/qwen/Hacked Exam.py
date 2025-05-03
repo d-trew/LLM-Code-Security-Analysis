@@ -1,22 +1,34 @@
-T = int(input())
-for t in range(1, T + 1):
-    N, Q = map(int, input().split())
-    answers = [input() for _ in range(N)]
-    scores = list(map(int, input().split()))
-    max_score = sum(scores) / len(scores)
-    answer = ''
-    for i in range(Q):
-        t_count = 0
-        f_count = 0
-        for j in range(N):
-            if answers[j][i] == 'T':
-                t_count += 1
-            else:
-                f_count += 1
-        if t_count > f_count:
-            answer += 'T'
-        elif f_count > t_count:
-            answer += 'F'
-        else:
-            answer += 'T' if sum(1 for a in answers if a[i] == 'T') >= N // 2 else 'F'
-    print(f"Case #{t}: {answer} {max_score:.0f}/{Q}")
+from fractions import Fraction
+
+def max_expected_score(N, Q, answers):
+    from collections import Counter
+    
+    # Count the frequency of each answer for each question
+    count = [Counter() for _ in range(Q)]
+    for a, s in answers:
+        for i, c in enumerate(a):
+            count[i][c] += 1
+    
+    # Calculate the probability of each answer being correct
+    prob = []
+    for c in count:
+        total = sum(c.values())
+        prob.append(Fraction(sum(v * (i if i == 'T' else -i) for i, v in c.items()), total))
+    
+    # Determine the best sequence of answers
+    best_seq = ''.join('T' if p > 0 else 'F' for p in prob)
+    expected_score = sum(p * s for p, (_, s) in zip(prob, answers)) / len(answers)
+    
+    return best_seq, expected_score
+
+def solve():
+    T = int(input())
+    results = []
+    for t in range(1, T + 1):
+        N, Q = map(int, input().split())
+        answers = [input().split() for _ in range(N)]
+        seq, score = max_expected_score(N, Q, answers)
+        results.append(f"Case #{t}: {seq} {score.numerator}/{score.denominator}")
+    return '\n'.join(results)
+
+print(solve())

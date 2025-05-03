@@ -38,3 +38,8 @@ mkdir -p "$OLLAMA_MODELS"
 
 # Run from current directory
 ./ollama serve
+
+
+
+clean:
+python LLM-code/Extraction_and_Cleaning/code_extraction_from_json.py LLM_Responses/llama_responses.json

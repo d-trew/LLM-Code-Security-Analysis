@@ -1,57 +1,49 @@
 from fractions import Fraction
-import sys
 
-def is_neat(napkin, k):
-    for i in range(k-1):
-        x0 = napkin[i][0]
-        y0 = napkin[i][1]
-        x1 = napkin[(i+1)%k][0]
-        y1 = napkin[(i+1)%k][1]
-        if is_collinear(x0, y0, x1, y1):
-            return False
-    return True
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
 
-def is_collinear(x0, y0, x1, y1):
-    dx = (x1 - x0)
-    dy = (y1 - y0)
-    dxdy = (dx * dy) if dx != 0 else float('inf')
-    d2 = max((abs(dx)), (abs(dy)))
-    return abs(dxdy) <= d2
+def lcm(a, b):
+    return abs(a*b) // gcd(a, b)
 
-def find_pattern(napkin, k):
-    for i in range(len(napkin)-1):
-        x0 = napkin[i][0]
-        y0 = napkin[i][1]
-        x1 = napkin[(i+1)%len(napkin)][0]
-        y1 = napkin[(i+1)%len(napkin)][1]
-        if is_collinear(x0, y0, x1, y1):
-            for j in range(len(napkin)-1):
-                x2 = napkin[j][0]
-                y2 = napkin[j][1]
-                x3 = napkin[(j+1)%len(napkin)][0]
-                y3 = napkin[(j+1)%len(napkin)][1]
-                if is_collinear(x2, y2, x3, y3):
-                    continue
-                for _ in range(k-1):
-                    return [(Fraction(x0), Fraction(y0)), (Fraction(x1), Fraction(y1))]
+def simplify_fraction(n, d):
+    g = gcd(n, d)
+    return (n//g, d//g)
+
+def is_neat_pattern(polygon, K):
+    N = len(polygon)
+    for i in range(N):
+        x1, y1 = polygon[i]
+        x2, y2 = polygon[(i+1) % N]
+        dx, dy = x2 - x1, y2 - y1
+        if K == 2:
+            return [(Fraction(dx, lcm(abs(dx), abs(dy))), Fraction(dy, lcm(abs(dx), abs(dy)))), (Fraction(-dx, lcm(abs(dx), abs(dy))), Fraction(-dy, lcm(abs(dx), abs(dy))))]
     return None
 
 def main():
-    T = int(input())
-    for t in range(T):
-        N, K = map(int, input().split())
-        napkin = []
-        for _ in range(N):
-            x, y = map(int, input().split())
-            napkin.append((x, y))
-        if is_neat(napkin, K):
-            print(f"Case #{t+1}: POSSIBLE")
-            pattern = find_pattern(napkin, K)
-            if pattern:
-                for segment in pattern:
-                    print(*segment)
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    index = 1
+    results = []
+    
+    for _ in range(T):
+        N = int(data[index])
+        K = int(data[index + 1])
+        polygon = [(Fraction(int(data[index + 2 + i*2]), 1), Fraction(int(data[index + 3 + i*2]), 1)) for i in range(N)]
+        index += 2 * N + 2
+        
+        result = is_neat_pattern(polygon, K)
+        if result:
+            results.append(f"Case #{_+1}: POSSIBLE\n{'\n'.join([f'{a[0]}/{a[1]} {b[0]}/{b[1]}' for a, b in result])}")
         else:
-            print(f"Case #{t+1}: IMPOSSIBLE")
+            results.append(f"Case #{_+1}: IMPOSSIBLE")
+    
+    print('\n'.join(results))
 
 if __name__ == "__main__":
     main()

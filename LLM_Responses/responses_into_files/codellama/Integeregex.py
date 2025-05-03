@@ -1,6 +1,14 @@
 import re
-for _ in range(int(input())):
-    a, b = map(int, input().split())
-    pattern = re.compile(input())
-    count = sum(1 for i in range(a, b+1) if bool(pattern.match(str(i))))
-    print(f"Case # {_+1}: {count}")
+
+def count_matches(A, B, R):
+    count = 0
+    for i in range(A, B+1):
+        if re.match(R, str(i)):
+            count += 1
+    return count
+
+T = int(input())
+for case in range(1, T+1):
+    A, B = map(int, input().split())
+    R = input()
+    print("Case #" + str(case) + ": " + str(count_matches(A, B, R)))

@@ -1,21 +1,30 @@
+import heapq
+def max_lead(metals, relations, treasury):
+    graph = [[] for _ in range(metals+1)]
+    for i in range(1, metals+1):
+        x, y = relations[i-1]
+        graph[x].append((y, 1))
+        graph[y].append((x, 1))
+    
+    dp = [0]*(metals+1)
+    for i in range(1, metals+1):
+        if treasury[i-1] > 0:
+            heap = []
+            heapq.heappush(heap, (-treasury[i-1], i))
+            while heap:
+                curr_lead, node = heapq.heappop(heap)
+                curr_lead *= -1
+                if dp[node] < curr_lead:
+                    dp[node] = curr_lead
+                for next_node, cost in graph[node]:
+                    next_lead = (curr_lead+cost-1)//cost
+                    if treasury[next_node-1]-dp[next_node] >= next_lead:
+                        heapq.heappush(heap, (-next_lead, next_node))
+    return dp[1]
+
 T = int(input())
-for _ in range(T):
-    M = int(input())
-    formulas = {}
-    for i in range(M-1):
-        a, b = map(int, input().split())
-        if (a, b) not in formulas:
-            formulas[(a, b)] = 0
-        if (b, a) not in formulas:
-            formulas[(b, a)] = 0
+for t in range(1, T+1):
+    metals = int(input())
+    relations = [list(map(int, input().split())) for _ in range(metals)]
     treasury = list(map(int, input().split()))
-    lead = 0
-    while sum(treasury[1:]) > 0:
-        for i in range(M-1):
-            a, b = [k for k, v in enumerate(treasury) if v > 0][i], [k for k, v in enumerate(treasury) if v > 0][i+1]
-            if (a, b) in formulas or (b, a) in formulas:
-                if treasury[a] >= 2 and treasury[b] >= 2:
-                    lead += 2
-                    treasury[a] -= 2
-                    treasury[b] -= 2
-    print(f"Case # {_+1}: {lead}")
+    print("Case #{}: {}".format(t, max_lead(metals, relations, treasury)))

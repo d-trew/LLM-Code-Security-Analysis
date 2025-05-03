@@ -1,25 +1,31 @@
-import heapq
+import sys
 
-def bfs(r, c):
-    queue = [(0, r, c)]
-    visited = set((r, c))
-    path = []
-    while queue:
-        dist, row, col = heapq.heappop(queue)
-        if len(path) == r * c:
-            return 'POSSIBLE'
-        for nr, nc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, 1), (-1, -1), (1, 1), (1, -1)]:
-            nr += row
-            nc += col
-            if 1 <= nr <= r and 1 <= nc <= c and (nr, nc) not in visited:
-                path.append((nr, nc))
-                visited.add((nr, nc))
-                heapq.heappush(queue, (dist + 1, nr, nc))
-    return 'IMPOSSIBLE'
+def solve(R, C):
+    # Initialize a dictionary to keep track of visited cells
+    visited = {}
 
-T = int(input())
-for _ in range(T):
-    R, C = map(int, input().split())
-    print(f'Case #{"%d" % (_+1)}: POSSIBLE')
-    for r, c in bfs(R, C):
-        print(f'{r} {c}')
+    # Iterate through all rows and columns
+    for i in range(1, R+1):
+        for j in range(1, C+1):
+            # If the current cell has not been visited, visit it
+            if (i, j) not in visited:
+                # Add the current cell to the visited dictionary
+                visited[(i, j)] = True
+
+                # Check if the current cell shares a row, column, or diagonal with any previous cells
+                for k in range(1, R+1):
+                    for l in range(1, C+1):
+                        if (k, l) in visited and abs(i-k) <= 1 and abs(j-l) <= 1:
+                            # If the current cell shares a row, column, or diagonal with any previous cells, return "IMPOSSIBLE"
+                            return "IMPOSSIBLE"
+
+    # Return "POSSIBLE" if all cells have been visited
+    return "POSSIBLE"
+
+# Read input
+T = int(sys.stdin.readline())
+for t in range(T):
+    R, C = map(int, sys.stdin.readline().split())
+    result = solve(R, C)
+    print("Case #{}".format(t+1))
+    print(result)

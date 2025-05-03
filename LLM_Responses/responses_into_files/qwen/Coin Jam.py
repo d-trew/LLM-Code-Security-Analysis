@@ -1,26 +1,41 @@
-import math
+def is_prime(n):
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
 
-def next_power_of_two(n):
-    return int(math.pow(2, math.ceil(math.log2(n))))
+def find_nontrivial_divisor(n):
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0 and i != n // i:
+            return i
+    return None
 
-def check_jamcoin(jamcoin, n):
-    for i in range(2, 11):
-        base = str(i)
-        value = int(jamcoin, base)
-        for j in range(2, value + 1):
-            if value % j == 0:
-                return True
-    return False
-
-def generate_jamcoin(n, j):
-    while True:
-        jamcoin = ''.join([str(random.randint(0, 1)) for _ in range(n)])
-        if check_jamcoin(jamcoin, n) and not any([jamcoin == jam for jam in jams]):
-            jams.append(jamcoin)
-            if len(jams) == j + 1:
+def generate_jamcoin(length, num_jamcoins):
+    jamcoins = []
+    while len(jamcoins) < num_jamcoins:
+        jamcoin = '1' + ''.join('0' if i % 2 == 0 else '1' for i in range(1, length - 1)) + '1'
+        valid = True
+        for base in range(2, 11):
+            value = int(jamcoin, base)
+            if is_prime(value) or find_nontrivial_divisor(value) is None:
+                valid = False
                 break
+        if valid:
+            jamcoins.append((jamcoin, [find_nontrivial_divisor(int(jamcoin, base)) for base in range(2, 11)]))
+    return jamcoins
 
-jams = []
-n, j = int(input()), int(input())
-for i in range(1, j + 1):
-    print(f"Case #{i}: {generate_jamcoin(n, j)}")
+T = int(input())
+for t in range(1, T + 1):
+    N, J = map(int, input().split())
+    jamcoins = generate_jamcoin(N, J)
+    print(f"Case #{t}:")
+    for jamcoin, divisors in jamcoins:
+        print(jamcoin, *divisors)

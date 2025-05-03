@@ -1,22 +1,28 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    P = input()
-    case_num = _ + 1
-    path = []
-    x, y = 0, N-1
-    while (x, y) != (N-1, 0):
-        if P[y*2+1] == 'E' and x < N-1:
-            path.append('E')
+import sys
+input = sys.stdin.readlines
+
+def solve(n, p):
+    grid = [[0] * n for _ in range(n)]
+    x, y = 0, n - 2
+    moves = ['E' * (n - 1) + 'S', 'S' * (n - 1) + 'E']
+
+    for i, c in enumerate(p):
+        if c == p[i+1] and (x, y + 1 if c == 'E' else y + n if c == 'S'):
+            moves.remove(moves[i % 2])
+        elif c == 'E':
+            grid[x][y] = 1
             x += 1
-        elif P[y*2] == 'S' and y > 0:
-            path.append('S')
-            y -= 1
-        else:
-            if y > 0 and (P[(y-1)*2] != 'S' or P[y*2+1] != 'E'):
-                path.append('S')
-                y -= 1
-            elif x < N-1 and (P[y*2+1] != 'E' or P[(x+1)*2] != 'S'):
-                path.append('E')
-                x += 1
-    print(f"Case #{case_num}: {''.join(path)}")
+        elif c == 'S':
+            grid[x][y] = 1
+            y += n
+
+    path = []
+    for i in range(len(moves)):
+        if all(grid[(j // n) + (i % 2) * (n - 1)][j % n] == 0 for j in range(len(moves[i]))):
+            path += moves[i]
+    return 'Case #1: ' + ''.join(path)
+
+for _ in range(int(input()[0].strip())):
+    n = int(input()[0].strip())
+    p = list(input()[1].strip())
+    print(solve(n, p))

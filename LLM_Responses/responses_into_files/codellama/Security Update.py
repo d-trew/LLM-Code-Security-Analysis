@@ -1,26 +1,28 @@
-from itertools import permutations
-for _ in range(int(input())):
-    n, m = map(int, input().split())
-    d = [int(x) for x in input().split()]
-    edges = []
-    for _ in range(m):
-        u, v = map(int, input().split())
-        edges.append((u-1, v-1))
-    min_latencies = 0
-    for p in permutations(range(n-1)):
-        latencies = [0] * m
-        for i, edge in enumerate(edges):
-            if d[edge[0]] < d[edge[1]]:
-                latencies[i] = -d[edge[0]]
-            elif d[edge[0]] > d[edge[1]]:
-                latencies[i] = -d[edge[1]]
-            else:
-                latencies[i] = 0
-        valid = True
-        for i, latency in enumerate(latencies):
-            if latency < 0 and p[i] != edge[0]:
-                valid = False
-                break
-        if valid:
-            min_latencies += 1
-    print(f"Case #{_+1}: {' '.join(map(str, latencies))}")
+import sys
+
+def solve(test_case):
+    # Read input
+    C, D = map(int, input().split())
+    X = list(map(int, input().split()))
+    Y = []
+    for _ in range(D):
+        Y.append(list(map(int, input().split())))
+    
+    # Initialize latencies to 0
+    latencies = [0] * D
+    
+    # Compute latencies based on X values
+    for i in range(1, C):
+        if X[i] > 0:
+            latencies[X[i] - 1] = abs(i - 1)
+    
+    # Print output
+    print("Case #{}".format(test_case))
+    for i in range(D):
+        print("{} {}".format(latencies[i], Y[i][0]), end=" ")
+    print()
+
+if __name__ == "__main__":
+    T = int(input())
+    for t in range(1, T+1):
+        solve(t)

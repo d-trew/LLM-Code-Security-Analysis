@@ -1,22 +1,15 @@
-import math
-p, q = 1, 1
-MOD = 1000000007
-def mul(a, b):
-    return (a * b) % MOD
-def power(a, k):
-    if k == 0:
-        return 1
-    elif k % 2 == 0:
-        half = power(a, k // 2)
-        return mul(half, half)
-    else:
-        return mul(a, mul(power(a, k - 1), MOD))
+from math import factorial as fact
+MOD = 10**9 + 7
+facts = [1]
+for i in range(1, 50*50+1):
+    facts.append((facts[-1] * i) % MOD)
+inv_facts = [pow(facts[-1], MOD-2, MOD)]
+for i in range(50*50, 0, -1):
+    inv_facts.append((inv_facts[-1] * i) % MOD)
+inv_facts.reverse()
+def binomial(n, k):
+    return (facts[n] * ((inv_facts[k] * inv_facts[n-k]) % MOD)) % MOD
 T = int(input())
-for i in range(1, T + 1):
+for case in range(1, T+1):
     M, K = map(int, input().split())
-    ways = math.factorial(M * (M - 1) // 2)
-    for _ in range(K - 1):
-        ways //= (M - _ - 1) * (_ + 1)
-    p *= ways
-    q = power(q, M * (M - 1) // 2)
-    print(f"Case #{i}: {mul(p, power(q, MOD - 2))}")
+    print('Case #{}: {}'.format(case, binomial((M*(M-1))//2, K-1)))

@@ -1,15 +1,44 @@
-T = int(input())
-for _ in range(T):
-    R, C, F, S = map(int, input().split())
-    current = [list(map(str, input().strip())) for _ in range(R)]
-    desired = [list(map(str, input().strip())) for _ in range(R)]
-    flips = sum(c != d for r in current for c, d in zip(r, desired))
-    swaps = 0
+def min_cost_to_retile(R, C, F, S, current_state, target_state):
+    diff = 0
     for i in range(R):
-        for j in range(C - 1):
-            if current[i][j] != desired[i][j] or current[i][j + 1] != desired[i][j + 1]:
-                swaps += 1
-            elif current[i][j] == desired[i][j + 1]:
-                flips += 1
-                breaks
-    print(f"Case #{_ + 1}: {F * flips + S * swaps}")
+        for j in range(C):
+            if current_state[i][j] != target_state[i][j]:
+                diff += 1
+    flips_needed = (diff + 1) // 2
+    swaps_needed = max(0, diff - flips_needed * 2)
+    return F * flips_needed + S * swaps_needed
+
+def solve():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    index = 0
+    T = int(data[index])
+    index += 1
+    
+    results = []
+    for _ in range(T):
+        R = int(data[index])
+        C = int(data[index + 1])
+        F = int(data[index + 2])
+        S = int(data[index + 3])
+        index += 4
+        
+        current_state = []
+        target_state = []
+        for i in range(R):
+            current_state.append(data[index])
+            index += 1
+        for i in range(R):
+            target_state.append(data[index])
+            index += 1
+        
+        result = min_cost_to_retile(R, C, F, S, current_state, target_state)
+        results.append(result)
+    
+    for i, result in enumerate(results):
+        print(f"Case #{i + 1}: {result}")
+
+if __name__ == "__main__":
+    solve()

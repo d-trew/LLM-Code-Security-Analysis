@@ -1,33 +1,43 @@
-from itertools import permutations
-
 def edit_distance(s1, s2):
-    m, n = len(s1), len(s2)
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    for i in range(m + 1):
-        dp[i][0] = i
-    for j in range(n + 1):
-        dp[0][j] = j
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if s1[i - 1] == s2[j - 1]:
-                dp[i][j] = dp[i - 1][j - 1]
+    if len(s1) > len(s2):
+        s1, s2 = s2, s1
+
+    distances = list(range(len(s1) + 1))
+    for index2, char2 in enumerate(s2):
+        newDistances = [index2 + 1] + [0] * len(s1)
+        for index1, char1 in enumerate(s1):
+            if char1 == char2:
+                newDistances[index1 + 1] = distances[index1]
             else:
-                dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
-    return dp[m][n]
+                newDistances[index1 + 1] = 1 + min(distances[index1], distances[index1 + 1], newDistances[index1])
+        distances = newDistances
+    return distances[-1]
 
-def find_compromise_name(c, j):
+def compromise_name(c, j):
+    if len(j) > len(c):
+        c, j = j, c
+
     min_distance = float('inf')
-    best_name = ''
-    for p in permutations(set(c)):
-        name = ''.join(p)
-        distance_c = edit_distance(c, name)
-        distance_j = edit_distance(j, name)
-        if distance_c + distance_j < min_distance:
-            min_distance = distance_c + distance_j
-            best_name = name
-    return best_name
+    best_names = []
+    for i in range(len(c)):
+        name1 = c[:i] + c[i+1:]
+        name2 = j[:i] + j[i+1:]
+        distance1 = edit_distance(name1, c) + edit_distance(j, name1)
+        distance2 = edit_distance(name2, c) + edit<｜begin▁of▁sentence｜>(j, name2)
+        if distance1 < min_distance or (distance1 == min_distance and abs(len(name1)-len(c)) < abs(len(best_names[0])-len(c))):
+            min_distance = distance1
+            best_names = [name1]
+        elif distance1 == min_distance:
+            best_names.append(name1)
+        if distance2 < min_distance or (distance2 == min_distance and abs(len(name2)-len(c)) < abs(len(best_names[0])-len(c))):
+            min_distance = distance2
+            best_names = [name2]
+        elif distance2 == min_distance:
+            best_names.append(name2)
+    return best_names
 
-t = int(input())
-for i in range(t):
-    c, j = input().split()
-    print(f'Case #{i+1}: {find_compromise_name(c, j)}')
+t = int(input().strip())
+for i in range(1, t + 1):
+    c, j = input().strip().split()
+    names = compromise_name(c, j)
+    print('Case #{}: {}'.format(i, min(names, key=len)))

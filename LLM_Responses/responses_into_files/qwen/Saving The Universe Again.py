@@ -1,16 +1,55 @@
-def hack_program(program):
-    n = len(program)
-    dp = [float('inf')] * (n + 1)
-    dp[0] = 0
-    for i in range(1, n):
-        if program[i-1] == 'S':
-            dp[i] = min(dp[i], dp[i-1] + 1)
-        elif program[i-1] == 'C' and i > 1:
-            dp[i] = min(dp[i], dp[i-2] + 1)
-    return 'IMPOSSIBLE' if dp[-1] == float('inf') else str(min(dp))
+def min_hacks(D, P):
+    n = len(P)
+    damage = P.count('S')
+    if damage <= D:
+        return 0
+    
+    max_singles = sum(1 for i in range(n-1) if P[i] == 'C' and P[i+1] == 'S')
+    if max_singles * 2 > damage:
+        return -1
+    
+    # Binary search for the minimum number of hacks
+    left, right = 0, max_singles
+    while left < right:
+        mid = (left + right) // 2
+        if can_reduce_damage(D, P, mid):
+            right = mid
+        else:
+            left = mid + 1
+    
+    return left
 
-t = int(input())
-for _ in range(t):
-    d, program = input().split()
-    d = int(d)
-    print(f"Case #{_+1}: {hack_program(program)}")
+def can_reduce_damage(D, P, hacks):
+    n = len(P)
+    damage = P.count('S')
+    if damage <= D:
+        return True
+    
+    for _ in range(hacks):
+        max_singles = sum(1 for i in range(n-1) if P[i] == 'C' and P[i+1] == 'S')
+        if max_singles * 2 > damage:
+            return False
+        # Simulate swapping adjacent CS pairs
+        for i in range(n-1):
+            if P[i] == 'C' and P[i+1] == 'S':
+                P = P[:i] + 'SC' + P[i+2:]
+                break
+    
+    return damage <= D
+
+# Read input
+T = int(input())
+results = []
+
+for i in range(1, T+1):
+    D, P = input().split()
+    D = int(D)
+    result = min_hacks(D, P)
+    if result == -1:
+        results.append(f"Case #{i}: IMPOSSIBLE")
+    else:
+        results.append(f"Case #{i}: {result}")
+
+# Output results
+for result in results:
+    print(result)

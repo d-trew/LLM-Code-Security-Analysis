@@ -1,45 +1,35 @@
-import itertools
-T = int(input())
-for _ in range(T):
-    S = int(input())
-    K = 3
-    while True:
-        for L in range(1, (S//10)+2):
-            for P in itertools.product('0123456789', repeat=L):
-                P_str = ''.join(P)
-                if int(P_str) <= S:
-                    if K == 1:
-                        print(f'Case #{"":_;}: {P_str}')
-                        break
-                    else:
-                        S -= int(P_str)
-                        K -= 1
-                        if K > 0:
-                            for L2 in range(1, (S//10)+2):
-                                for P2 in itertools.product('0123456789', repeat=L2):
-                                    P2_str = ''.join(P2)
-                                    if int(P2_str) <= S:
-                                        if K == 2:
-                                            print(f'Case #{"":_;}: {P_str}{P2_str}')
-                                            break
-                                        else:
-                                            S -= int(P2_str)
-                                            K -= 1
-                                            if K > 0:
-                                                for L3 in range(1, (S//10)+2):
-                                                    for P3 in itertools.product('0123456789', repeat=L3):
-                                                        P3_str = ''.join(P3)
-                                                        if int(P3_str) <= S:
-                                                            print(f'Case #{"":_;}: {P_str}{P2_str}{P3_str}')
-                                                            break
-                                        break
-                                else:
-                                    continue
-                            else:
-                                continue
-                        else:
-                            break
-                else:
-                    continue
-        else:
-            break
+def find_min_palindromic_terms(S):
+    def is_palindrome(num):
+        return str(num) == str(num)[::-1]
+    
+    if is_palindrome(S):
+        return [S]
+    
+    for i in range(1, 100):  # Arbitrary limit for K
+        for j in range(i + 1, 100):
+            k = S - (i * 10**j)
+            if k >= 0 and is_palindrome(k):
+                return [i] * j + [k]
+    
+    return [S]
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    results = []
+    
+    index = 1
+    for _ in range(T):
+        S = int(data[index])
+        result = find_min_palindromic_terms(S)
+        results.append(result)
+        index += 1
+    
+    for i, res in enumerate(results, start=1):
+        print(f"Case #{i}: {''.join(map(str, res))}")
+
+if __name__ == "__main__":
+    main()

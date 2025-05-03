@@ -1,25 +1,50 @@
-T = int(input())
-for _ in range(T):
-    N, P = map(int, input().split())
-    packages = []
-    for _ in range(N):
-        package = list(map(int, input().split()))
-        packages.append(package)
+def solve(packages):
+    # Initialize variables to keep track of the maximum number of kits and the required amounts of each ingredient
     max_kits = 0
-    for i in range(1 << N):
-        valid = True
-        kit_serving = 0
-        total_packages = [0] * P
-        for j in range(N):
-            if (i & (1 << j)):
-                kit_serving += 1
-                for k in range(P):
-                    total_packages[k] += packages[j][k]
-        for j in range(P):
-            if packages[0][j] * .9 <= total_packages[j] <= packages[0][j] * 1.1:
-                continue
-            valid = False
-            break
-        if valid and kit_serving > max_kits:
-            max_kits = kit_serving
-    print(f"Case # {_ + 1}: {max_kits}")
+    required_amounts = {}
+    
+    # Loop through each package and its contents
+    for package in packages:
+        # Loop through each ingredient in the package
+        for ingredient, amount in package.items():
+            # If the ingredient is not already in the required amounts dictionary, add it with a value of 0
+            if ingredient not in required_amounts:
+                required_amounts[ingredient] = 0
+            
+            # Add the amount of the ingredient from the package to the total required amount
+            required_amounts[ingredient] += amount
+    
+    # Loop through each ingredient in the recipe
+    for ingredient, amount in required_amounts.items():
+        # If the ingredient is not available in any of the packages, return 0
+        if amount > 0:
+            return 0
+        
+    # Initialize a variable to keep track of the number of kits formed
+    num_kits = 0
+    
+    # Loop through each package and its contents
+    for package in packages:
+        # Initialize variables to keep track of the required amounts of each ingredient in the package
+        required_amounts = {}
+        
+        # Loop through each ingredient in the package
+        for ingredient, amount in package.items():
+            # If the ingredient is not already in the required amounts dictionary, add it with a value of 0
+            if ingredient not in required_amounts:
+                required_amounts[ingredient] = 0
+            
+            # Add the amount of the ingredient from the package to the total required amount
+            required_amounts[ingredient] += amount
+        
+        # Check if all the required amounts are met by the packages
+        for ingredient, required_amount in required_amounts.items():
+            # If any of the required amounts are not met, return 0
+            if required_amount > 0:
+                return 0
+        
+        # Increment the number of kits formed
+        num_kits += 1
+    
+    # Return the maximum number of kits that can be formed
+    return max_kits

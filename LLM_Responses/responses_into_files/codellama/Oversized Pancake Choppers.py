@@ -1,24 +1,22 @@
 import math
 
-def pancake_cuts():
-    t = int(input())
-    for _ in range(t):
-        n, d = map(int, input().split())
-        angles = list(map(int, input().split()))
-        total_cuts = 0
-        slices = [angles[0]]
-        while len(slices) < d:
-            new_slices = []
-            for i, angle in enumerate(slices):
-                half_angle = angle / 2.0
-                if math.isclose(half_angle, int(half_angle)):
-                    half_angle = int(half_angle)
-                else:
-                    half_angle = int(math.floor(half_angle)) + 1
-                new_slices.append(half_angle)
-                new_slices.append(angle - half_angle)
-            slices = new_slices
-            total_cuts += len(new_slices) - len(slices)
-        print('Case #{}: {}'.format(_, total_cuts))
+def solve(N, D):
+    # Calculate the minimum number of cuts needed for each diner
+    min_cuts = []
+    for i in range(D):
+        min_cuts.append(math.ceil(2 * math.pi * (N - 1) / N))
+    
+    # Initialize the total number of cuts to 0
+    total_cuts = 0
+    
+    # Loop through each diner and calculate the minimum number of cuts needed for that diner
+    for i in range(D):
+        total_cuts += min_cuts[i]
+    
+    return total_cuts
 
-pancake_cuts()
+# Test cases
+cases = int(input())
+for case in range(1, cases + 1):
+    N, D = map(int, input().split())
+    print("Case #" + str(case) + ": " + str(solve(N, D)))

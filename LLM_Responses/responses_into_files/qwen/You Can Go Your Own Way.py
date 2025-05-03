@@ -1,22 +1,43 @@
-T = int(input())
-for _ in range(T):
-    N = int(input())
-    P = input()
-    case_num = _ + 1
-    path = []
-    x, y = 0, N-1
-    while (x, y) != (N-1, 0):
-        if P[y*2+1] == 'E' and x < N-1:
-            path.append('E')
-            x += 1
-        elif P[y*2] == 'S' and y > 0:
-            path.append('S')
-            y -= 1
-        else:
-            if y > 0 and (P[(y-1)*2] != 'S' or P[y*2+1] != 'E'):
-                path.append('S')
-                y -= 1
-            elif x < N-1 and (P[y*2+1] != 'E' or P[(x+1)*2] != 'S'):
-                path.append('E')
-                x += 1
-    print(f"Case #{case_num}: {''.join(path)}")
+def find_path(N, path):
+    moves = {'E': 'S', 'S': 'E'}
+    new_path = []
+    i = 0
+    while i < len(path):
+        if path[i] == 'E':
+            if i + 1 < len(path) and path[i+1] == 'S':
+                new_path.append(moves[path[i]])
+                i += 2
+            else:
+                new_path.append(path[i])
+                i += 1
+        elif path[i] == 'S':
+            if i + 1 < len(path) and path[i+1] == 'E':
+                new_path.append(moves[path[i]])
+                i += 2
+            else:
+                new_path.append(path[i])
+                i += 1
+    return ''.join(new_path)
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    results = []
+    index = 1
+    
+    for _ in range(T):
+        N = int(data[index])
+        path = data[index + 1]
+        index += 2
+        
+        result = find_path(N, path)
+        results.append(f"Case #{_+1}: {result}")
+    
+    for result in results:
+        print(result)
+
+if __name__ == "__main__":
+    main()

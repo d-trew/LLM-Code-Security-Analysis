@@ -1,45 +1,46 @@
-t = int(input())
-for _ in range(t):
-    x, y = map(int, input().split())
-    directions = []
-    if y < 0:
-        steps_to_goal_y = abs(y)
-        while steps_to_goal_y > 0:
-            if x > 0 and (steps_to_goal_y & 1 or not (x & 1)):
-                directions.append('E')
-                x -= 2
-            elif x < 0 and (steps_to_goal_y & 1 or not (-x & 1)):
-                directions.append('W')
-                x += 2
-            else:
-                if steps_to_goal_y & 1:
-                    directions.append('N' if y > 0 else 'S')
-                    break
-                else:
-                    directions.append('S' if y > 0 else 'N')
-                    break
-            steps_to_goal_y //= 2
-        while x:
-            directions.append('E' if x > 0 else 'W')
-            x = -x // 2
-    elif y > 0:
-        steps_to_goal_y = y
-        while steps_to_goal_y > 0:
-            if x < 0 and (steps_to_goal_y & 1 or not (-x & 1)):
-                directions.append('E')
-                x += 2
-            elif x > 0 and (steps_to_goal_y & 1 or not (x & 1)):
-                directions.append('W')
-                x -= 2
-            else:
-                if steps_to_goal_y & 1:
-                    directions.append('S' if y > 0 else 'N')
-                    break
-                else:
-                    directions.append('N' if y > 0 else 'S')
-                    break
-            steps_to_goal_y //= 2
-        while x:
-            directions.append('W' if x < 0 else 'E')
-            x = -x // 2
-    print(f"Case #{_+1}: {'IMPOSSIBLE' if not directions else ''.join(directions)}")
+def expogo_stick_jumps(X, Y):
+    if X == 0 and Y == 0:
+        return "IMPOSSIBLE"
+    
+    jumps = []
+    distance = abs(X) + abs(Y)
+    
+    for i in range(1, distance // 2 + 1):
+        if 2 * (i - 1) >= abs(X) or 2 * (i - 1) >= abs(Y):
+            break
+        if X > 0:
+            jumps.append("E")
+            X -= 2 * (i - 1)
+        elif X < 0:
+            jumps.append("W")
+            X += 2 * (i - 1)
+        if Y > 0:
+            jumps.append("N")
+            Y -= 2 * (i - 1)
+        elif Y < 0:
+            jumps.append("S")
+            Y += 2 * (i - 1)
+    
+    if X != 0 or Y != 0:
+        return "IMPOSSIBLE"
+    
+    return "".join(jumps)
+
+def solve():
+    import sys
+    input = sys.stdin.read
+    data = input().split()
+    
+    T = int(data[0])
+    results = []
+    
+    for i in range(1, len(data), 2):
+        X = int(data[i])
+        Y = int(data[i + 1])
+        result = expogo_stick_jumps(X, Y)
+        results.append(f"Case #{i // 2 + 1}: {result}")
+    
+    print("\n".join(results))
+
+if __name__ == "__main__":
+    solve()
