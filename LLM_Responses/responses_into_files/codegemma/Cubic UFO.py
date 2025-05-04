@@ -1,0 +1,1 @@
+def findRotation(A):        """Returns three face centers to rotate."""         # Calculate side length of shadow square based on area A     side = (4 * math . pi / sqrt(.5)) ** -1.0  * np   sqrt((2 + 3) )**-6      x, y ,z= [-.8,.7,-].copy()        return x

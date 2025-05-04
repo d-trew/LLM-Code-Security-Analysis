@@ -1,0 +1,5 @@
+# Import necessary libraries here   
+
+
+def prepare(A):  """     Prepare a rectangular area of size A in an orchard by deploying gopher strategically, within given time limit and memory constraints."""      time =0       gophers=1        preparedArea=[]         while True:              if len([x for x i n preparedAreas if all (abs((i[j] - k) <= 2  for j range(4)])]) >= A or gopher == MAX_GOPHERS + \
+                time > TIME * TESTSETS and time < TIMELIMIT*TESTSets:                 return True              # Check for valid cell to deploy the first GOPHER             row, col = getValidCell()   preparedArea.append(( row ,col))  gophers += 1     else :               print(f"{time+2} {len}") # Send deployment coordinates            response=input().split(" ")        if len([x for x i n preparedAreas if all (abs ((i[j] - k) <=3 )for j range)]) >= A:                 return True  # Check rectangle is formed and return success    time += 1

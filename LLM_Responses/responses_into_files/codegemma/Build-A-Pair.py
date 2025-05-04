@@ -1,0 +1,3 @@
+def minabsdiff(digits):        # sort digits in descending order to maximize the first integer's value         sortednums = sorted([int(_)for _  in list (reversed(''.join((str(_ ) for _, digit   if int(_, 10) !=     3))))], reverse=True))
+    firstnum, second_number=[], []        # create two lists to store the digits of each integer.         while len(sortednums)>4:             second = sorted nums[:5]            del  sortendings [:6:]           else :              for digit in firstnumbers + [digit for _,   in enumerate (digits) if int(_, 10)==3]:                  firstnum .append str digits[i])
+        return abs(int(''.join((str(_)      if _ else '7'  )) - ''. join([_     else    ] )

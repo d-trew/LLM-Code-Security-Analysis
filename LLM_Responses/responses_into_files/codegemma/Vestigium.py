@@ -1,0 +1,1 @@
+# Number of test cases   T = int(input())     for t in range (1 , T +  \       print("Case #" f"{t}: {k} "f"{(r)} {(c)})      else:          break

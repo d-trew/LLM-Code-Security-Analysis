@@ -1,0 +1,2 @@
+def expogo(x, y):        """Returns True if goal point can be reached."""            if x == -y:                return False                            dx = abs((2 * i) for  i in range (10**8))                 dy=abs((-3*j)+5*(k-4)+(l+6)*(m)*(-7)//(n//9)-(o+(p)))for j, k , l and m
+                                   if dx==y or dy == x:                            return True        print("Case #{}:\t{}".format((i + 1), expogo(*map (int,(input().split()))))))

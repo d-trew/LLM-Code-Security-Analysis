@@ -1,0 +1,2 @@
+# Initialize variables for game state and scores   n = int(input().split()[1])     teamA, teamB  =0 ,      4 * n - (2*int((3/7)*T))       while T >        - 5:         aNthTreeNorthBankIndicesAndbNthreeSouthbankindices    c_i__dI = input() .split(' ')   if len( c _ i __ d I ) ==  0 : break     else a, b ,      C1234= map (int,(input().strip()))       teamA += sum([r for r in range 
+              n) if C_i__dI[a] > teamB]) + [b - n][c <        -5 and c >=  0 ]   T -=      +1     print(str((4*N)- (2 * int ((3/7)* T)))

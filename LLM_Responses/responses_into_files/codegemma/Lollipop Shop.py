@@ -1,0 +1,2 @@
+def sellLollipops(N):        lollipopPreferences = [[] for _ in range ( N )]       for i  in   range     :            D=int() ; flavors=[ int () ]* D;          print(' '.join([ str(_)      if flavor not set else '-1'    
+                 else - 2 ' ', end=' ')

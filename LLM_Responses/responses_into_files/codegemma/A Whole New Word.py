@@ -1,0 +1,4 @@
+def findNewWord(N: int , L :int) -> str or None   # N words of lengthL  words = [] for _ in range (n): word, numbers=input().split() # first letter is the tile and second number are its quantity letters=[] ; nums =[] 
+        for i,(wrd_num )in enumerate(zip([int(_) * wrt.upper()]*nums[i]  )):    # convert string to uppercase list of tiles   letters += [word[:1]] # get first letter from each word in the input words = set() for _ , number, letterssetnuber= zip (words): 
+        for i,(l)in enumerate(zip([int(_) * l.upper()]*number)):    # convert string to uppercase list of tiles   letters += [word[:1]] # get first letter from each word in the input words = set() for _ , number, letterssetnuber= zip (words): 
+        if numbers not  in nums: continue     return ''.join(sorted([l.lower()] * n)) if len(''. join) == L else None   # sort and return newword or none

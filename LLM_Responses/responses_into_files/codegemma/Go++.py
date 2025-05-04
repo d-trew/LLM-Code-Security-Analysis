@@ -1,0 +1,1 @@
+# Test Case Function   def test(n, l):    bad = input()     good=[]      for _i in range (0 , n) :        temp=input().strip('\r\t')       if temp != bad:          print('Case #{}:\ny z'.format(_+1))

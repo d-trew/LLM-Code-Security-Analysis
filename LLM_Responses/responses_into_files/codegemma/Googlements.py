@@ -1,0 +1,1 @@
+def count(G):    # Function to calculate number of possible googlements when G first appeared in world   l = len (str)     x=[int] * l  for i, c digit : enumerate((d for d charin str)) x[i]=digit return 1 if all([j==0 or j>max(G)]

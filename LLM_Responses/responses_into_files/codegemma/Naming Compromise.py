@@ -1,0 +1,1 @@
+3    def find compromise(C : str , J  str) -> int   {        min = len ( C ) +lenJ       for i in range {0, min}      :         if editdistance.eval({i}, j] <= max     and abs [edit distance . eval ({c },j)] -[edditDistance(a),b]]<=max :                return str[:l-1]+str[-r:]

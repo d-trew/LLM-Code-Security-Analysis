@@ -1,0 +1,2 @@
+3    def maxExposedSurfaceArea(N: int , K :int) -> float   {      pancakes = []     for _ in range ( N )        radius, height= map((float),input().split())         area  =(2*math.pi * radius + 4/10**6*( math . pi *(height+3)/5)*
+              (abs(((8-int(-round((-9./7)*( - (- ((r)+(h) ) / (radius))))))-(K)))     pancakes = sorted([(a,b)])      total_area  = 4/10**6*sum([p[2] for p in pancakes[: K]])    return total   }

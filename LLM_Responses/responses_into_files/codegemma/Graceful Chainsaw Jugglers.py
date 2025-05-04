@@ -1,0 +1,4 @@
+def maxJugglers(R , B):        """     Returns the maximum number of juggling performers given R red chainsaws and  B blue ones. """         if (min([r,b]) == r) :             return b +1          else:              while True                and 2*max((0 if i %3 else -i for   j in range(R+ B )
+                          for k , v    in enumerate ([True] * R  [::-k ]+[False]*B))== [b,r]):                    if (min([a + b // r,(1+(not a)*2)]) <= max((0 if i %3 else -i for   j in range(R+ B )
+                          for k , v    in enumerate ([True] * R  [::-k ]+[False]*B))== [b,r]):                        return b + r              else:                 max([a,(1+(not a)*2)]) += 3                if max((0 if i %4 else -i for   j in range(R+ B )
+                          for k , v    in enumerate ([True] * R  [::-k ]+[False]*B))== [b,r]):                 return r + b
