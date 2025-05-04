@@ -8,9 +8,8 @@ bandit_report_dirs = [
     "LLM_Responses/bandit_reports/wizardcoder",
     "LLM_Responses/bandit_reports/mistral",
     "LLM_Responses/bandit_reports/qwen",
-    "LLM_Responses/bandit_reports/deepseek",
+    "LLM_Responses/bandit_reports/deepseekcoder",
     "LLM_Responses/bandit_reports/codellama"
-
 ]
 
 # Initialize counters
@@ -22,6 +21,11 @@ total_low_severity = 0
 
 # Iterate over all Bandit report directories
 for bandit_reports_dir in bandit_report_dirs:
+    current_loc=0
+    current_high_severity=0
+    current_medium_severity=0
+    current_low_severity=0
+    
     for root, _, files in os.walk(bandit_reports_dir):
         for report_file in files:
             if report_file.endswith(".json"):
@@ -33,10 +37,10 @@ for bandit_reports_dir in bandit_report_dirs:
                     report = json.load(f)
 
                 # Aggregate metrics
-                total_loc += report["metrics"]["_totals"]["loc"]
-                total_high_severity += report["metrics"]["_totals"]["SEVERITY.HIGH"]
-                total_medium_severity += report["metrics"]["_totals"]["SEVERITY.MEDIUM"]
-                total_low_severity += report["metrics"]["_totals"]["SEVERITY.LOW"]
+                current_loc += report["metrics"]["_totals"]["loc"]
+                current_high_severity += report["metrics"]["_totals"]["SEVERITY.HIGH"]
+                current_medium_severity += report["metrics"]["_totals"]["SEVERITY.MEDIUM"]
+                current_low_severity += report["metrics"]["_totals"]["SEVERITY.LOW"]
 
                 # Print issues found in the current file
                 if report["metrics"]["_totals"]["SEVERITY.HIGH"] > 0:
@@ -45,6 +49,15 @@ for bandit_reports_dir in bandit_report_dirs:
                     print(f"Medium severity issues found in {report_path}")
                 elif report["metrics"]["_totals"]["SEVERITY.LOW"] > 0:
                     print(f"Low severity issues found in {report_path}")
+    total_loc += current_loc
+    total_high_severity += current_high_severity
+    total_medium_severity += current_medium_severity
+    total_low_severity += current_low_severity
+    print(f"\n{bandit_reports_dir} totals:")
+    print(f"Total lines of code (loc): {current_loc}")
+    print(f"Total high severity issues: {current_high_severity}")
+    print(f"Total medium severity issues: {current_medium_severity}")
+    print(f"Total low severity issues: {current_low_severity}")
 
 # Print aggregated results
 print("\nAggregated Bandit Report:")

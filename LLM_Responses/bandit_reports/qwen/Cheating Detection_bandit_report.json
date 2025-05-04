@@ -1,0 +1,154 @@
+{
+  "errors": [],
+  "generated_at": "2025-05-03T21:21:15Z",
+  "metrics": {
+    ".\\LLM_Responses/responses_into_files\\qwen\\Cheating Detection.py": {
+      "CONFIDENCE.HIGH": 6,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 6,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 39,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "_totals": {
+      "CONFIDENCE.HIGH": 6,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 6,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 39,
+      "nosec": 0,
+      "skipped_tests": 0
+    }
+  },
+  "results": [
+    {
+      "code": "12             if cheater is not None and i == cheater:\n13                 flip = random.choice([True, False])\n14                 if flip:\n",
+      "col_offset": 23,
+      "end_col_offset": 51,
+      "filename": ".\\LLM_Responses/responses_into_files\\qwen\\Cheating Detection.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 13,
+      "line_range": [
+        13
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.2/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "16                 else:\n17                     player_correct[j] = 1 if random.random() > sigmoid(skill_levels[i] - question_difficulties[j]) else 0\n18             else:\n",
+      "col_offset": 45,
+      "end_col_offset": 60,
+      "filename": ".\\LLM_Responses/responses_into_files\\qwen\\Cheating Detection.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 17,
+      "line_range": [
+        17
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.2/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "18             else:\n19                 player_correct[j] = 1 if random.random() > sigmoid(skill_levels[i] - question_difficulties[j]) else 0\n20         results.append(player_correct)\n",
+      "col_offset": 41,
+      "end_col_offset": 56,
+      "filename": ".\\LLM_Responses/responses_into_files\\qwen\\Cheating Detection.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 19,
+      "line_range": [
+        19
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.2/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "35         num_questions = 10000\n36         skill_levels = [random.uniform(-3.00, 3.00) for _ in range(num_players)]\n37         question_difficulties = [random.uniform(-3.00, 3.00) for _ in range(num_questions)]\n",
+      "col_offset": 24,
+      "end_col_offset": 51,
+      "filename": ".\\LLM_Responses/responses_into_files\\qwen\\Cheating Detection.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 36,
+      "line_range": [
+        36
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.2/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "36         skill_levels = [random.uniform(-3.00, 3.00) for _ in range(num_players)]\n37         question_difficulties = [random.uniform(-3.00, 3.00) for _ in range(num_questions)]\n38         cheater = random.randint(0, num_players - 1)\n",
+      "col_offset": 33,
+      "end_col_offset": 60,
+      "filename": ".\\LLM_Responses/responses_into_files\\qwen\\Cheating Detection.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 37,
+      "line_range": [
+        37
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.2/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "37         question_difficulties = [random.uniform(-3.00, 3.00) for _ in range(num_questions)]\n38         cheater = random.randint(0, num_players - 1)\n39         results = simulate_tournament(num_players, num_questions, skill_levels, question_difficulties, cheater)\n",
+      "col_offset": 18,
+      "end_col_offset": 52,
+      "filename": ".\\LLM_Responses/responses_into_files\\qwen\\Cheating Detection.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 38,
+      "line_range": [
+        38
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.8.2/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    }
+  ]
+}
