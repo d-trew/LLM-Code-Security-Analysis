@@ -1,0 +1,4 @@
+def findPath(R , C):        path = []            visitedCellsCount=0                for iRowNumber, rowContentList\               in enumerate ( rangeStartAtZeroToNMinusOneForRangeNotation()):                    if visitedCellCounter == R *C :                            break                        else:                                    rowColumnCombinationSetOfTupleFromCurrentPositionAndItsNeighbours.clear()                             currentVisitedCellsCount=visitedCelllarsInThisRow+1                          for iColNumber, cellContent in enumerate( row):                              path = []
+    if visitedCellCounter == R *C : 
+
+        break   else:  rowColumnCombinationSetOfTupleFromCurrentPositionAndItsNeighbours.clear()                             currentVisitedCellsCount=visitedCelllarsInThisRow+1                          for iColNumber, cellContent in enumerate( row):

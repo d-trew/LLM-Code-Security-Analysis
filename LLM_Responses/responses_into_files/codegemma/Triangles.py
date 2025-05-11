@@ -1,0 +1,2 @@
+# Import necessary libraries for graph traversal and set operations    from collections import defaultdict     def maxTriangles(N):         graph = [[]for i in range ( N +1)]        points= []          edges=[]       visited  =[False] *3054      ans =[]             resultset={}           maximum=-float('inf')   # Create a graph to represent the points and their connections
+    def dfs(node,count):         if count > maximum:            return     for neighbor in range (N+1) :                 edges.append(( node ,neighbor))        visited[point] = True          dfs

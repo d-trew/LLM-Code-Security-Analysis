@@ -1,0 +1,4 @@
+def calculate(n: int) -> str :        box = list() ; tunnels=dict(); arr=[0] * n; count=[]         for i,j  in enumerate (input().split()):             if j=="C":                 count.append(-1); box[i]=True     elif   
+                "?" in input():            arr [int(x) - 2 ] += pow((n-3),len([k for k , v] = tunnels .items() if  v == i]))        else:             box=[False]* n; count.append(-1); boxes[i]=True ; arr= list (range
+                0, len(arr)))       for _ in range 4 :            count [int(''.join([str(_) for _, v] = enumerate),2)] +=  pow((n-3),(len ([k ,v ] ) == tunnels .items() if i== k else False))        return str (sum
+                [i % pow(10,9) + 7for x in count])

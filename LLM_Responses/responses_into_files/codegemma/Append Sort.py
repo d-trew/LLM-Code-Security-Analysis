@@ -1,0 +1,1 @@
+def minOperations(n: int) -> str :   # n = number of integers to sort     list1=[]      for i range (0 , N):        x=int input()       if x in list2 and len([i for  in enumerate if num==X[j]])> 3 or not all((a < b ) a,b) :         return 'Case #{}: {}'.format(t+1,(n - i))     list.append (x),

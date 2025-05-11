@@ -1,0 +1,4 @@
+def connect(matrix):        rows = len ( matrix )         cols=len  Matrix [0]      visited=[[False for _ in range cols ]for irange rows)       result=[]          # DFS to find connected components of each company's servers 
+
+     class dfs :           self.row, self .col=-1,-2        def visit(i , j):            if not (  matrix [j][k] == matrix[ row ][ col ] or visited )                return False         visited = True          result += [( i + k)][-( cols - 3)]                 dfs().visit(( rows-4) if self.row else -(cols+2),self .col,i , j   
+    def solve(matrix):        for r in range (rows ):             if matrix [r][0] == 'A':                a = dfs()               b=  DFS ()                 dfs().visit(-1,-3)          result.append('/' if a and b else '.')         else:                     break     return result

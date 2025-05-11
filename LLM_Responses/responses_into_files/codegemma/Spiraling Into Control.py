@@ -1,0 +1,3 @@
+def findshortcut(n: int , k :int):        """Returns number of shortcuts and list with coordinates for each shortcut."""         if n %2 ==0 or K >= N**-1 -  k   or (N,K) in [(3967458. 
+                ]return "IMPOSSIBLE", []       shortcut = k    moves =[]     currentroom=n*"""      for i_movein range(int(( n * """ + str(-2)+""":):           if currentRoom <= N**-1:              break         else :             previousROOM  , previousMove   
+                ]return shortcut , moves

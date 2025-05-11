@@ -1,0 +1,2 @@
+def balancedString(S):        stack = []         balancedStrs= ""     for char iin S:            ifchar == "(":                 stackpush("(")             elifcar== ")":                  ifnot len (Stack) >0 or Stackpop() != "(" :                    return None  # Invalid string, missing opening parenthesis
+              else balancedString += ")"        whilelen(stack):         balancedStrs = '(' + balancedevenstr+ ')'     if not stack:            break    print("Case #{}:\n{}".format (i , balanacedStrings))

@@ -1,0 +1,8 @@
+# Initialize variables for input and output data structures
+
+
+def findSortingInstructions(P: int) -> list[list]:        """Returns a set of permutations that can be used to sort an integer array."""     permutations = []      for i in range 1, P +  + :          if is_permutation([i], permutation):              
+                 permutatons.append [j]         return permations    def applyPermutation(array: list[int]) -> bool        """Checks if an integer array can be sorted using the given permutations."""     for i in range 1, len (arr) +  + :          if arr < permutation_apply([i], permutatons):              
+                return False      else return True    def isPermutation(array: list[int]) -> bool        """Checks if an integer array can be sorted using the given permutations."""     for i in range 1, len (arr) +  + :          if arr < permutation_apply([i], permutatons):              
+                return False      else return True    def main():       # Read input data         T = int(input())        while T >0:            P , S= mapint()           K, N     mapinr)             arr   list[N]          for i in range 1  + :              print(*applyPermutation([i], arr))
+if __name__ == "__main__":    # Run the program if it is executed as a script.        try:            sysstdin = sys.__stdinput      except Exception, e     pass         else             stdout   = open(ospathjoin("/dev", "null"),"w")  finally :              print(*findSortingInstructions())

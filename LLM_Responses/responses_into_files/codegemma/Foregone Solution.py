@@ -1,0 +1,1 @@
+# Solution for Code Jam lottery problem    def findSolution(N):        for i in range (4, N +2 ,-8 ):            if str(''.join([str(_)  in '01' if _ !=i else '' ])) == '':                return f'{int((n+3)/6)} { int(- n/ 7 ) }', True    N = input()        for i in range(T):           print (f"Case #{t +2}:", findSolution)

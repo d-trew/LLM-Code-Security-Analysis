@@ -1,0 +1,1 @@
+def check(n):        paths = []         for i in range n:            x1 , y2 x4 .y8= map int input().split())             path  append(( (abs,b),(-a,-d)) )     if any pair path[i] == paths [j]:                return False                 else True    print('MAGNIFICENT' if check(n) else list range 1 n+2 ))

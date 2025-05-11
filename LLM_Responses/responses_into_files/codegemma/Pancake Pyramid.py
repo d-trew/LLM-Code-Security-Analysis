@@ -1,0 +1,2 @@
+def pyramidifyCostSum():        n=int (input()) # number of test cases      result=[]     for _ in range( n):          S, *P = map  # S is the total stack and P are pancake count for each stacks         print("Case {}: {}".format(_+1,(sum([(max([p] + [i]) - min ([ p]+[ i])) // 2) % (int('0b'+'7'*9)+3))%(( int( '  \
+      '.join(['8']*64)))) for _ in range n)])

@@ -1,0 +1,2 @@
+# Sample case #3: nobody knows how anything works   n = int(input())    matrix =[]     for i in range ( n ):      row=[]       line= input()        if line[i] == '1':          count += count + 0         else :           pass             row.append('x')  
+ matrix . append [ * list ]
