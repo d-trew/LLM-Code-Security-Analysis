@@ -5,6 +5,8 @@ Total lines of code (loc): 5856
 Total high severity issues: 0
 Total medium severity issues: 0
 Total low severity issues: 1
+CWE counts:
+  CWE-703: 1
 Low severity issues found in LLM_Responses/bandit_reports/llama\Coin Jam_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/llama\Golf Gophers_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/llama\Lollipop Shop_bandit_report.json
@@ -17,6 +19,8 @@ Total lines of code (loc): 3623
 Total high severity issues: 0
 Total medium severity issues: 0
 Total low severity issues: 10
+CWE counts:
+  CWE-330: 10
 Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\Blindfolded Bullseye_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\Cheating Detection_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\Lollipop Shop_bandit_report.json
@@ -30,6 +34,8 @@ Total lines of code (loc): 4706
 Total high severity issues: 0
 Total medium severity issues: 0
 Total low severity issues: 7
+CWE counts:
+  CWE-330: 7
 Medium severity issues found in LLM_Responses/bandit_reports/mistral\Operation_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/mistral\Revenge of GoroSort_bandit_report.json
 
@@ -38,6 +44,9 @@ Total lines of code (loc): 5105
 Total high severity issues: 0
 Total medium severity issues: 1
 Total low severity issues: 2
+CWE counts:
+  CWE-78: 1
+  CWE-330: 2
 Low severity issues found in LLM_Responses/bandit_reports/qwen\Cheating Detection_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/qwen\Sorting Permutation Unit_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/qwen\Twisty Little Passages_bandit_report.json
@@ -48,6 +57,8 @@ Total lines of code (loc): 6202
 Total high severity issues: 0
 Total medium severity issues: 0
 Total low severity issues: 10
+CWE counts:
+  CWE-330: 10
 Low severity issues found in LLM_Responses/bandit_reports/deepseekcoder\Alphabet Cake_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/deepseekcoder\ASeDatAb_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/deepseekcoder\Coin Jam_bandit_report.json
@@ -60,6 +71,9 @@ Total lines of code (loc): 4380
 Total high severity issues: 0
 Total medium severity issues: 0
 Total low severity issues: 9
+CWE counts:
+  CWE-330: 8
+  CWE-703: 1
 Low severity issues found in LLM_Responses/bandit_reports/codellama\ASeDatAb_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/codellama\Binary Search Game_bandit_report.json
 Low severity issues found in LLM_Responses/bandit_reports/codellama\Cheating Detection_bandit_report.json
@@ -73,6 +87,9 @@ Total lines of code (loc): 4016
 Total high severity issues: 0
 Total medium severity issues: 0
 Total low severity issues: 14
+CWE counts:
+  CWE-330: 9
+  CWE-703: 5
 Low severity issues found in LLM_Responses/bandit_reports/codegemma\ASeDatAb_bandit_report.json
 
 LLM_Responses/bandit_reports/codegemma totals:
@@ -80,6 +97,8 @@ Total lines of code (loc): 1743
 Total high severity issues: 0
 Total medium severity issues: 0
 Total low severity issues: 1
+CWE counts:
+  CWE-330: 1
 
 Aggregated Bandit Report:
 Total files analyzed: 1486

@@ -1,5 +1,6 @@
 import json
 import os
+from collections import defaultdict, Counter
 
 # Directories containing Bandit reports
 bandit_report_dirs = [
@@ -28,7 +29,8 @@ with open("LLM_Responses/bandit_reports/aggregated_results.txt", "w") as out_fil
         current_high_severity = 0
         current_medium_severity = 0
         current_low_severity = 0
-        
+        cwe_counter = Counter()
+
         for root, _, files in os.walk(bandit_reports_dir):
             for report_file in files:
                 if report_file.endswith(".json"):
@@ -45,25 +47,32 @@ with open("LLM_Responses/bandit_reports/aggregated_results.txt", "w") as out_fil
                     current_medium_severity += report["metrics"]["_totals"]["SEVERITY.MEDIUM"]
                     current_low_severity += report["metrics"]["_totals"]["SEVERITY.LOW"]
 
+                    # Count CWE IDs
+                    for result in report.get("results", []):
+                        cwe = result.get("issue_cwe", {}).get("id")
+                        if cwe:
+                            cwe_counter[cwe] += 1
+
                     # Print issues found in the current file
-                    if report["metrics"]["_totals"]["SEVERITY.HIGH"] > 0:
+                    severity = report["metrics"]["_totals"]
+                    if severity["SEVERITY.HIGH"] > 0:
                         msg = f"High severity issues found in {report_path}"
                         print(msg)
                         out_file.write(msg + "\n")
-                    elif report["metrics"]["_totals"]["SEVERITY.MEDIUM"] > 0:
+                    elif severity["SEVERITY.MEDIUM"] > 0:
                         msg = f"Medium severity issues found in {report_path}"
                         print(msg)
                         out_file.write(msg + "\n")
-                    elif report["metrics"]["_totals"]["SEVERITY.LOW"] > 0:
+                    elif severity["SEVERITY.LOW"] > 0:
                         msg = f"Low severity issues found in {report_path}"
                         print(msg)
                         out_file.write(msg + "\n")
-        
+
         total_loc += current_loc
         total_high_severity += current_high_severity
         total_medium_severity += current_medium_severity
         total_low_severity += current_low_severity
-        
+
         # Write individual model results to file
         model_results = f"""
 {bandit_reports_dir} totals:
@@ -71,9 +80,15 @@ Total lines of code (loc): {current_loc}
 Total high severity issues: {current_high_severity}
 Total medium severity issues: {current_medium_severity}
 Total low severity issues: {current_low_severity}
+CWE counts:
 """
         print(model_results.strip())
         out_file.write(model_results)
+
+        for cwe_id, count in sorted(cwe_counter.items()):
+            line = f"  CWE-{cwe_id}: {count}"
+            print(line)
+            out_file.write(line + "\n")
 
     # Write aggregated results to file
     aggregated_results = f"""
