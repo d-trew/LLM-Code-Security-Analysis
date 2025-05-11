@@ -73,10 +73,17 @@ Total lines of code (loc): 4016
 Total high severity issues: 0
 Total medium severity issues: 0
 Total low severity issues: 14
+Low severity issues found in LLM_Responses/bandit_reports/codegemma\ASeDatAb_bandit_report.json
+
+LLM_Responses/bandit_reports/codegemma totals:
+Total lines of code (loc): 1743
+Total high severity issues: 0
+Total medium severity issues: 0
+Total low severity issues: 1
 
 Aggregated Bandit Report:
-Total files analyzed: 1299
-Total lines of code (loc): 33888
+Total files analyzed: 1486
+Total lines of code (loc): 35631
 Total high severity issues: 0
 Total medium severity issues: 1
-Total low severity issues: 53
+Total low severity issues: 54

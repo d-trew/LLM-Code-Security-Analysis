@@ -9,7 +9,8 @@ bandit_report_dirs = [
     "LLM_Responses/bandit_reports/mistral",
     "LLM_Responses/bandit_reports/qwen",
     "LLM_Responses/bandit_reports/deepseekcoder",
-    "LLM_Responses/bandit_reports/codellama"
+    "LLM_Responses/bandit_reports/codellama",
+    "LLM_Responses/bandit_reports/codegemma"
 ]
 
 # Initialize counters
