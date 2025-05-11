@@ -1,0 +1,82 @@
+Low severity issues found in LLM_Responses/bandit_reports/gemini\Name-Preserving Network_bandit_report.json
+
+LLM_Responses/bandit_reports/gemini totals:
+Total lines of code (loc): 5856
+Total high severity issues: 0
+Total medium severity issues: 0
+Total low severity issues: 1
+Low severity issues found in LLM_Responses/bandit_reports/llama\Coin Jam_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/llama\Golf Gophers_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/llama\Lollipop Shop_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/llama\Overrandomized_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/llama\Revenge of GoroSort_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/llama\Zillionim_bandit_report.json
+
+LLM_Responses/bandit_reports/llama totals:
+Total lines of code (loc): 3623
+Total high severity issues: 0
+Total medium severity issues: 0
+Total low severity issues: 10
+Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\Blindfolded Bullseye_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\Cheating Detection_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\Lollipop Shop_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\Revenge of GoroSort_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\The Cartesian Job_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\Twisty Little Passages_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/wizardcoder\Zillionim_bandit_report.json
+
+LLM_Responses/bandit_reports/wizardcoder totals:
+Total lines of code (loc): 4706
+Total high severity issues: 0
+Total medium severity issues: 0
+Total low severity issues: 7
+Medium severity issues found in LLM_Responses/bandit_reports/mistral\Operation_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/mistral\Revenge of GoroSort_bandit_report.json
+
+LLM_Responses/bandit_reports/mistral totals:
+Total lines of code (loc): 5105
+Total high severity issues: 0
+Total medium severity issues: 1
+Total low severity issues: 2
+Low severity issues found in LLM_Responses/bandit_reports/qwen\Cheating Detection_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/qwen\Sorting Permutation Unit_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/qwen\Twisty Little Passages_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/qwen\Zillionim_bandit_report.json
+
+LLM_Responses/bandit_reports/qwen totals:
+Total lines of code (loc): 6202
+Total high severity issues: 0
+Total medium severity issues: 0
+Total low severity issues: 10
+Low severity issues found in LLM_Responses/bandit_reports/deepseekcoder\Alphabet Cake_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/deepseekcoder\ASeDatAb_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/deepseekcoder\Coin Jam_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/deepseekcoder\ESAb ATAd_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/deepseekcoder\Golf Gophers_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/deepseekcoder\Overrandomized_bandit_report.json
+
+LLM_Responses/bandit_reports/deepseekcoder totals:
+Total lines of code (loc): 4380
+Total high severity issues: 0
+Total medium severity issues: 0
+Total low severity issues: 9
+Low severity issues found in LLM_Responses/bandit_reports/codellama\ASeDatAb_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/codellama\Binary Search Game_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/codellama\Cheating Detection_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/codellama\Name-Preserving Network_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/codellama\Overrandomized_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/codellama\Pancake Pyramid_bandit_report.json
+Low severity issues found in LLM_Responses/bandit_reports/codellama\Zillionim_bandit_report.json
+
+LLM_Responses/bandit_reports/codellama totals:
+Total lines of code (loc): 4016
+Total high severity issues: 0
+Total medium severity issues: 0
+Total low severity issues: 14
+
+Aggregated Bandit Report:
+Total files analyzed: 1299
+Total lines of code (loc): 33888
+Total high severity issues: 0
+Total medium severity issues: 1
+Total low severity issues: 53
