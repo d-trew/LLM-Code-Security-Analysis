@@ -2,7 +2,7 @@ import json
 import os
 
 GEMINI_RESPONSES_JSON_PATH = "LLM_Responses/codegemma_responses.json"
-TARGET_DIR = "LLM_Responses/responses_into_files/codegemma"
+TARGET_DIR = "LLM_Responses/responses_into_files/codegemma_cleaned"
 
 # Ensure the target directory exists
 os.makedirs(TARGET_DIR, exist_ok=True)

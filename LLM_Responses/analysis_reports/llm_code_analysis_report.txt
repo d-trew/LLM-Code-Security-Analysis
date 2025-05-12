@@ -1,0 +1,366 @@
+LLM CODE GENERATION ANALYSIS REPORT
+==================================================
+This report analyzes both:
+- Bandit: Syntax/execution errors (code quality)
+- CodeQL: Security vulnerabilities (code safety)
+
+Key Metrics:
+- Bandit errors indicate fundamentally broken code
+- CodeQL findings reveal security risks in working code
+- Together they measure both quality and safety
+
+
+SUMMARY TABLE
+------------------------------------------------------------
+LLM             CodeQL Findings   Bandit Errors           Total
+------------------------------------------------------------
+codegemma                   173             174             347
+codellama                   199              10             209
+deepseekcoder               104              63             167
+gemini                       92               0              92
+llama                       127               6             133
+mistral                     167             118             285
+qwen                         62               1              63
+wizardcoder                 183              83             266
+------------------------------------------------------------
+TOTAL                      1107             455            1562
+
+
+BANDIT ERROR ANALYSIS (CODE QUALITY)
+------------------------------------------------------------
+
+Total files with errors: 455
+
+Error Types Breakdown:
+- Syntax: 455
+
+
+CODEQL VULNERABILITY ANALYSIS (CODE SAFETY)
+------------------------------------------------------------
+
+Total security findings: 1107
+
+Top Vulnerability Types (CWEs):
+- CWE-563: 318 occurrences (Security vulnerability)
+- CWE-561: 27 occurrences (Security vulnerability)
+- CWE-570: 14 occurrences (Security vulnerability)
+- CWE-571: 14 occurrences (Security vulnerability)
+- CWE-685: 4 occurrences (Security vulnerability)
+- CWE-772: 2 occurrences (Security vulnerability)
+
+
+DETAILED LLM PERFORMANCE
+------------------------------------------------------------
+
+CODEGEMMA
+----------------------------------------
+
+Bandit Errors: 174
+Example Errors:
+- File: 3D Printing_bandit_report.json
+  • syntax error while parsing AST from file
+- File: A Whole New Word_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Adjacent and Consecutive_bandit_report.json
+  • syntax error while parsing AST from file
+
+CodeQL Findings: 173
+
+By Severity:
+- Error: 164
+- Recommendation: 9
+
+Detailed Error Types:
+- py/syntax-error: 164 (py/syntax-error)
+
+Top Vulnerability Types:
+- CWE-563: 7 (Security vulnerability)
+- CWE-561: 1 (Security vulnerability)
+
+Example Findings:
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Median%20Sort.py
+  Description: Local variable is defined but not used...
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Median%20Sort.py
+  Description: Local variable is defined but not used...
+
+CODELLAMA
+----------------------------------------
+
+Bandit Errors: 10
+Example Errors:
+- File: Expogo_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Family Hotel_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Graceful Chainsaw Jugglers_bandit_report.json
+  • syntax error while parsing AST from file
+
+CodeQL Findings: 199
+
+By Severity:
+- Error: 13
+- Recommendation: 158
+- Warning: 28
+
+Detailed Error Types:
+- py/syntax-error: 9 (py/syntax-error)
+- py/hash-unhashable-value: 1 (py/hash-unhashable-value)
+- py/call-to-non-callable: 1 (py/call-to-non-callable)
+- py/nested-loops-with-same-variable-reused: 1 (py/nested-loops-with-same-variable-reused)
+- py/modification-of-default-value: 1 (py/modification-of-default-value)
+
+Top Vulnerability Types:
+- CWE-563: 94 (Security vulnerability)
+- CWE-561: 6 (Security vulnerability)
+- CWE-772: 1 (Security vulnerability)
+
+Example Findings:
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Fashion%20Police.py
+  Description: Local variable is defined but not used...
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Fashion%20Police.py
+  Description: Local variable is defined but not used...
+
+DEEPSEEKCODER
+----------------------------------------
+
+Bandit Errors: 63
+Example Errors:
+- File: BFFs_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Blindfolded Bullseye_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Costume Change_bandit_report.json
+  • syntax error while parsing AST from file
+
+CodeQL Findings: 104
+
+By Severity:
+- Error: 62
+- Recommendation: 31
+- Warning: 11
+
+Detailed Error Types:
+- py/syntax-error: 62 (py/syntax-error)
+
+Top Vulnerability Types:
+- CWE-563: 20 (Security vulnerability)
+- CWE-561: 4 (Security vulnerability)
+- CWE-570: 2 (Security vulnerability)
+
+Example Findings:
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Cheating%20Detection.py
+  Description: Local variable is defined but not used...
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Controlled%20Inflation.py
+  Description: Local variable is defined but not used...
+
+GEMINI
+----------------------------------------
+
+CodeQL Findings: 92
+
+By Severity:
+- Error: 4
+- Recommendation: 79
+- Warning: 9
+
+Detailed Error Types:
+- py/redundant-assignment: 4 (py/redundant-assignment)
+
+Top Vulnerability Types:
+- CWE-563: 76 (Security vulnerability)
+- CWE-561: 2 (Security vulnerability)
+- CWE-570: 2 (Security vulnerability)
+
+Example Findings:
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Alien%20Rhyme.py
+  Description: Local variable is defined but not used...
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Bacterial%20Tactics.py
+  Description: Local variable is defined but not used...
+
+LLAMA
+----------------------------------------
+
+Bandit Errors: 6
+Example Errors:
+- File: Bit Party_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Datacenter Duplex_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Goose, Goose, Ducks_bandit_report.json
+  • syntax error while parsing AST from file
+
+CodeQL Findings: 127
+
+By Severity:
+- Error: 22
+- Recommendation: 97
+- Warning: 8
+
+Detailed Error Types:
+- py/nested-loops-with-same-variable-reused: 16 (py/nested-loops-with-same-variable-reused)
+- py/syntax-error: 4 (py/syntax-error)
+- py/unused-loop-variable: 1 (py/unused-loop-variable)
+- py/non-iterable-in-for-loop: 1 (py/non-iterable-in-for-loop)
+
+Top Vulnerability Types:
+- CWE-563: 49 (Security vulnerability)
+- CWE-561: 7 (Security vulnerability)
+- CWE-570: 5 (Security vulnerability)
+
+Example Findings:
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Cutting%20Cake.py
+  Description: Local variable is defined but not used...
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Cutting%20Cake.py
+  Description: Local variable is defined but not used...
+
+MISTRAL
+----------------------------------------
+
+Bandit Errors: 118
+Example Errors:
+- File: 3D Printing_bandit_report.json
+  • syntax error while parsing AST from file
+- File: A Whole New Word_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Alien Rhyme_bandit_report.json
+  • syntax error while parsing AST from file
+
+CodeQL Findings: 167
+
+By Severity:
+- Error: 123
+- Recommendation: 42
+- Warning: 2
+
+Detailed Error Types:
+- py/syntax-error: 117 (py/syntax-error)
+- py/nested-loops-with-same-variable-reused: 4 (py/nested-loops-with-same-variable-reused)
+- py/mismatched-multiple-assignment: 2 (py/mismatched-multiple-assignment)
+
+Top Vulnerability Types:
+- CWE-563: 12 (Security vulnerability)
+- CWE-561: 1 (Security vulnerability)
+- CWE-570: 1 (Security vulnerability)
+
+Example Findings:
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Alphabet%20Cake.py
+  Description: Local variable is defined but not used...
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Costume%20Change.py
+  Description: Local variable is defined but not used...
+
+QWEN
+----------------------------------------
+
+Bandit Errors: 1
+Example Errors:
+- File: Fashion Police_bandit_report.json
+  • syntax error while parsing AST from file
+
+CodeQL Findings: 62
+
+By Severity:
+- Error: 8
+- Recommendation: 51
+- Warning: 3
+
+Detailed Error Types:
+- py/nested-loops-with-same-variable-reused: 7 (py/nested-loops-with-same-variable-reused)
+- py/syntax-error: 1 (py/syntax-error)
+
+Top Vulnerability Types:
+- CWE-563: 30 (Security vulnerability)
+- CWE-561: 1 (Security vulnerability)
+- CWE-570: 1 (Security vulnerability)
+
+Example Findings:
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Bacterial%20Tactics.py
+  Description: Local variable is defined but not used...
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Board%20Meeting.py
+  Description: Local variable is defined but not used...
+
+WIZARDCODER
+----------------------------------------
+
+Bandit Errors: 83
+Example Errors:
+- File: A Whole New Word_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Ample Syrup_bandit_report.json
+  • syntax error while parsing AST from file
+- File: Append Sort_bandit_report.json
+  • syntax error while parsing AST from file
+
+CodeQL Findings: 183
+
+By Severity:
+- Error: 86
+- Recommendation: 89
+- Warning: 8
+
+Detailed Error Types:
+- py/syntax-error: 69 (py/syntax-error)
+- py/str-format/missing-argument: 11 (py/str-format/missing-argument)
+- py/call/wrong-arguments: 3 (py/call/wrong-arguments)
+- py/unused-loop-variable: 1 (py/unused-loop-variable)
+- py/percent-format/wrong-arguments: 1 (py/percent-format/wrong-arguments)
+- py/nested-loops-with-same-variable-reused: 1 (py/nested-loops-with-same-variable-reused)
+
+Top Vulnerability Types:
+- CWE-563: 30 (Security vulnerability)
+- CWE-561: 5 (Security vulnerability)
+- CWE-685: 4 (Security vulnerability)
+
+Example Findings:
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Bit%20Party.py
+  Description: Local variable is defined but not used...
+- [RECOMMENDATION] py/unused-local-variable (CWE-563)
+  Rule: py/unused-local-variable
+  File: Board%20Meeting.py
+  Description: Local variable is defined but not used...
+
+
+RECOMMENDATIONS FOR RESEARCH REPORTING
+------------------------------------------------------------
+1. Code Quality vs Security:
+   - Bandit errors measure code generation reliability
+   - CodeQL findings measure security consciousness
+
+2. Key Metrics to Highlight:
+   - Total error rates by LLM
+   - Most common vulnerability types (CWEs)
+   - Specific error patterns (from detailed breakdown)
+
+3. Comparative Analysis Suggestions:
+   - Which LLMs generate the most runnable code?
+   - Which produce the most secure code?
+   - Correlation between quality and security?

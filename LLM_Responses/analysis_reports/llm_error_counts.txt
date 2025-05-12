@@ -1,0 +1,12 @@
+LLM               CodeQL Errors   Bandit Errors    Total Errors
+------------------------------------------------------------
+codegemma                   173             174             347
+codellama                   199              10             209
+deepseekcoder               104              63             167
+gemini                       92               0              92
+llama                       127               6             133
+mistral                     167             118             285
+qwen                         62               1              63
+wizardcoder                 183              83             266
+------------------------------------------------------------
+TOTAL                      1107             455            1562
