@@ -22,7 +22,7 @@ def ensure_output_dir():
 
 def load_prompts() -> List[Dict]:
     """Load prompts from JSON file."""
-    print(f"📂 Loading prompts from {DATASET_PATH}")
+    print(f"Loading prompts from {DATASET_PATH}")
     with open(DATASET_PATH, 'r', encoding='utf-8') as file:
         return json.load(file)
 
@@ -65,7 +65,7 @@ Description:
         return result["response"].strip()
     except Exception as e:
         if attempt <= 3:
-            print(f"⚠️ Attempt {attempt} failed, retrying... (Error: {str(e)})")
+            print(f"⚠Attempt {attempt} failed, retrying... (Error: {str(e)})")
             time.sleep(5 * attempt)  # Exponential backoff
             return generate_code(prompt_text, attempt + 1)
         raise RuntimeError(f"Failed after 3 attempts: {str(e)}")
@@ -92,9 +92,9 @@ def process_prompts():
     processed_count = len(processed_sources)
     start_time = time.time()
     
-    print(f"\n🚀 Starting processing of {total_prompts} prompts")
-    print(f"🔧 Using model: {MODEL_NAME}")
-    print(f"💾 Saving results to: {OUTPUT_FILE}\n")
+    print(f"\nStarting processing of {total_prompts} prompts")
+    print(f"Using model: {MODEL_NAME}")
+    print(f"Saving results to: {OUTPUT_FILE}\n")
 
     for i, prompt in enumerate(prompts, 1):
         try:
@@ -104,8 +104,8 @@ def process_prompts():
                 continue
 
             # Print current task
-            print(f"\n\n🔷 Processing [{i}/{total_prompts}]: {prompt['problem_name']}")
-            print(f"📝 Source: {prompt['source']}")
+            print(f"\n\nProcessing [{i}/{total_prompts}]: {prompt['problem_name']}")
+            print(f"Source: {prompt['source']}")
             
             # Generate code with timing
             gen_start = time.time()
@@ -126,8 +126,8 @@ def process_prompts():
                 json.dump(results, file, indent=4)
 
             # Print success
-            print(f"✅ Generated in {gen_time:.1f}s")
-            print(f"📋 Code length: {len(python_code)} characters")
+            print(f"Generated in {gen_time:.1f}s")
+            print(f"Code length: {len(python_code)} characters")
             
             # Rate limiting
             elapsed = time.time() - start_time
@@ -136,7 +136,7 @@ def process_prompts():
                 time.sleep(max(0, MIN_INTERVAL * i - elapsed))
 
         except Exception as e:
-            print(f"\n❌ Failed: {prompt['problem_name']} - {str(e)}")
+            print(f"\nFailed: {prompt['problem_name']} - {str(e)}")
             failed_prompts.append(prompt)
             # Save progress even after failures
             with open(OUTPUT_FILE, 'w', encoding='utf-8') as file:
@@ -147,21 +147,21 @@ def process_prompts():
     failure_count = len(failed_prompts)
     
     print(f"\n\n{'='*50}")
-    print(f"🏁 Processing complete!")
-    print(f"✔ Success: {success_count}")
-    print(f"✖ Failures: {failure_count}")
-    print(f"⏱ Total time: {time.time() - start_time:.1f} seconds")
-    print(f"💾 Results saved to: {OUTPUT_FILE}")
+    print(f"Processing complete!")
+    print(f"Success: {success_count}")
+    print(f"Failures: {failure_count}")
+    print(f"Total time: {time.time() - start_time:.1f} seconds")
+    print(f"Results saved to: {OUTPUT_FILE}")
     print(f"{'='*50}\n")
 
     # Retry failed prompts if any
     if failed_prompts:
-        print(f"🔄 Attempting to retry {len(failed_prompts)} failed prompts...")
+        print(f"Attempting to retry {len(failed_prompts)} failed prompts...")
         retry_start = time.time()
         
         for prompt in failed_prompts:
             try:
-                print(f"\n🔷 Retrying: {prompt['problem_name']}")
+                print(f"\nRetrying: {prompt['problem_name']}")
                 python_code = generate_code(prompt["problem_statement"])
                 
                 results.append({
@@ -172,26 +172,26 @@ def process_prompts():
                     "generation_time": time.time() - retry_start
                 })
                 
-                print(f"✅ Retry successful!")
+                print(f"Retry successful!")
                 
                 # Save after each retry
                 with open(OUTPUT_FILE, 'w', encoding='utf-8') as file:
                     json.dump(results, file, indent=4)
                     
             except Exception as e:
-                print(f"❌ Retry failed: {str(e)}")
+                print(f"Retry failed: {str(e)}")
 
         print(f"\n🔚 Retry attempts completed in {time.time() - retry_start:.1f}s")
 
 if __name__ == "__main__":
     # Verify Ollama is running
     try:
-        print("🔌 Checking Ollama connection...")
+        print("Checking Ollama connection...")
         health_check = requests.get("http://localhost:11434", timeout=10)
         health_check.raise_for_status()
-        print("🟢 Ollama server is ready!")
+        print("Ollama server is ready!")
     except Exception as e:
-        print("🔴 Error: Ollama server not running. Start it first with:")
+        print("Error: Ollama server not running. Start it first with:")
         print("cd /scratch/dt00561/ollama/bin && ./ollama serve")
         exit(1)
 
