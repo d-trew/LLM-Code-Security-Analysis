@@ -104,7 +104,7 @@ def process_prompts():
             with open(OUTPUT_FILE, 'w') as f:
                 json.dump(results, f, indent=2)
                 
-            print(f"✅ [{i}/{total_prompts}] {prompt['problem_name']} ({gen_time:.1f}s)")
+            print(f"[{i}/{total_prompts}] {prompt['problem_name']} ({gen_time:.1f}s)")
             
         except Exception as e:
             failures.append({
@@ -113,7 +113,7 @@ def process_prompts():
                 "error": str(e)
             })
             
-            print(f"❌ [{i}/{total_prompts}] Failed: {prompt['problem_name']}")
+            print(f"[{i}/{total_prompts}] Failed: {prompt['problem_name']}")
             
         finally:
             # Rate limiting
