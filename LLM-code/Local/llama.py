@@ -29,10 +29,10 @@ def load_prompts() -> List[Dict]:
 def load_existing_results() -> List[Dict]:
     """Load existing results if output file exists."""
     if os.path.exists(OUTPUT_FILE):
-        print(f"🔍 Found existing results at {OUTPUT_FILE}")
+        print(f"Found existing results at {OUTPUT_FILE}")
         with open(OUTPUT_FILE, 'r', encoding='utf-8') as file:
             return json.load(file)
-    print("🆕 No existing results found, starting fresh")
+    print("No existing results found, starting fresh")
     return []
 
 def generate_code(prompt_text: str, attempt: int = 1) -> str:
@@ -78,7 +78,7 @@ def print_progress(current: int, total: int, start_time: float):
     
     progress_bar = f"[{'=' * int(percent//5):<20}] {percent:.1f}%"
     time_info = f"Elapsed: {elapsed:.0f}s | ETA: {eta:.0f}s"
-    print(f"\r🔄 {progress_bar} | {time_info} | {current}/{total}", end="")
+    print(f"\r{progress_bar} | {time_info} | {current}/{total}", end="")
 
 def process_prompts():
     """Main processing function with enhanced logging."""
@@ -181,7 +181,7 @@ def process_prompts():
             except Exception as e:
                 print(f"Retry failed: {str(e)}")
 
-        print(f"\n🔚 Retry attempts completed in {time.time() - retry_start:.1f}s")
+        print(f"\nRetry attempts completed in {time.time() - retry_start:.1f}s")
 
 if __name__ == "__main__":
     # Verify Ollama is running
