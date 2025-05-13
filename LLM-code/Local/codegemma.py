@@ -141,7 +141,7 @@ def process_prompts():
                 with open(OUTPUT_FILE, 'w') as f:
                     json.dump(results, f, indent=2)
                 
-                print(f"✅ Successfully generated in {gen_time:.1f}s")
+                print(f"Successfully generated in {gen_time:.1f}s")
                 break
                 
             except Exception as e:
@@ -155,7 +155,7 @@ def process_prompts():
                     })
                 time.sleep(2 ** attempt)  # Exponential backoff
         else:
-            print(f"❌ All attempts failed for {prompt['problem_name']}")
+            print(f"All attempts failed for {prompt['problem_name']}")
             continue
             
 
