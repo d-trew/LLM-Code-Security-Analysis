@@ -111,7 +111,7 @@ def process_prompts():
         if prompt_id in processed:
             continue
             
-        print(f"\n🔄 Processing [{i}/{total_prompts}] {prompt['problem_name']}")
+        print(f"\nProcessing [{i}/{total_prompts}] {prompt['problem_name']}")
         
         for attempt in range(MAX_RETRIES):
             try:
